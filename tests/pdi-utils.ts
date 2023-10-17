@@ -1,33 +1,10 @@
 import { newMockEvent } from "matchstick-as"
 import { ethereum, Address, BigInt } from "@graphprotocol/graph-ts"
 import {
-  Approval,
   AssetRemoved,
   Transfer,
   UpdateAnatomy
 } from "../generated/pdi/pdi"
-
-export function createApprovalEvent(
-  owner: Address,
-  spender: Address,
-  value: BigInt
-): Approval {
-  let approvalEvent = changetype<Approval>(newMockEvent())
-
-  approvalEvent.parameters = new Array()
-
-  approvalEvent.parameters.push(
-    new ethereum.EventParam("owner", ethereum.Value.fromAddress(owner))
-  )
-  approvalEvent.parameters.push(
-    new ethereum.EventParam("spender", ethereum.Value.fromAddress(spender))
-  )
-  approvalEvent.parameters.push(
-    new ethereum.EventParam("value", ethereum.Value.fromUnsignedBigInt(value))
-  )
-
-  return approvalEvent
-}
 
 export function createAssetRemovedEvent(asset: Address): AssetRemoved {
   let assetRemovedEvent = changetype<AssetRemoved>(newMockEvent())

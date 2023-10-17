@@ -14,7 +14,6 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Approval
         - AssetRemoved
         - Transfer
         - UpdateAnatomy
@@ -22,8 +21,6 @@ dataSources:
         - name: pdi
           file: ./abis/pdi.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
         - event: AssetRemoved(address)
           handler: handleAssetRemoved
         - event: Transfer(indexed address,indexed address,uint256)

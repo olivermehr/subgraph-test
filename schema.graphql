@@ -1,6 +1,11 @@
-type ExampleEntity @entity {
+type Index @entity {
   id: Bytes!
-  count: BigInt!
-  owner: Bytes! # address
-  spender: Bytes! # address
+  holders: BigInt!
+  assets: [Bytes!]!
+  weights: [Int!]!
+}
+
+type Account @entity {
+  id: Bytes!
+  balance: BigInt!
 }

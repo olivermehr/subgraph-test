@@ -11,7 +11,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class ExampleEntity extends Entity {
+export class Index extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -19,26 +19,24 @@ export class ExampleEntity extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ExampleEntity entity without an ID");
+    assert(id != null, "Cannot save Index entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type ExampleEntity must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Index must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ExampleEntity", id.toBytes().toHexString(), this);
+      store.set("Index", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): ExampleEntity | null {
-    return changetype<ExampleEntity | null>(
-      store.get_in_block("ExampleEntity", id.toHexString())
+  static loadInBlock(id: Bytes): Index | null {
+    return changetype<Index | null>(
+      store.get_in_block("Index", id.toHexString())
     );
   }
 
-  static load(id: Bytes): ExampleEntity | null {
-    return changetype<ExampleEntity | null>(
-      store.get("ExampleEntity", id.toHexString())
-    );
+  static load(id: Bytes): Index | null {
+    return changetype<Index | null>(store.get("Index", id.toHexString()));
   }
 
   get id(): Bytes {
@@ -54,8 +52,8 @@ export class ExampleEntity extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get count(): BigInt {
-    let value = this.get("count");
+  get holders(): BigInt {
+    let value = this.get("holders");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -63,12 +61,67 @@ export class ExampleEntity extends Entity {
     }
   }
 
-  set count(value: BigInt) {
-    this.set("count", Value.fromBigInt(value));
+  set holders(value: BigInt) {
+    this.set("holders", Value.fromBigInt(value));
   }
 
-  get owner(): Bytes {
-    let value = this.get("owner");
+  get assets(): Array<Bytes> {
+    let value = this.get("assets");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytesArray();
+    }
+  }
+
+  set assets(value: Array<Bytes>) {
+    this.set("assets", Value.fromBytesArray(value));
+  }
+
+  get weights(): Array<i32> {
+    let value = this.get("weights");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toI32Array();
+    }
+  }
+
+  set weights(value: Array<i32>) {
+    this.set("weights", Value.fromI32Array(value));
+  }
+}
+
+export class Account extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Account entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type Account must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Account", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): Account | null {
+    return changetype<Account | null>(
+      store.get_in_block("Account", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): Account | null {
+    return changetype<Account | null>(store.get("Account", id.toHexString()));
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -76,20 +129,20 @@ export class ExampleEntity extends Entity {
     }
   }
 
-  set owner(value: Bytes) {
-    this.set("owner", Value.fromBytes(value));
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
   }
 
-  get spender(): Bytes {
-    let value = this.get("spender");
+  get balance(): BigInt {
+    let value = this.get("balance");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toBigInt();
     }
   }
 
-  set spender(value: Bytes) {
-    this.set("spender", Value.fromBytes(value));
+  set balance(value: BigInt) {
+    this.set("balance", Value.fromBigInt(value));
   }
 }
