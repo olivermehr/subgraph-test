@@ -1,0 +1,17 @@
+type Index @entity {
+  id: Bytes!
+  holders: BigInt!
+  assets: [Asset!]!
+}
+
+type Account @entity {
+  id: Bytes!
+  balance: BigInt!
+}
+
+type Asset @entity {
+  id: Bytes!
+  vtoken: Bytes!
+  balance: BigInt!
+  weight: Int!
+}

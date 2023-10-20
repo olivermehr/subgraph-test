@@ -1,0 +1,88 @@
+specVersion: 0.0.5
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: vaultFactory
+    network: mainnet
+    source:
+      address: "0x24aD48f31CAb5E35D0E9CDfa9213b5451f22FB92"
+      abi: vaultFactory
+      startBlock: 14832739
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Asset
+      abis:
+        - name: vaultFactory
+          file: vaultFactory/abis/vaultFactory.json
+      eventHandlers:
+        - event: VTokenCreated(address,address)
+          handler: handleVTokenCreated
+      file: vaultFactory/vaultFactory.wasm
+  - kind: ethereum
+    name: indexFactory
+    network: mainnet
+    source:
+      address: "0xb4e85a5BFCd5f247D4BDa1491F57921473dDcE2e"
+      abi: indexFactory
+      startBlock: 14832781
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Index
+      abis:
+        - name: indexFactory
+          file: indexFactory/abis/indexFactory.json
+      eventHandlers:
+        - event: ManagedIndexCreated(address,address[],uint8[])
+          handler: handleManagedIndexCreated
+      file: indexFactory/indexFactory.wasm
+templates:
+  - kind: ethereum
+    name: vault
+    network: mainnet
+    source:
+      abi: vault
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Index
+        - Asset
+      abis:
+        - name: vault
+          file: vault/abis/vault.json
+      eventHandlers:
+        - event: VTokenTransfer(indexed address,indexed address,uint256)
+          handler: handleVTokenTransfer
+      file: templates/vault/vault.wasm
+  - kind: ethereum
+    name: indexToken
+    network: mainnet
+    source:
+      abi: indexToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Index
+        - Account
+        - Asset
+      abis:
+        - name: indexToken
+          file: indexToken/abis/indexToken.json
+      eventHandlers:
+        - event: AssetRemoved(address)
+          handler: handleAssetRemoved
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: UpdateAnatomy(address,uint8)
+          handler: handleUpdateAnatomy
+      file: templates/indexToken/indexToken.wasm

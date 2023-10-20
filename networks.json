@@ -1,0 +1,20 @@
+{
+  "mainnet": {
+    "pdi": {
+      "address": "0x632806BF5c8f062932Dd121244c9fbe7becb8B48",
+      "startBlock": 14832996
+    },
+    "Contract": {
+      "address": "0x24aD48f31CAb5E35D0E9CDfa9213b5451f22FB92"
+    },
+    "index-factory": {
+      "address": "0x2a625D501a3159105EEb747715c152009d482e58"
+    },
+    "indexFactory": {
+      "address": "0xb4e85a5BFCd5f247D4BDa1491F57921473dDcE2e"
+    },
+    "vault": {
+      "address": "0xf4B9d22f2c35C07B86d0C065b0b2fF3A95e4e891"
+    }
+  }
+}
