@@ -1,7 +1,6 @@
 import { Bytes, BigInt } from "@graphprotocol/graph-ts"
-import { Index, Account, IndexAsset, IndexAccount, Asset, HistoricalAccountBalances } from "../generated/schema"
+import { Index, Account, IndexAsset, IndexAccount, Asset, HistoricalAccountBalances, HistoricalIndexBalances } from "../generated/schema"
 import { VTokenTransfer as VTokenTransferEvent } from "../generated/templates/vault/vault"
-import { HistoricalIndexBalances } from "../generated/schema"
 import { Transfer as TransferEvent } from "../generated/templates/indexToken/indexToken"
 
 export function createOrLoadIndexEntity(id: Bytes): Index {

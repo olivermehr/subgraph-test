@@ -4,7 +4,7 @@ import {
 } from "../generated/indexFactory/indexFactory"
 import { indexToken, vaultFactory } from "../generated/templates"
 import { indexToken as indexTokenContract } from "../generated/templates/indexToken/indexToken"
-import { createOrLoadAccountEntity,createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
+import { createOrLoadAssetEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
 
 export function handleManagedIndexCreated(
   event: ManagedIndexCreatedEvent
@@ -22,8 +22,8 @@ export function handleManagedIndexCreated(
   for (let i = 0; i < event.params._assets.length; i++) {
     let token = event.params._assets[i]
     let weight = event.params._weights[i]
-    createOrLoadAccountEntity(token)
-    let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index,token)
+    createOrLoadAssetEntity(token)
+    let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index, token)
     indexAssetEntity.weight = weight
     indexAssetEntity.save()
     indexAssetArray.push(indexAssetEntity.id)
