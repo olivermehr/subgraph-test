@@ -43,3 +43,27 @@ export class vaultFactory extends DataSourceTemplate {
     );
   }
 }
+
+export class feePool extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("feePool", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext("feePool", [address.toHex()], context);
+  }
+}
+
+export class indexRegistry extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("indexRegistry", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "indexRegistry",
+      [address.toHex()],
+      context
+    );
+  }
+}

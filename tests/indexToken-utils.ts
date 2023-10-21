@@ -4,7 +4,7 @@ import {
   AssetRemoved,
   Transfer,
   UpdateAnatomy
-} from "../generated/indexToken/indexToken"
+} from "../generated/templates/indexToken/indexToken"
 
 export function createAssetRemovedEvent(asset: Address): AssetRemoved {
   let assetRemovedEvent = changetype<AssetRemoved>(newMockEvent())

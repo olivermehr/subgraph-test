@@ -1,4 +1,4 @@
-import { Bytes, BigInt } from "@graphprotocol/graph-ts"
+import { Bytes, BigInt, BigDecimal } from "@graphprotocol/graph-ts"
 import { Index, Account, IndexAsset, IndexAccount, Asset, HistoricalAccountBalances, HistoricalIndexBalances } from "../generated/schema"
 import { VTokenTransfer as VTokenTransferEvent } from "../generated/templates/vault/vault"
 import { Transfer as TransferEvent } from "../generated/templates/indexToken/indexToken"
@@ -9,7 +9,10 @@ export function createOrLoadIndexEntity(id: Bytes): Index {
         index = Index.load(id)
         if (index == null) {
             index = new Index(id)
-            index.holders = BigInt.fromI32(0)
+            index.mintingFee = BigDecimal.zero()
+            index.redemptionFee = BigDecimal.zero()
+            index.aumFee = BigDecimal.zero()
+            index.holders = BigInt.zero()
             index.assets = []
             index.save()
         }
@@ -38,7 +41,7 @@ export function createOrLoadIndexAccountEntity(index: Bytes, account: Bytes): In
             indexAccount = new IndexAccount(id)
             indexAccount.index = index
             indexAccount.account = account
-            indexAccount.balance = BigInt.fromI32(0)
+            indexAccount.balance = BigDecimal.zero()
             indexAccount.save()
         }
     }
@@ -54,7 +57,7 @@ export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes): IndexA
             indexAsset = new IndexAsset(id)
             indexAsset.index = index
             indexAsset.asset = asset
-            indexAsset.balance = BigInt.fromI32(0)
+            indexAsset.balance = BigDecimal.zero()
             indexAsset.weight = 0
             indexAsset.save()
         }
@@ -64,13 +67,15 @@ export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes): IndexA
 
 export function createOrLoadHistoricalIndexBalances(index: Bytes, event: VTokenTransferEvent): HistoricalIndexBalances {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
-    let id = index.toString().concat(timestamp.toString())
+    let id = index.toHexString().concat(timestamp.toString())
     let historicalIndexBalancesEntity = HistoricalIndexBalances.loadInBlock(id)
     if (historicalIndexBalancesEntity == null) {
         historicalIndexBalancesEntity = HistoricalIndexBalances.load(id)
         if (historicalIndexBalancesEntity == null) {
             historicalIndexBalancesEntity = new HistoricalIndexBalances(id)
+            historicalIndexBalancesEntity.timestamp = timestamp
             historicalIndexBalancesEntity.index = index
+            historicalIndexBalancesEntity.assets = []
             historicalIndexBalancesEntity.save()
         }
     }
@@ -91,14 +96,16 @@ export function createOrLoadAssetEntity(id: Bytes): Asset {
 
 export function createOrLoadHistoricalAccountBalances(index : Bytes, account: Bytes, event: TransferEvent): HistoricalAccountBalances {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
-    let id = index.toString().concat(account.toString().concat(timestamp.toString()))
+    let id = index.toHexString().concat(account.toHexString().concat(timestamp.toString()))
     let historicalAccountBalancesEntity = HistoricalAccountBalances.loadInBlock(id)
     if (historicalAccountBalancesEntity == null) {
         historicalAccountBalancesEntity = HistoricalAccountBalances.load(id)
         if (historicalAccountBalancesEntity == null) {
             historicalAccountBalancesEntity = new HistoricalAccountBalances(id)
+            historicalAccountBalancesEntity.timestamp = timestamp
             historicalAccountBalancesEntity.index = index
             historicalAccountBalancesEntity.account = account
+            historicalAccountBalancesEntity.balance = BigDecimal.zero()
             historicalAccountBalancesEntity.save()
         }
     }

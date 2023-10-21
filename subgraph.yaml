@@ -1,4 +1,6 @@
 specVersion: 0.0.5
+description: Indexer for Phuture v1 index products
+repository: https://github.com/olivermehr/subgraph-test
 schema:
   file: ./schema.graphql
 dataSources:
@@ -20,6 +22,12 @@ dataSources:
       abis:
         - name: indexFactory
           file: ./abis/indexFactory.json
+        - name: indexToken
+          file: ./abis/indexToken.json
+        - name: indexRegistry
+          file: ./abis/indexRegistry.json
+        - name: feePool
+          file: ./abis/feePool.json
       eventHandlers:
         - event: ManagedIndexCreated(address,address[],uint8[])
           handler: handleManagedIndexCreated
@@ -88,3 +96,45 @@ templates:
         - event: VTokenCreated(address,address)
           handler: handleVTokenCreated
       file: ./src/vaultFactory.ts
+  - kind: ethereum
+    name: feePool
+    network: mainnet
+    source:
+      abi: feePool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - SetAUMScaledPerSecondsRate
+        - SetBurningFeeInBP
+        - SetMintingFeeInBP
+      abis:
+        - name: feePool
+          file: ./abis/feePool.json
+      eventHandlers:
+        - event: SetAUMScaledPerSecondsRate(indexed address,indexed address,uint256)
+          handler: handleSetAUMScaledPerSecondsRate
+        - event: SetBurningFeeInBP(indexed address,indexed address,uint16)
+          handler: handleSetBurningFeeInBP
+        - event: SetMintingFeeInBP(indexed address,indexed address,uint16)
+          handler: handleSetMintingFeeInBP
+      file: ./src/feePool.ts
+  - kind: ethereum
+    name: indexRegistry
+    network: mainnet
+    source:
+      abi: indexRegistry
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Index
+      abis:
+        - name: indexRegistry
+          file: ./abis/indexRegistry.json
+      eventHandlers:
+        - event: SetFeePool(indexed address,address)
+          handler: handleSetFeePool
+      file: ./src/indexRegistry.ts
