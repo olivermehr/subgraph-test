@@ -6,7 +6,7 @@ import {
   Withdraw as WithdrawEvent,
   usvVault
 } from "../generated/usvVault/usvVault"
-import { createOrLoadAssetEntity, createOrLoadHistoricalIndexBalance, createOrLoadHistoricalUSVPrice, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, createOrLoadHistoricalIndexAsset } from "./entityCreation"
+import { createOrLoadAssetEntity, createOrLoadHistoricalIndexBalance, createOrLoadHistoricalUSVPrice, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, createOrLoadHistoricalIndexAsset, loadIndexAssetEntity } from "./entityCreation"
 import { IndexAsset } from "../generated/schema"
 export { handleTransfer } from "./indexToken"
 
@@ -57,7 +57,7 @@ export function updateBalances(event: ethereum.Event): void {
   createOrLoadHistoricalIndexBalance(event.address, event)
   let indexEntity = createOrLoadIndexEntity(event.address)
   for (let i = 0; i < indexEntity.assets.length; i++) {
-    let tempIndexAssetEntity = new IndexAsset(indexEntity.assets[i])
+    let tempIndexAssetEntity = loadIndexAssetEntity(indexEntity.assets[i])
     let historicalIndexAssetEntity = createOrLoadHistoricalIndexAsset(event.address, tempIndexAssetEntity.asset, event)
     historicalIndexAssetEntity.balance = tempIndexAssetEntity.balance
     historicalIndexAssetEntity.weight = tempIndexAssetEntity.weight

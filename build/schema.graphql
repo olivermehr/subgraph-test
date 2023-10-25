@@ -58,6 +58,7 @@ type HistoricalIndexAsset @entity {
   asset: Bytes!
   timestamp: BigInt!
   balance: BigDecimal!
+  weight:Int!
   
 }
 

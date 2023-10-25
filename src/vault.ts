@@ -2,7 +2,7 @@ import { Address, BigDecimal, BigInt, Bytes, dataSource, log } from "@graphproto
 import {
   VTokenTransfer as VTokenTransferEvent, vault
 } from "../generated/templates/vault/vault"
-import { createOrLoadAssetEntity, createOrLoadHistoricalIndexAsset, createOrLoadHistoricalIndexBalance, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
+import { createOrLoadAssetEntity, createOrLoadHistoricalIndexAsset, createOrLoadHistoricalIndexBalance, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadIndexAssetEntity } from "./entityCreation"
 import { Index, IndexAsset } from "../generated/schema"
 
 export function handleVTokenTransfer(event: VTokenTransferEvent): void {
@@ -18,7 +18,7 @@ export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   createOrLoadHistoricalIndexBalance(indexAddress, event)
   let indexEntity = createOrLoadIndexEntity(indexAddress)
   for (let i = 0; i < indexEntity.assets.length; i++){
-    let tempIndexAssetEntity = new IndexAsset(indexEntity.assets[i])
+    let tempIndexAssetEntity = loadIndexAssetEntity(indexEntity.assets[i])
     let historicalIndexAssetEntity = createOrLoadHistoricalIndexAsset(indexAddress, tempIndexAssetEntity.asset, event)
     historicalIndexAssetEntity.balance = tempIndexAssetEntity.balance
     historicalIndexAssetEntity.weight = tempIndexAssetEntity.weight

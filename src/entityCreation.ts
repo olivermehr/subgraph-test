@@ -67,6 +67,24 @@ export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes): IndexA
     return indexAsset
 }
 
+export function loadIndexAssetEntity(id:Bytes):IndexAsset {
+    let indexAsset = IndexAsset.loadInBlock(id)
+    if (indexAsset == null) {
+        indexAsset = IndexAsset.load(id)
+        if (indexAsset == null) {
+            log.debug("Should never enter this logic block of loadIndexAssetEntity function",[])
+            indexAsset = new IndexAsset(id)
+            indexAsset.index = Bytes.fromHexString('0x')
+            indexAsset.asset = Bytes.fromHexString('0x')
+            indexAsset.balance = BigDecimal.zero()
+            indexAsset.weight = 0
+            indexAsset.save()
+        }
+    }
+    return indexAsset
+
+}
+
 
 export function createOrLoadHistoricalIndexBalance(index: Bytes, event: ethereum.Event): HistoricalIndexBalance {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))

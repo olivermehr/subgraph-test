@@ -4,14 +4,14 @@ import {
 } from "../generated/indexFactory/indexFactory"
 import { feePool, indexRegistry, indexToken, vaultFactory } from "../generated/templates"
 import { indexToken as indexTokenContract } from "../generated/templates/indexToken/indexToken"
-import {indexRegistry as indexRegistryContract} from "../generated/templates/indexRegistry/indexRegistry"
-import {feePool as feePoolContract} from  "../generated/templates/feePool/feePool"
+import { indexRegistry as indexRegistryContract } from "../generated/templates/indexRegistry/indexRegistry"
+import { feePool as feePoolContract } from "../generated/templates/feePool/feePool"
 import { createOrLoadAssetEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
 
 export function handleManagedIndexCreated(
   event: ManagedIndexCreatedEvent
 ): void {
-  
+
   let indexContract = indexTokenContract.bind(event.params.index)
   let decimals = indexContract.decimals()
   let vTokenFactory = indexContract.vTokenFactory()
@@ -24,13 +24,12 @@ export function handleManagedIndexCreated(
   vaultFactory.createWithContext(vTokenFactory, vTokenContext)
 
   let registryContext = new DataSourceContext()
-  registryContext.setBytes('indexAddress',event.params.index)
-  indexRegistry.createWithContext(registry,registryContext)
+  registryContext.setBytes('indexAddress', event.params.index)
+  indexRegistry.createWithContext(registry, registryContext)
 
   let feePoolAddress = indexRegistryContract.bind(registry).feePool()
-  log.debug("Fee pool {}",[feePoolAddress.toHexString()])
   feePool.create(feePoolAddress)
-  
+
   let indexEntity = createOrLoadIndexEntity(event.params.index)
   indexEntity.decimals = decimals
 
