@@ -54,6 +54,11 @@ dataSources:
       abis:
         - name: usvVault
           file: usvVault/abis/usvVault.json
+<<<<<<< HEAD
+=======
+        - name: erc20
+          file: usvVault/abis/erc20.json
+>>>>>>> c329e3e (Added USV)
       eventHandlers:
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
