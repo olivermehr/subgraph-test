@@ -1,3 +1,4 @@
+"Entry point for all information related to index products"
 type Index @entity {
   id: Bytes!
   decimals: Int!
@@ -8,17 +9,17 @@ type Index @entity {
   assets: [IndexAsset!]!
   history: [HistoricalIndexBalance!]! @derivedFrom(field:"index")
 }
+"Entry point for all information related to accounts"
+type Account @entity {
+  id: Bytes!
+  indices: [IndexAccount!]! @derivedFrom(field:"account")
+  history: [HistoricalAccountBalance!]! @derivedFrom(field:"account")
+}
 
 type Asset @entity {
   id: Bytes!
   decimals: Int!
   indices: [IndexAsset!]! @derivedFrom(field:"asset")
-}
-
-type Account @entity {
-  id: Bytes!
-  indices: [IndexAccount!]! @derivedFrom(field:"account")
-  history: [HistoricalAccountBalance!]! @derivedFrom(field:"account")
 }
 
 type IndexAsset @entity {
