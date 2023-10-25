@@ -2,7 +2,7 @@ specVersion: 0.0.5
 description: Indexer for Phuture v1 index products
 repository: https://github.com/olivermehr/subgraph-test
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: indexFactory
@@ -21,19 +21,19 @@ dataSources:
         - Asset
       abis:
         - name: indexFactory
-          file: ./abis/indexFactory.json
+          file: indexFactory/abis/indexFactory.json
         - name: indexToken
-          file: ./abis/indexToken.json
+          file: indexFactory/abis/indexToken.json
         - name: indexRegistry
-          file: ./abis/indexRegistry.json
+          file: indexFactory/abis/indexRegistry.json
         - name: feePool
-          file: ./abis/feePool.json
+          file: indexFactory/abis/feePool.json
         - name: erc20
-          file: ./abis/erc20.json
+          file: indexFactory/abis/erc20.json
       eventHandlers:
         - event: ManagedIndexCreated(address,address[],uint8[])
           handler: handleManagedIndexCreated
-      file: ./src/indexFactory.ts
+      file: indexFactory/indexFactory.wasm
   - kind: ethereum
     name: usvVault
     network: mainnet
@@ -53,7 +53,7 @@ dataSources:
         - IndexAccount
       abis:
         - name: usvVault
-          file: ./abis/usvVault.json
+          file: usvVault/abis/usvVault.json
       eventHandlers:
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
@@ -63,7 +63,7 @@ dataSources:
           handler: handleUpgraded
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-      file: ./src/usvVault.ts
+      file: usvVault/usvVault.wasm
 templates:
   - kind: ethereum
     name: vault
@@ -79,11 +79,11 @@ templates:
         - HistoricalIndexBalances
       abis:
         - name: vault
-          file: ./abis/vault.json
+          file: vault/abis/vault.json
       eventHandlers:
         - event: VTokenTransfer(indexed address,indexed address,uint256)
           handler: handleVTokenTransfer
-      file: ./src/vault.ts
+      file: templates/vault/vault.wasm
   - kind: ethereum
     name: indexToken
     network: mainnet
@@ -100,9 +100,9 @@ templates:
         - IndexAsset
       abis:
         - name: indexToken
-          file: ./abis/indexToken.json
+          file: indexToken/abis/indexToken.json
         - name: erc20
-          file: ./abis/erc20.json
+          file: indexToken/abis/erc20.json
       eventHandlers:
         - event: AssetRemoved(address)
           handler: handleAssetRemoved
@@ -110,7 +110,7 @@ templates:
           handler: handleTransfer
         - event: UpdateAnatomy(address,uint8)
           handler: handleUpdateAnatomy
-      file: ./src/indexToken.ts
+      file: templates/indexToken/indexToken.wasm
   - kind: ethereum
     name: vaultFactory
     network: mainnet
@@ -125,11 +125,11 @@ templates:
         - Asset
       abis:
         - name: vaultFactory
-          file: ./abis/vaultFactory.json
+          file: vaultFactory/abis/vaultFactory.json
       eventHandlers:
         - event: VTokenCreated(address,address)
           handler: handleVTokenCreated
-      file: ./src/vaultFactory.ts
+      file: templates/vaultFactory/vaultFactory.wasm
   - kind: ethereum
     name: feePool
     network: mainnet
@@ -145,7 +145,7 @@ templates:
         - SetMintingFeeInBP
       abis:
         - name: feePool
-          file: ./abis/feePool.json
+          file: feePool/abis/feePool.json
       eventHandlers:
         - event: SetAUMScaledPerSecondsRate(indexed address,indexed address,uint256)
           handler: handleSetAUMScaledPerSecondsRate
@@ -153,7 +153,7 @@ templates:
           handler: handleSetBurningFeeInBP
         - event: SetMintingFeeInBP(indexed address,indexed address,uint16)
           handler: handleSetMintingFeeInBP
-      file: ./src/feePool.ts
+      file: templates/feePool/feePool.wasm
   - kind: ethereum
     name: indexRegistry
     network: mainnet
@@ -167,8 +167,8 @@ templates:
         - Index
       abis:
         - name: indexRegistry
-          file: ./abis/indexRegistry.json
+          file: indexRegistry/abis/indexRegistry.json
       eventHandlers:
         - event: SetFeePool(indexed address,address)
           handler: handleSetFeePool
-      file: ./src/indexRegistry.ts
+      file: templates/indexRegistry/indexRegistry.wasm

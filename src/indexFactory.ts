@@ -1,4 +1,4 @@
-import { BigDecimal, Bytes, DataSourceContext } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, Bytes, DataSourceContext, log, BigInt } from "@graphprotocol/graph-ts"
 import {
   ManagedIndexCreated as ManagedIndexCreatedEvent
 } from "../generated/indexFactory/indexFactory"
@@ -17,11 +17,8 @@ export function handleManagedIndexCreated(
   let vTokenFactory = indexContract.vTokenFactory()
   let registry = indexContract.registry()
 
-  let indexTokenContext = new DataSourceContext()
-  indexTokenContext.setI32('decimals',decimals)
-  indexToken.createWithContext(event.params.index,indexTokenContext)
+  indexToken.create(event.params.index)
 
-  
   let vTokenContext = new DataSourceContext()
   vTokenContext.setBytes('indexAddress', event.params.index)
   vaultFactory.createWithContext(vTokenFactory, vTokenContext)
@@ -31,14 +28,11 @@ export function handleManagedIndexCreated(
   indexRegistry.createWithContext(registry,registryContext)
 
   let feePoolAddress = indexRegistryContract.bind(registry).feePool()
+  log.debug("Fee pool {}",[feePoolAddress.toHexString()])
   feePool.create(feePoolAddress)
   
   let indexEntity = createOrLoadIndexEntity(event.params.index)
-  let feeContract = feePoolContract.bind(feePoolAddress)
-  let mintingFee = (feeContract.mintingFeeInBPOf(event.params.index)/100).toString()
-  let redemptionFee = (feeContract.burningFeeInBPOf(event.params.index)/100).toString()
-  indexEntity.mintingFee = BigDecimal.fromString(mintingFee)
-  indexEntity.redemptionFee = BigDecimal.fromString(redemptionFee)
+  indexEntity.decimals = decimals
 
   let indexAssetArray: Bytes[] = []
 

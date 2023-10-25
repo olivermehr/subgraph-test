@@ -1,7 +1,8 @@
-import { Bytes, BigInt, BigDecimal } from "@graphprotocol/graph-ts"
-import { Index, Account, IndexAsset, IndexAccount, Asset, HistoricalAccountBalances, HistoricalIndexBalances } from "../generated/schema"
+import { Bytes, BigInt, BigDecimal,log, Address, ethereum } from "@graphprotocol/graph-ts"
+import { Index, Account, IndexAsset, IndexAccount, Asset, HistoricalAccountBalance, HistoricalIndexBalance } from "../generated/schema"
 import { VTokenTransfer as VTokenTransferEvent } from "../generated/templates/vault/vault"
 import { Transfer as TransferEvent } from "../generated/templates/indexToken/indexToken"
+import { erc20 as erc20Contract}  from "../generated/indexFactory/erc20"
 
 export function createOrLoadIndexEntity(id: Bytes): Index {
     let index = Index.loadInBlock(id)
@@ -9,6 +10,7 @@ export function createOrLoadIndexEntity(id: Bytes): Index {
         index = Index.load(id)
         if (index == null) {
             index = new Index(id)
+            index.decimals = 0
             index.mintingFee = BigDecimal.zero()
             index.redemptionFee = BigDecimal.zero()
             index.aumFee = BigDecimal.zero()
@@ -65,21 +67,21 @@ export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes): IndexA
     return indexAsset
 }
 
-export function createOrLoadHistoricalIndexBalances(index: Bytes, event: VTokenTransferEvent): HistoricalIndexBalances {
+export function createOrLoadHistoricalIndexBalance(index: Bytes, event: ethereum.Event): HistoricalIndexBalance {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(timestamp.toString())
-    let historicalIndexBalancesEntity = HistoricalIndexBalances.loadInBlock(id)
-    if (historicalIndexBalancesEntity == null) {
-        historicalIndexBalancesEntity = HistoricalIndexBalances.load(id)
-        if (historicalIndexBalancesEntity == null) {
-            historicalIndexBalancesEntity = new HistoricalIndexBalances(id)
-            historicalIndexBalancesEntity.timestamp = timestamp
-            historicalIndexBalancesEntity.index = index
-            historicalIndexBalancesEntity.assets = []
-            historicalIndexBalancesEntity.save()
+    let historicalIndexBalanceEntity = HistoricalIndexBalance.loadInBlock(id)
+    if (historicalIndexBalanceEntity == null) {
+        historicalIndexBalanceEntity = HistoricalIndexBalance.load(id)
+        if (historicalIndexBalanceEntity == null) {
+            historicalIndexBalanceEntity = new HistoricalIndexBalance(id)
+            historicalIndexBalanceEntity.timestamp = timestamp
+            historicalIndexBalanceEntity.index = index
+            historicalIndexBalanceEntity.assets = []
+            historicalIndexBalanceEntity.save()
         }
     }
-    return historicalIndexBalancesEntity
+    return historicalIndexBalanceEntity
 }
 
 export function createOrLoadAssetEntity(id: Bytes): Asset {
@@ -88,26 +90,34 @@ export function createOrLoadAssetEntity(id: Bytes): Asset {
         asset = Asset.load(id)
         if (asset == null) {
             asset = new Asset(id)
+            let callResult = erc20Contract.bind(Address.fromBytes(id)).try_decimals()
+            if(callResult.reverted){
+                asset.decimals = 18
+                log.info("Get decimals reverted for {}",[id.toHexString()])
+            }
+            else{
+                asset.decimals = callResult.value
+            }
             asset.save()
         }
     }
     return asset
 }
 
-export function createOrLoadHistoricalAccountBalances(index : Bytes, account: Bytes, event: TransferEvent): HistoricalAccountBalances {
+export function createOrLoadHistoricalAccountBalance(index : Bytes, account: Bytes, event: TransferEvent): HistoricalAccountBalance {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(account.toHexString().concat(timestamp.toString()))
-    let historicalAccountBalancesEntity = HistoricalAccountBalances.loadInBlock(id)
-    if (historicalAccountBalancesEntity == null) {
-        historicalAccountBalancesEntity = HistoricalAccountBalances.load(id)
-        if (historicalAccountBalancesEntity == null) {
-            historicalAccountBalancesEntity = new HistoricalAccountBalances(id)
-            historicalAccountBalancesEntity.timestamp = timestamp
-            historicalAccountBalancesEntity.index = index
-            historicalAccountBalancesEntity.account = account
-            historicalAccountBalancesEntity.balance = BigDecimal.zero()
-            historicalAccountBalancesEntity.save()
+    let historicalAccountBalanceEntity = HistoricalAccountBalance.loadInBlock(id)
+    if (historicalAccountBalanceEntity == null) {
+        historicalAccountBalanceEntity = HistoricalAccountBalance.load(id)
+        if (historicalAccountBalanceEntity == null) {
+            historicalAccountBalanceEntity = new HistoricalAccountBalance(id)
+            historicalAccountBalanceEntity.timestamp = timestamp
+            historicalAccountBalanceEntity.index = index
+            historicalAccountBalanceEntity.account = account
+            historicalAccountBalanceEntity.balance = BigDecimal.zero()
+            historicalAccountBalanceEntity.save()
         }
     }
-    return historicalAccountBalancesEntity
+    return historicalAccountBalanceEntity
 }

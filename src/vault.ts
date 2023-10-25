@@ -1,25 +1,24 @@
-import { Address, BigInt, Bytes, dataSource } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts"
 import {
-  VTokenTransfer as VTokenTransferEvent
+  VTokenTransfer as VTokenTransferEvent, vault
 } from "../generated/templates/vault/vault"
-import { createOrLoadHistoricalIndexBalances, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
+import { createOrLoadAssetEntity, createOrLoadHistoricalIndexBalance, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
 
 export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let assetAddress = dataSource.context().getBytes('assetAddress')
   let indexAddress = dataSource.context().getBytes('indexAddress')
   let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, assetAddress)
-  if (event.params.from == Address.fromString('0x0000000000000000000000000000000000000000') && event.params.to != Address.fromString('0x0000000000000000000000000000000000000000')) {
-    indexAssetEntity.balance = indexAssetEntity.balance.plus(event.params.amount)
-  }
-  else if (event.params.from != Address.fromString('0x0000000000000000000000000000000000000000') && event.params.to == Address.fromString('0x0000000000000000000000000000000000000000')) {
-    indexAssetEntity.balance = indexAssetEntity.balance.minus(event.params.amount)
-  }
+  let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadAssetEntity(assetAddress).decimals)))
+  let vaultContract = vault.bind(event.address)
+  let indexBalance = vaultContract.lastAssetBalanceOf(Address.fromBytes(indexAddress))
+
+  indexAssetEntity.balance = new BigDecimal(indexBalance).div(scalar)
   indexAssetEntity.save()
 
-  let historicalIndexBalancesEntity = createOrLoadHistoricalIndexBalances(indexAddress, event)
+  let historicalIndexBalanceEntity = createOrLoadHistoricalIndexBalance(indexAddress, event)
   let indexEntity = createOrLoadIndexEntity(indexAddress)
-  historicalIndexBalancesEntity.assets = indexEntity.assets
-  historicalIndexBalancesEntity.save()
+  historicalIndexBalanceEntity.assets = indexEntity.assets
+  historicalIndexBalanceEntity.save()
 
 
 }
