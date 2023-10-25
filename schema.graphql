@@ -40,7 +40,7 @@ type HistoricalIndexBalance @entity {
   id: String!
   timestamp: BigInt!
   index: Index!
-  assets: [IndexAsset!]!
+  assets: [HistoricalIndexAsset!]! @derivedFrom(field:"indexTimestamp")
 }
 
 type HistoricalAccountBalance @entity {
@@ -49,4 +49,21 @@ type HistoricalAccountBalance @entity {
   index: Bytes! 
   account: Account!
   balance: BigDecimal!
+}
+
+type HistoricalIndexAsset @entity {
+  id: String!
+  indexTimestamp: HistoricalIndexBalance!
+  index: Bytes!
+  asset: Bytes!
+  timestamp: BigInt!
+  balance: BigDecimal!
+  weight:Int!
+  
+}
+
+type HistoricalUSVPrice @entity {
+  id:String!
+  timestamp: BigInt!
+  price: BigDecimal!
 }

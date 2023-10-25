@@ -515,17 +515,12 @@ export class HistoricalIndexBalance extends Entity {
     this.set("index", Value.fromBytes(value));
   }
 
-  get assets(): Array<Bytes> {
-    let value = this.get("assets");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytesArray();
-    }
-  }
-
-  set assets(value: Array<Bytes>) {
-    this.set("assets", Value.fromBytesArray(value));
+  get assets(): HistoricalIndexAssetLoader {
+    return new HistoricalIndexAssetLoader(
+      "HistoricalIndexBalance",
+      this.get("id")!.toString(),
+      "assets"
+    );
   }
 }
 
@@ -628,6 +623,198 @@ export class HistoricalAccountBalance extends Entity {
   }
 }
 
+export class HistoricalIndexAsset extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save HistoricalIndexAsset entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type HistoricalIndexAsset must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("HistoricalIndexAsset", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): HistoricalIndexAsset | null {
+    return changetype<HistoricalIndexAsset | null>(
+      store.get_in_block("HistoricalIndexAsset", id)
+    );
+  }
+
+  static load(id: string): HistoricalIndexAsset | null {
+    return changetype<HistoricalIndexAsset | null>(
+      store.get("HistoricalIndexAsset", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get indexTimestamp(): string {
+    let value = this.get("indexTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set indexTimestamp(value: string) {
+    this.set("indexTimestamp", Value.fromString(value));
+  }
+
+  get index(): Bytes {
+    let value = this.get("index");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set index(value: Bytes) {
+    this.set("index", Value.fromBytes(value));
+  }
+
+  get asset(): Bytes {
+    let value = this.get("asset");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set asset(value: Bytes) {
+    this.set("asset", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get balance(): BigDecimal {
+    let value = this.get("balance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set balance(value: BigDecimal) {
+    this.set("balance", Value.fromBigDecimal(value));
+  }
+
+  get weight(): i32 {
+    let value = this.get("weight");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set weight(value: i32) {
+    this.set("weight", Value.fromI32(value));
+  }
+}
+
+export class HistoricalUSVPrice extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save HistoricalUSVPrice entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type HistoricalUSVPrice must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("HistoricalUSVPrice", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): HistoricalUSVPrice | null {
+    return changetype<HistoricalUSVPrice | null>(
+      store.get_in_block("HistoricalUSVPrice", id)
+    );
+  }
+
+  static load(id: string): HistoricalUSVPrice | null {
+    return changetype<HistoricalUSVPrice | null>(
+      store.get("HistoricalUSVPrice", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get price(): BigDecimal {
+    let value = this.get("price");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set price(value: BigDecimal) {
+    this.set("price", Value.fromBigDecimal(value));
+  }
+}
+
 export class HistoricalIndexBalanceLoader extends Entity {
   _entity: string;
   _field: string;
@@ -697,5 +884,23 @@ export class HistoricalAccountBalanceLoader extends Entity {
   load(): HistoricalAccountBalance[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<HistoricalAccountBalance[]>(value);
+  }
+}
+
+export class HistoricalIndexAssetLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): HistoricalIndexAsset[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<HistoricalIndexAsset[]>(value);
   }
 }

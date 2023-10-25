@@ -1,4 +1,4 @@
-specVersion: 0.0.5
+specVersion: 0.0.8
 description: Indexer for Phuture v1 index products
 repository: https://github.com/olivermehr/subgraph-test
 schema:

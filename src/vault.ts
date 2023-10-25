@@ -2,7 +2,8 @@ import { Address, BigDecimal, BigInt, Bytes, dataSource, log } from "@graphproto
 import {
   VTokenTransfer as VTokenTransferEvent, vault
 } from "../generated/templates/vault/vault"
-import { createOrLoadAssetEntity, createOrLoadHistoricalIndexBalance, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
+import { createOrLoadAssetEntity, createOrLoadHistoricalIndexAsset, createOrLoadHistoricalIndexBalance, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
+import { Index, IndexAsset } from "../generated/schema"
 
 export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let assetAddress = dataSource.context().getBytes('assetAddress')
@@ -10,17 +11,19 @@ export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, assetAddress)
   let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadAssetEntity(assetAddress).decimals)))
   let vaultContract = vault.bind(event.address)
-  let indexBalance = vaultContract.lastAssetBalanceOf(Address.fromBytes(indexAddress))
-
-  indexAssetEntity.balance = new BigDecimal(indexBalance).div(scalar)
+  let assetBalance = new BigDecimal(vaultContract.lastAssetBalanceOf(Address.fromBytes(indexAddress)))
+  indexAssetEntity.balance = assetBalance.div(scalar)
   indexAssetEntity.save()
 
-  let historicalIndexBalanceEntity = createOrLoadHistoricalIndexBalance(indexAddress, event)
+  createOrLoadHistoricalIndexBalance(indexAddress, event)
   let indexEntity = createOrLoadIndexEntity(indexAddress)
-  historicalIndexBalanceEntity.assets = indexEntity.assets
-  historicalIndexBalanceEntity.save()
-
-
+  for (let i = 0; i < indexEntity.assets.length; i++){
+    let tempIndexAssetEntity = new IndexAsset(indexEntity.assets[i])
+    let historicalIndexAssetEntity = createOrLoadHistoricalIndexAsset(indexAddress, tempIndexAssetEntity.asset, event)
+    historicalIndexAssetEntity.balance = tempIndexAssetEntity.balance
+    historicalIndexAssetEntity.weight = tempIndexAssetEntity.weight
+    historicalIndexAssetEntity.save()
+  } 
 }
 
 

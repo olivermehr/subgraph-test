@@ -5,11 +5,12 @@ import {
   UpdateAnatomy as UpdateAnatomyEvent
 } from "../generated/templates/indexToken/indexToken"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalance, createOrLoadAssetEntity, createOrLoadAccountEntity } from "./entityCreation"
+import { log } from "matchstick-as"
 
 export function handleTransfer(event: TransferEvent): void {
   let index = createOrLoadIndexEntity(event.address)
   let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(index.decimals)))
-  if (event.params.from != Address.fromString('0x0000000000000000000000000000000000000000')) {
+  if (event.params.from != Address.fromString('0x0000000000000000000000000000000000000000') && event.params.value > BigInt.zero()) {
     let fromAccount = createOrLoadIndexAccountEntity(event.address, event.params.from)
     createOrLoadAccountEntity(event.params.from)
     fromAccount.balance = fromAccount.balance.minus(new BigDecimal(event.params.value).div(scalar))
@@ -22,7 +23,7 @@ export function handleTransfer(event: TransferEvent): void {
     historicalAccountBalanceEntity.balance = fromAccount.balance
     historicalAccountBalanceEntity.save()
   }
-  if (event.params.to != Address.fromString('0x0000000000000000000000000000000000000000')) {
+  if (event.params.to != Address.fromString('0x0000000000000000000000000000000000000000') && event.params.value > BigInt.zero()) {
     let toAccount = createOrLoadIndexAccountEntity(event.address, event.params.to)
     createOrLoadAccountEntity(event.params.to)
     if (toAccount.balance == BigDecimal.zero()) {

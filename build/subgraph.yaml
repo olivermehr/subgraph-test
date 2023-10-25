@@ -1,4 +1,4 @@
-specVersion: 0.0.5
+specVersion: 0.0.8
 description: Indexer for Phuture v1 index products
 repository: https://github.com/olivermehr/subgraph-test
 schema:
@@ -54,14 +54,13 @@ dataSources:
       abis:
         - name: usvVault
           file: usvVault/abis/usvVault.json
-<<<<<<< HEAD
-=======
         - name: erc20
           file: usvVault/abis/erc20.json
->>>>>>> c329e3e (Added USV)
       eventHandlers:
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
+        - event: FCashMinted(indexed address,uint256,uint256)
+          handler: handleFCashMinted
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
         - event: Upgraded(indexed address)

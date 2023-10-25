@@ -1,8 +1,8 @@
-import { Bytes, BigInt, BigDecimal,log, Address, ethereum } from "@graphprotocol/graph-ts"
-import { Index, Account, IndexAsset, IndexAccount, Asset, HistoricalAccountBalance, HistoricalIndexBalance } from "../generated/schema"
+import { Bytes, BigInt, BigDecimal, log, Address, ethereum } from "@graphprotocol/graph-ts"
+import { Index, Account, IndexAsset, IndexAccount, Asset, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalUSVPrice, HistoricalIndexAsset } from "../generated/schema"
 import { VTokenTransfer as VTokenTransferEvent } from "../generated/templates/vault/vault"
 import { Transfer as TransferEvent } from "../generated/templates/indexToken/indexToken"
-import { erc20 as erc20Contract}  from "../generated/indexFactory/erc20"
+import { erc20 as erc20Contract } from "../generated/indexFactory/erc20"
 
 export function createOrLoadIndexEntity(id: Bytes): Index {
     let index = Index.loadInBlock(id)
@@ -67,6 +67,7 @@ export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes): IndexA
     return indexAsset
 }
 
+
 export function createOrLoadHistoricalIndexBalance(index: Bytes, event: ethereum.Event): HistoricalIndexBalance {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(timestamp.toString())
@@ -77,7 +78,6 @@ export function createOrLoadHistoricalIndexBalance(index: Bytes, event: ethereum
             historicalIndexBalanceEntity = new HistoricalIndexBalance(id)
             historicalIndexBalanceEntity.timestamp = timestamp
             historicalIndexBalanceEntity.index = index
-            historicalIndexBalanceEntity.assets = []
             historicalIndexBalanceEntity.save()
         }
     }
@@ -91,11 +91,11 @@ export function createOrLoadAssetEntity(id: Bytes): Asset {
         if (asset == null) {
             asset = new Asset(id)
             let callResult = erc20Contract.bind(Address.fromBytes(id)).try_decimals()
-            if(callResult.reverted){
+            if (callResult.reverted) {
                 asset.decimals = 18
-                log.info("Get decimals reverted for {}",[id.toHexString()])
+                log.info("Get decimals reverted for {}", [id.toHexString()])
             }
-            else{
+            else {
                 asset.decimals = callResult.value
             }
             asset.save()
@@ -104,7 +104,7 @@ export function createOrLoadAssetEntity(id: Bytes): Asset {
     return asset
 }
 
-export function createOrLoadHistoricalAccountBalance(index : Bytes, account: Bytes, event: TransferEvent): HistoricalAccountBalance {
+export function createOrLoadHistoricalAccountBalance(index: Bytes, account: Bytes, event: TransferEvent): HistoricalAccountBalance {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(account.toHexString().concat(timestamp.toString()))
     let historicalAccountBalanceEntity = HistoricalAccountBalance.loadInBlock(id)
@@ -120,4 +120,40 @@ export function createOrLoadHistoricalAccountBalance(index : Bytes, account: Byt
         }
     }
     return historicalAccountBalanceEntity
+}
+
+export function createOrLoadHistoricalUSVPrice(index: Bytes, block: ethereum.Block): HistoricalUSVPrice {
+    let timestamp = block.timestamp.minus(block.timestamp.mod(BigInt.fromI32(86400)))
+    let id = index.toHexString().concat(timestamp.toString())
+    let historicalUSVPriceEntity = HistoricalUSVPrice.loadInBlock(id)
+    if (historicalUSVPriceEntity == null) {
+        historicalUSVPriceEntity = HistoricalUSVPrice.load(id)
+        if (historicalUSVPriceEntity == null) {
+            historicalUSVPriceEntity = new HistoricalUSVPrice(id)
+            historicalUSVPriceEntity.timestamp = timestamp
+            historicalUSVPriceEntity.price = BigDecimal.zero()
+            historicalUSVPriceEntity.save()
+        }
+    }
+    return historicalUSVPriceEntity
+}
+
+export function createOrLoadHistoricalIndexAsset(index: Bytes, asset: Bytes, event: ethereum.Event): HistoricalIndexAsset {
+    let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
+    let id = index.toHexString().concat(asset.toHexString().concat(timestamp.toString()))
+    let historicalIndexAssetEntity = HistoricalIndexAsset.loadInBlock(id)
+    if (historicalIndexAssetEntity == null) {
+        historicalIndexAssetEntity = HistoricalIndexAsset.load(id)
+        if (historicalIndexAssetEntity == null) {
+            historicalIndexAssetEntity = new HistoricalIndexAsset(id)
+            historicalIndexAssetEntity.indexTimestamp = index.toHexString().concat(timestamp.toString())
+            historicalIndexAssetEntity.index = index
+            historicalIndexAssetEntity.asset = asset
+            historicalIndexAssetEntity.timestamp = timestamp
+            historicalIndexAssetEntity.balance= BigDecimal.zero()
+            historicalIndexAssetEntity.weight = 0
+            historicalIndexAssetEntity.save()
+        }
+    }
+    return historicalIndexAssetEntity
 }
