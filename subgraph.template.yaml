@@ -8,7 +8,7 @@ dataSources:
     name: indexFactory
     network: {{network}}
     source:
-      address: {{indexFactory.address}}
+      address: "{{indexFactory.address}}"
       abi: indexFactory
       startBlock: {{indexFactory.startBlock}}
     mapping:
@@ -73,7 +73,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: vault
-    network: mainnet
+    network: {{network}}
     source:
       abi: vault
     mapping:
@@ -92,7 +92,7 @@ templates:
       file: ./src/vault.ts
   - kind: ethereum
     name: indexToken
-    network: mainnet
+    network: {{network}}
     source:
       abi: indexToken
     mapping:
@@ -119,7 +119,7 @@ templates:
       file: ./src/indexToken.ts
   - kind: ethereum
     name: vaultFactory
-    network: mainnet
+    network: {{network}}
     source:
       abi: vaultFactory
     mapping:
@@ -138,7 +138,7 @@ templates:
       file: ./src/vaultFactory.ts
   - kind: ethereum
     name: feePool
-    network: mainnet
+    network: {{network}}
     source:
       abi: feePool
     mapping:
@@ -162,7 +162,7 @@ templates:
       file: ./src/feePool.ts
   - kind: ethereum
     name: indexRegistry
-    network: mainnet
+    network: {{network}}
     source:
       abi: indexRegistry
     mapping:
