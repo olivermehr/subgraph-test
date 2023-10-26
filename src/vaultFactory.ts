@@ -14,6 +14,6 @@ export function handleVTokenCreated(event: VTokenCreatedEvent): void {
   let index = dataSource.context().getBytes('indexAddress')
   let context = new DataSourceContext()
   context.setBytes('assetAddress', event.params.asset)
-  context.setBytes('indexAddress',index)
+  context.setBytes('indexAddress', index)
   vault.createWithContext(event.params.vToken, context)
 }

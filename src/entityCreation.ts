@@ -67,12 +67,12 @@ export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes): IndexA
     return indexAsset
 }
 
-export function loadIndexAssetEntity(id:Bytes):IndexAsset {
+export function loadIndexAssetEntity(id: Bytes): IndexAsset {
     let indexAsset = IndexAsset.loadInBlock(id)
     if (indexAsset == null) {
         indexAsset = IndexAsset.load(id)
         if (indexAsset == null) {
-            log.debug("Should never enter this logic block of loadIndexAssetEntity function",[])
+            log.debug("Should never enter this logic block of loadIndexAssetEntity function", [])
             indexAsset = new IndexAsset(id)
             indexAsset.index = Bytes.fromHexString('0x')
             indexAsset.asset = Bytes.fromHexString('0x')
@@ -168,7 +168,7 @@ export function createOrLoadHistoricalIndexAsset(index: Bytes, asset: Bytes, eve
             historicalIndexAssetEntity.index = index
             historicalIndexAssetEntity.asset = asset
             historicalIndexAssetEntity.timestamp = timestamp
-            historicalIndexAssetEntity.balance= BigDecimal.zero()
+            historicalIndexAssetEntity.balance = BigDecimal.zero()
             historicalIndexAssetEntity.weight = 0
             historicalIndexAssetEntity.save()
         }

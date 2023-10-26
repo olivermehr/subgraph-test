@@ -66,9 +66,6 @@ export function updateBalances(event: ethereum.Event): void {
   }
 }
 
-
-
-
 export function handleUSVPrice(block: ethereum.Block): void {
   let vaultAddress = '0x6bAD6A9BcFdA3fd60Da6834aCe5F93B8cFed9598'
   let vaultContract = usvVault.bind(Address.fromString(vaultAddress))

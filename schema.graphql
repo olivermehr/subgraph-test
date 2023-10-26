@@ -9,6 +9,7 @@ type Index @entity {
   assets: [IndexAsset!]!
   history: [HistoricalIndexBalance!]! @derivedFrom(field:"index")
 }
+
 "Entry point for all information related to accounts"
 type Account @entity {
   id: Bytes!
@@ -59,8 +60,7 @@ type HistoricalIndexAsset @entity {
   asset: Bytes!
   timestamp: BigInt!
   balance: BigDecimal!
-  weight:Int!
-  
+  weight:Int! 
 }
 
 type HistoricalUSVPrice @entity {

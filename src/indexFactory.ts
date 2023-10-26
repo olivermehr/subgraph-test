@@ -5,7 +5,6 @@ import {
 import { feePool, indexRegistry, indexToken, vaultFactory } from "../generated/templates"
 import { indexToken as indexTokenContract } from "../generated/templates/indexToken/indexToken"
 import { indexRegistry as indexRegistryContract } from "../generated/templates/indexRegistry/indexRegistry"
-import { feePool as feePoolContract } from "../generated/templates/feePool/feePool"
 import { createOrLoadAssetEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
 
 export function handleManagedIndexCreated(

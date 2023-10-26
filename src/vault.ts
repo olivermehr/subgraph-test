@@ -3,7 +3,6 @@ import {
   VTokenTransfer as VTokenTransferEvent, vault
 } from "../generated/templates/vault/vault"
 import { createOrLoadAssetEntity, createOrLoadHistoricalIndexAsset, createOrLoadHistoricalIndexBalance, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadIndexAssetEntity } from "./entityCreation"
-import { Index, IndexAsset } from "../generated/schema"
 
 export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let assetAddress = dataSource.context().getBytes('assetAddress')
