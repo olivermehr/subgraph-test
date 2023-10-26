@@ -1,0 +1,8 @@
+{
+    "network": "mainnet",
+    "indexFactory": {
+        "address": "0xb4e85a5BFCd5f247D4BDa1491F57921473dDcE2e",
+        "startBlock": 14832780
+    },
+    "usv": true
+}

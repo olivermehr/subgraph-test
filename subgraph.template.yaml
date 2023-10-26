@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: indexFactory
-    network: mainnet
+    network: {{network}}
     source:
-      address: "0xb4e85a5BFCd5f247D4BDa1491F57921473dDcE2e"
+      address: {{indexFactory.address}}
       abi: indexFactory
-      startBlock: 14832780
+      startBlock: {{indexFactory.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -34,6 +34,7 @@ dataSources:
         - event: ManagedIndexCreated(address,address[],uint8[])
           handler: handleManagedIndexCreated
       file: ./src/indexFactory.ts
+  {{#usv}}
   - kind: ethereum
     name: usvVault
     network: mainnet
@@ -68,6 +69,7 @@ dataSources:
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
       file: ./src/usvVault.ts
+  {{/usv}}
 templates:
   - kind: ethereum
     name: vault

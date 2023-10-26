@@ -8,11 +8,17 @@
     "create-local": "graph create --node http://localhost:8020/ subgraph-test",
     "remove-local": "graph remove --node http://localhost:8020/ subgraph-test",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 subgraph-test",
-    "test": "graph test"
+    "test": "graph test",
+    "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:avalanche": "mustache config/avalanche.json subgraph.template.yaml > subgraph.yaml",
+    "clean": "rm -rf subgraph.yaml"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.59.0",
     "@graphprotocol/graph-ts": "0.30.0"
   },
-  "devDependencies": { "matchstick-as": "0.5.0" }
+  "devDependencies": {
+    "matchstick-as": "0.5.0",
+    "mustache": "^4.2.0"
+  }
 }

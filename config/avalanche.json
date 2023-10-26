@@ -1,0 +1,8 @@
+{
+    "network": "avalanche",
+    "indexFactory": {
+        "address": "0x6d825cE7F220c6cc03fE156F28BE6318e6546Ca8",
+        "startBlock": 19403310
+    },
+    "usv": false
+}
