@@ -30,6 +30,8 @@ dataSources:
           file: ./abis/feePool.json
         - name: erc20
           file: ./abis/erc20.json
+        - name: vaultFactory
+          file: ./abis/vaultFactory.json
       eventHandlers:
         - event: ManagedIndexCreated(address,address[],uint8[])
           handler: handleManagedIndexCreated
@@ -82,6 +84,7 @@ templates:
       language: wasm/assemblyscript
       entities:
         - IndexAsset
+        - Index
         - HistoricalIndexBalances
       abis:
         - name: vault

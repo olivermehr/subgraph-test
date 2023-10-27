@@ -2,9 +2,10 @@ import { Address, BigDecimal, Bytes, DataSourceContext, log, BigInt } from "@gra
 import {
   ManagedIndexCreated as ManagedIndexCreatedEvent
 } from "../generated/indexFactory/indexFactory"
-import { feePool, indexRegistry, indexToken, vaultFactory } from "../generated/templates"
+import { feePool, indexRegistry, indexToken, vault, vaultFactory } from "../generated/templates"
 import { indexToken as indexTokenContract } from "../generated/templates/indexToken/indexToken"
 import { indexRegistry as indexRegistryContract } from "../generated/templates/indexRegistry/indexRegistry"
+import { vaultFactory as vaultFactoryContract } from "../generated/templates/vaultFactory/vaultFactory"
 import { createOrLoadAssetEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "./entityCreation"
 
 export function handleManagedIndexCreated(
@@ -37,6 +38,13 @@ export function handleManagedIndexCreated(
   for (let i = 0; i < event.params._assets.length; i++) {
     let token = event.params._assets[i]
     let weight = event.params._weights[i]
+    let vtokenAddress = vaultFactoryContract.bind(vTokenFactory).vTokenOf(token)
+    if (vtokenAddress != Address.fromString("0x0000000000000000000000000000000000000000")) {
+      let context = new DataSourceContext()
+      context.setBytes('assetAddress', token)
+      context.setBytes('indexAddress', event.params.index)
+      vault.createWithContext(vtokenAddress, context)
+    }
     createOrLoadAssetEntity(token)
     let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index, token)
     indexAssetEntity.weight = weight

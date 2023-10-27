@@ -5,7 +5,6 @@ import {
   UpdateAnatomy as UpdateAnatomyEvent
 } from "../generated/templates/indexToken/indexToken"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalance, createOrLoadAssetEntity, createOrLoadAccountEntity } from "./entityCreation"
-import { log } from "matchstick-as"
 
 export function handleTransfer(event: TransferEvent): void {
   let index = createOrLoadIndexEntity(event.address)
