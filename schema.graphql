@@ -19,6 +19,7 @@ type Account @entity {
 
 type Asset @entity {
   id: Bytes!
+  symbol: String!
   decimals: Int!
   indices: [IndexAsset!]! @derivedFrom(field:"asset")
 }
@@ -63,8 +64,9 @@ type HistoricalIndexAsset @entity {
   weight:Int! 
 }
 
-type HistoricalUSVPrice @entity {
-  id:String!
+type HistoricalPrice @entity {
+  id: String!
+  index: Bytes!
   timestamp: BigInt!
   price: BigDecimal!
 }

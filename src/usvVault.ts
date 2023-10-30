@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, BigInt, Bytes, ethereum, log } from "@graphprotocol/graph-ts"
 import {
   Deposit as DepositEvent,
   FCashMinted as FCashMintedEvent,
@@ -6,7 +6,7 @@ import {
   Withdraw as WithdrawEvent,
   usvVault
 } from "../generated/usvVault/usvVault"
-import { createOrLoadAssetEntity, createOrLoadHistoricalIndexBalance, createOrLoadHistoricalUSVPrice, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, createOrLoadHistoricalIndexAsset, loadIndexAssetEntity } from "./entityCreation"
+import { createOrLoadAssetEntity, createOrLoadHistoricalIndexBalance, createOrLoadHistoricalPrice, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, createOrLoadHistoricalIndexAsset, loadIndexAssetEntity } from "./entityCreation"
 import { IndexAsset } from "../generated/schema"
 export { handleTransfer } from "./indexToken"
 
@@ -66,12 +66,23 @@ export function updateBalances(event: ethereum.Event): void {
   }
 }
 
-export function handleUSVPrice(block: ethereum.Block): void {
+export function usvBlockHandler(block: ethereum.Block): void {
+  log.debug('Block handler being called at {}',[block.number.toString()])
   let vaultAddress = '0x6bAD6A9BcFdA3fd60Da6834aCe5F93B8cFed9598'
   let vaultContract = usvVault.bind(Address.fromString(vaultAddress))
-  let price = new BigDecimal(vaultContract.totalAssets().times(BigInt.fromI32(10).pow(12))).div(new BigDecimal(vaultContract.totalSupply()))
-  let historicalUSVPriceEntity = createOrLoadHistoricalUSVPrice(Bytes.fromHexString(vaultAddress), block)
-  historicalUSVPriceEntity.price = price
-  historicalUSVPriceEntity.save()
-
+  let totalAssetsCall = vaultContract.try_totalAssets()
+  let totalAssetsValue = BigDecimal.zero()
+  if(!totalAssetsCall.reverted){
+    totalAssetsValue = new BigDecimal(totalAssetsCall.value.times(BigInt.fromI32(10).pow(12)))
+  }
+  let totalSupplyCall = vaultContract.try_totalSupply()
+  let totalSupplyValue = BigDecimal.zero()
+  if(!totalSupplyCall.reverted){
+    totalSupplyValue = new BigDecimal(totalSupplyCall.value)
+  }
+  if(totalSupplyValue > BigDecimal.zero()){
+    let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), block)
+    historicalPriceEntity.price = totalAssetsValue.div(totalSupplyValue)
+    historicalPriceEntity.save()
+  }
 }
