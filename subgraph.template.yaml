@@ -58,7 +58,9 @@ dataSources:
         - name: usvVault
           file: ./abis/usvVault.json
         - name: erc20
-          file: ./abis/erc20.json      
+          file: ./abis/erc20.json
+        - name: chainlinkFeedRegistry
+          file: ./abis/chainlinkFeedRegistry.json    
       eventHandlers:
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
