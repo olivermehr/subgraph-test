@@ -91,12 +91,12 @@ export function usvBlockHandler(block: ethereum.Block): void {
       let scalar = new BigDecimal(BigInt.fromI32(10).pow(8))
       let usdcPrice = new BigDecimal(usdcPriceCall.value).div(scalar)
       if (totalAssetsValue == BigDecimal.zero()) {
-        let previousDayTimestamp = block.timestamp.minus(block.timestamp.mod(BigInt.fromI32(86400)).minus(BigInt.fromI32(86400)))
+        let previousDayTimestamp = block.timestamp.minus(block.timestamp.mod(BigInt.fromI32(86400))).minus(BigInt.fromI32(86400))
         let previousDayPrice = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), previousDayTimestamp).price
         let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), block.timestamp)
         historicalPriceEntity.price = previousDayPrice
         historicalPriceEntity.save()
-        log.debug("Call for total assets returned 0 so previous day's price was used", [])
+        log.debug("Call for total assets returned 0 so previous day's price was used. Current timestamp: {}. Previous timestamp {}", [block.timestamp.toString(),previousDayTimestamp.toString()])
       }
       else {
         let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), block.timestamp)
@@ -106,6 +106,6 @@ export function usvBlockHandler(block: ethereum.Block): void {
     }
     else {
       log.debug("USDC price reverted at block number {}", [block.number.toString()])
-    }
+    } 
   }
 }
