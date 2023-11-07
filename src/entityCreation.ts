@@ -159,30 +159,12 @@ export function createOrLoadHistoricalPrice(index: Bytes, blockTimestamp: BigInt
             historicalPriceEntity.index = index
             historicalPriceEntity.timestamp = timestamp
             historicalPriceEntity.price = BigDecimal.zero()
+            historicalPriceEntity.apy = BigDecimal.zero()
             historicalPriceEntity.save()
         }
     }
     return historicalPriceEntity
 }
-
-export function loadHistoricalPriceEntity(id: Bytes): IndexAsset {
-    let indexAsset = IndexAsset.loadInBlock(id)
-    if (indexAsset == null) {
-        indexAsset = IndexAsset.load(id)
-        if (indexAsset == null) {
-            log.debug("Should never enter this logic block of loadIndexAssetEntity function", [])
-            indexAsset = new IndexAsset(id)
-            indexAsset.index = Bytes.fromHexString('0x')
-            indexAsset.asset = Bytes.fromHexString('0x')
-            indexAsset.balance = BigDecimal.zero()
-            indexAsset.weight = 0
-            indexAsset.save()
-        }
-    }
-    return indexAsset
-
-}
-
 
 export function createOrLoadHistoricalIndexAsset(index: Bytes, asset: Bytes, event: ethereum.Event): HistoricalIndexAsset {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))

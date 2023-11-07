@@ -115,8 +115,5 @@ export function usvBlockHandler(block: ethereum.Block): void {
     let apy = new BigDecimal(apyCall.value).div(scalar)
     historicalPriceEntity.apy = apy
   }
-  else{
-    historicalPriceEntity.apy = BigDecimal.zero()
-  }
   historicalPriceEntity.save()
 }
