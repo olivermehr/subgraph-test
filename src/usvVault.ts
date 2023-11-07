@@ -10,6 +10,7 @@ import { createOrLoadAssetEntity, createOrLoadHistoricalIndexBalance, createOrLo
 import { chainlinkFeedRegistry } from "../generated/usvVault/chainlinkFeedRegistry"
 export { handleTransfer } from "./indexToken"
 import { convertAUMFeeRate } from "./feePool"
+import { usvViews } from "../generated/usvVault/usvViews"
 
 export function handleDeposit(event: DepositEvent): void {
   updateBalances(event)
@@ -74,6 +75,7 @@ export function usvBlockHandler(block: ethereum.Block): void {
   let usdcAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
   let usdDenom = '0x0000000000000000000000000000000000000348'
   let chainlinkFeedRegistryAddress = '0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf'
+  let usvViewAddress = '0xE574beBdDB460e3E0588F1001D24441102339429'
   let vaultContract = usvVault.bind(Address.fromString(vaultAddress))
   let totalAssetsCall = vaultContract.try_totalAssets()
   let totalAssetsValue = BigDecimal.zero()
@@ -85,6 +87,7 @@ export function usvBlockHandler(block: ethereum.Block): void {
   if (!totalSupplyCall.reverted) {
     totalSupplyValue = new BigDecimal(totalSupplyCall.value)
   }
+  let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), block.timestamp)
   if (totalSupplyValue > BigDecimal.zero()) {
     let usdcPriceCall = chainlinkFeedRegistry.bind(Address.fromString(chainlinkFeedRegistryAddress)).try_latestAnswer(Address.fromString(usdcAddress), Address.fromString(usdDenom))
     if (!usdcPriceCall.reverted) {
@@ -93,19 +96,27 @@ export function usvBlockHandler(block: ethereum.Block): void {
       if (totalAssetsValue == BigDecimal.zero()) {
         let previousDayTimestamp = block.timestamp.minus(block.timestamp.mod(BigInt.fromI32(86400))).minus(BigInt.fromI32(86400))
         let previousDayPrice = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), previousDayTimestamp).price
-        let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), block.timestamp)
         historicalPriceEntity.price = previousDayPrice
-        historicalPriceEntity.save()
-        log.debug("Call for total assets returned 0 so previous day's price was used. Current timestamp: {}. Previous timestamp {}", [block.timestamp.toString(),previousDayTimestamp.toString()])
+        
+        log.debug("Call for total assets returned 0 so previous day's price was used. Current timestamp: {}. Previous timestamp {}", [block.timestamp.toString(), previousDayTimestamp.toString()])
       }
       else {
-        let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), block.timestamp)
         historicalPriceEntity.price = totalAssetsValue.div(totalSupplyValue).times(usdcPrice)
-        historicalPriceEntity.save()
       }
     }
     else {
       log.debug("USDC price reverted at block number {}", [block.number.toString()])
-    } 
+    }
   }
+  let usvViewsContract = usvViews.bind(Address.fromString(usvViewAddress))
+  let apyCall = usvViewsContract.try_getAPY(Address.fromString(vaultAddress))
+  if(!apyCall.reverted){
+    let scalar = new BigDecimal(BigInt.fromI32(10).pow(9))
+    let apy = new BigDecimal(apyCall.value).div(scalar)
+    historicalPriceEntity.apy = apy
+  }
+  else{
+    historicalPriceEntity.apy = BigDecimal.zero()
+  }
+  historicalPriceEntity.save()
 }

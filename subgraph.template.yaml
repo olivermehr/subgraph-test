@@ -61,6 +61,8 @@ dataSources:
           file: ./abis/erc20.json
         - name: chainlinkFeedRegistry
           file: ./abis/chainlinkFeedRegistry.json    
+        - name: usvViews
+          file: ./abis/usvViews.json
       eventHandlers:
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
