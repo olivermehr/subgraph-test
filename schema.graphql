@@ -69,4 +69,5 @@ type HistoricalPrice @entity {
   index: Bytes!
   timestamp: BigInt!
   price: BigDecimal!
+  apy: BigDecimal!
 }
