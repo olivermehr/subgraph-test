@@ -87,8 +87,8 @@ export function usvBlockHandler(block: ethereum.Block): void {
   if (!totalSupplyCall.reverted) {
     totalSupplyValue = new BigDecimal(totalSupplyCall.value)
   }
-  let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), block.timestamp)
   if (totalSupplyValue > BigDecimal.zero()) {
+    let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), block.timestamp)
     let usdcPriceCall = chainlinkFeedRegistry.bind(Address.fromString(chainlinkFeedRegistryAddress)).try_latestAnswer(Address.fromString(usdcAddress), Address.fromString(usdDenom))
     if (!usdcPriceCall.reverted) {
       let scalar = new BigDecimal(BigInt.fromI32(10).pow(8))
@@ -97,7 +97,6 @@ export function usvBlockHandler(block: ethereum.Block): void {
         let previousDayTimestamp = block.timestamp.minus(block.timestamp.mod(BigInt.fromI32(86400))).minus(BigInt.fromI32(86400))
         let previousDayPrice = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), previousDayTimestamp).price
         historicalPriceEntity.price = previousDayPrice
-        
         log.debug("Call for total assets returned 0 so previous day's price was used. Current timestamp: {}. Previous timestamp {}", [block.timestamp.toString(), previousDayTimestamp.toString()])
       }
       else {
@@ -107,13 +106,17 @@ export function usvBlockHandler(block: ethereum.Block): void {
     else {
       log.debug("USDC price reverted at block number {}", [block.number.toString()])
     }
+    let usvViewsContract = usvViews.bind(Address.fromString(usvViewAddress))
+    let apyCall = usvViewsContract.try_getAPY(Address.fromString(vaultAddress))
+    if (!apyCall.reverted && apyCall.value != BigInt.zero()) {
+      let scalar = new BigDecimal(BigInt.fromI32(10).pow(9))
+      let apy = new BigDecimal(apyCall.value).div(scalar)
+      historicalPriceEntity.apy = apy
+    }
+    else {
+      let apy = BigDecimal.fromString("0.031864313")
+      historicalPriceEntity.apy = apy
+    }
+    historicalPriceEntity.save()
   }
-  let usvViewsContract = usvViews.bind(Address.fromString(usvViewAddress))
-  let apyCall = usvViewsContract.try_getAPY(Address.fromString(vaultAddress))
-  if(!apyCall.reverted){
-    let scalar = new BigDecimal(BigInt.fromI32(10).pow(9))
-    let apy = new BigDecimal(apyCall.value).div(scalar)
-    historicalPriceEntity.apy = apy
-  }
-  historicalPriceEntity.save()
 }

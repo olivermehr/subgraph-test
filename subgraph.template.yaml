@@ -36,7 +36,36 @@ dataSources:
         - event: ManagedIndexCreated(address,address[],uint8[])
           handler: handleManagedIndexCreated
       file: ./src/indexFactory.ts
-  {{#usv}}
+  {{#ethereum}}
+  - kind: ethereum
+    name: ephtr
+    network: mainnet
+    source:
+      address: "0x3b9805E163b3750e7f13a26B06F030f2d3b799F5"
+      abi: erc20
+      startBlock: 12561997
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Index
+        - Asset
+        - IndexAsset
+        - Account
+        - IndexAccount
+      abis:
+        - name: erc20
+          file: ./abis/erc20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      blockHandlers:
+        - handler: ephtrBlockHandler
+          filter:
+            kind: polling
+            every: 5000
+      file: ./src/ephtr.ts
   - kind: ethereum
     name: usvVault
     network: mainnet
@@ -80,7 +109,7 @@ dataSources:
             kind: polling
             every: 5000
       file: ./src/usvVault.ts
-  {{/usv}}
+  {{/ethereum}}
 templates:
   - kind: ethereum
     name: vault

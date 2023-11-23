@@ -17,7 +17,6 @@ export function handleTransfer(event: TransferEvent): void {
       index.holders = index.holders.minus(BigInt.fromI32(1))
     }
     fromAccount.save()
-
     let historicalAccountBalanceEntity = createOrLoadHistoricalAccountBalance(event.address, event.params.from, event)
     historicalAccountBalanceEntity.balance = fromAccount.balance
     historicalAccountBalanceEntity.save()
