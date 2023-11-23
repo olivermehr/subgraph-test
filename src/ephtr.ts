@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, ByteArray, Bytes, dataSource, ethereum } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, BigInt, ByteArray, Bytes, bigDecimal, dataSource, ethereum, log } from "@graphprotocol/graph-ts"
 import {
     Transfer as TransferEvent, erc20
 } from "../generated/indexFactory/erc20"
@@ -56,7 +56,7 @@ export function handleTransfer(event: TransferEvent): void {
 
 export function ephtrBlockHandler(block: ethereum.Block): void {
     let ephtrAddress = '0x3b9805E163b3750e7f13a26B06F030f2d3b799F5'
-    let phtrAddress = '0x3b9805E163b3750e7f13a26B06F030f2d3b799F5'
+    let phtrAddress = '0xE1Fc4455f62a6E89476f1072530C20CF1A0622dA'
     let emissionsAddress = '0x4819CecF672177F37e5450Fa6DC78d9BaAfa74be'
     let indexAssetEntity = createOrLoadIndexAssetEntity(Bytes.fromHexString(ephtrAddress), Bytes.fromHexString(phtrAddress))
     let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(ephtrAddress), block.timestamp)
@@ -64,19 +64,19 @@ export function ephtrBlockHandler(block: ethereum.Block): void {
     let emissionsContract = emissions.bind(Address.fromString(emissionsAddress))
 
     let phtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadAssetEntity(Bytes.fromHexString(phtrAddress)).decimals)))
-    let ephtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadIndexEntity(Bytes.fromHexString(phtrAddress)).decimals)))
-
     
     let phtrBalance = new BigDecimal(phtrContract.balanceOf(Address.fromString(ephtrAddress)))
+    let totalSupply = new BigDecimal(erc20.bind(Address.fromString(ephtrAddress)).totalSupply()).minus(new BigDecimal(BigInt.fromI32(10000)))
+    log.debug("balance :{} total supply : {}",[phtrBalance.toString(),totalSupply.toString()])
 
-    if (phtrBalance > BigDecimal.zero()){
+    if (phtrBalance > BigDecimal.zero() && totalSupply > BigDecimal.zero()){
         let withdrawableAmount = new BigDecimal(emissionsContract.withdrawable())
         phtrBalance = phtrBalance.plus(withdrawableAmount).div(phtrScalar)
     
         indexAssetEntity.balance = phtrBalance
     
-        let totalSupply = new BigDecimal(erc20.bind(Address.fromString(ephtrAddress)).totalSupply()).minus(new BigDecimal(BigInt.fromI32(10000)))
-        totalSupply = totalSupply.div(ephtrScalar)
+        
+        totalSupply = totalSupply.div(phtrScalar)
     
         let price = phtrBalance.div(totalSupply)
         

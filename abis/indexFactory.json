@@ -1,7 +1,11 @@
 [
   {
     "inputs": [
-      { "internalType": "address", "name": "_registry", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "_registry",
+        "type": "address"
+      },
       {
         "internalType": "address",
         "name": "_vTokenFactory",
@@ -129,25 +133,53 @@
   {
     "inputs": [],
     "name": "MAX_AUM_FEE",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAX_FEE_IN_BP",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address[]", "name": "_assets", "type": "address[]" },
-      { "internalType": "uint8[]", "name": "_weights", "type": "uint8[]" },
+      {
+        "internalType": "address[]",
+        "name": "_assets",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint8[]",
+        "name": "_weights",
+        "type": "uint8[]"
+      },
       {
         "components": [
-          { "internalType": "string", "name": "name", "type": "string" },
-          { "internalType": "string", "name": "symbol", "type": "string" }
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "symbol",
+            "type": "string"
+          }
         ],
         "internalType": "struct IIndexFactory.NameDetails",
         "name": "_nameDetails",
@@ -156,7 +188,11 @@
     ],
     "name": "createIndex",
     "outputs": [
-      { "internalType": "address", "name": "index", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "index",
+        "type": "address"
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -164,35 +200,65 @@
   {
     "inputs": [],
     "name": "defaultAUMScaledPerSecondsRate",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "defaultBurningFeeInBP",
-    "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "defaultMintingFeeInBP",
-    "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "registry",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "reweightingLogic",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -211,7 +277,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint16", "name": "_burningFeeInBP", "type": "uint16" }
+      {
+        "internalType": "uint16",
+        "name": "_burningFeeInBP",
+        "type": "uint16"
+      }
     ],
     "name": "setDefaultBurningFeeInBP",
     "outputs": [],
@@ -220,7 +290,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint16", "name": "_mintingFeeInBP", "type": "uint16" }
+      {
+        "internalType": "uint16",
+        "name": "_mintingFeeInBP",
+        "type": "uint16"
+      }
     ],
     "name": "setDefaultMintingFeeInBP",
     "outputs": [],
@@ -242,23 +316,43 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes4", "name": "_interfaceId", "type": "bytes4" }
+      {
+        "internalType": "bytes4",
+        "name": "_interfaceId",
+        "type": "bytes4"
+      }
     ],
     "name": "supportsInterface",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "vTokenFactory",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_index", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_index",
+        "type": "address"
+      }
     ],
     "name": "withdrawToFeePool",
     "outputs": [],
