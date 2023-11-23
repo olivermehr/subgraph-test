@@ -84,5 +84,10 @@ export function ephtrBlockHandler(block: ethereum.Block): void {
         historicalPriceEntity.save()
         indexAssetEntity.save()
     }
+
+    else {
+        historicalPriceEntity.price = BigDecimal.fromString("1.00")
+        historicalPriceEntity.save()
+    }
   
 }
