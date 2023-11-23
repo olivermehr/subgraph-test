@@ -1,6 +1,8 @@
 "Entry point for all information related to index products"
 type Index @entity {
   id: Bytes!
+  name: String!
+  symbol: String!
   decimals: Int!
   mintingFee: BigDecimal!
   redemptionFee: BigDecimal!

@@ -11,6 +11,8 @@ export function createOrLoadIndexEntity(id: Bytes): Index {
         if (index == null) {
             index = new Index(id)
             index.decimals = 0
+            index.name = ""
+            index.symbol = ""
             index.mintingFee = BigDecimal.zero()
             index.redemptionFee = BigDecimal.zero()
             index.aumFee = BigDecimal.zero()
@@ -130,7 +132,7 @@ export function createOrLoadAssetEntity(id: Bytes): Asset {
     return asset
 }
 
-export function createOrLoadHistoricalAccountBalance(index: Bytes, account: Bytes, event: TransferEvent): HistoricalAccountBalance {
+export function createOrLoadHistoricalAccountBalance(index: Bytes, account: Bytes, event: ethereum.Event): HistoricalAccountBalance {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(account.toHexString().concat(timestamp.toString()))
     let historicalAccountBalanceEntity = HistoricalAccountBalance.loadInBlock(id)

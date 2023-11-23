@@ -19,7 +19,11 @@ export function handleDeposit(event: DepositEvent): void {
 export function handleUpgraded(event: UpgradedEvent): void {
   let indexEntity = createOrLoadIndexEntity(event.address)
   let usvContract = usvVault.bind(event.address)
+  let name = usvContract.name()
+  let symbol = usvContract.symbol()
   indexEntity.decimals = usvContract.decimals()
+  indexEntity.name = name
+  indexEntity.symbol = symbol
   indexEntity.mintingFee = new BigDecimal(usvContract.MINTING_FEE_IN_BP()).div(new BigDecimal(BigInt.fromI32(10000)))
   indexEntity.redemptionFee = new BigDecimal(usvContract.BURNING_FEE_IN_BP()).div(new BigDecimal(BigInt.fromI32(10000)))
   let aumFee = usvContract.AUM_SCALED_PER_SECONDS_RATE()

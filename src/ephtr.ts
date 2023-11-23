@@ -2,13 +2,20 @@ import { Address, BigDecimal, BigInt, ByteArray, Bytes, dataSource, ethereum } f
 import {
     Transfer as TransferEvent, erc20
 } from "../generated/indexFactory/erc20"
+import { emissions } from "../generated/ephtr/emissions"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalance, createOrLoadAssetEntity, createOrLoadAccountEntity, createOrLoadHistoricalPrice } from "./entityCreation"
 
 export function handleTransfer(event: TransferEvent): void {
     let index = createOrLoadIndexEntity(event.address)
     let phtrAddress = '0x3b9805E163b3750e7f13a26B06F030f2d3b799F5'
     if (index.decimals == 0) {
-        index.decimals = 18
+        let ephtrContract = erc20.bind(event.address)
+        let decimals = ephtrContract.decimals()
+        let name = ephtrContract.name()
+        let symbol = ephtrContract.symbol()
+        index.decimals = decimals
+        index.name = name 
+        index.symbol = symbol
         createOrLoadAssetEntity(Bytes.fromHexString(phtrAddress))
         let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, Bytes.fromHexString(phtrAddress))
         indexAssetEntity.weight = 255
@@ -44,12 +51,6 @@ export function handleTransfer(event: TransferEvent): void {
         historicalAccountBalanceEntity.balance = toAccount.balance
         historicalAccountBalanceEntity.save()
     }
-    let phtrContract = erc20.bind(Address.fromHexString(phtrAddress))
-    let phtrBalance = new BigDecimal(phtrContract.balanceOf(Address.fromBytes(event.address)))
-    let indexAssetEntity = createOrLoadIndexAssetEntity(event.address,Bytes.fromHexString(phtrAddress))
-    let phtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadAssetEntity(Bytes.fromHexString(phtrAddress)).decimals)))
-    indexAssetEntity.balance = phtrBalance.div(phtrScalar)
-    indexAssetEntity.save()
     index.save()
 }
 
@@ -57,19 +58,31 @@ export function ephtrBlockHandler(block: ethereum.Block): void {
     let ephtrAddress = '0x3b9805E163b3750e7f13a26B06F030f2d3b799F5'
     let phtrAddress = '0x3b9805E163b3750e7f13a26B06F030f2d3b799F5'
     let emissionsAddress = '0x4819CecF672177F37e5450Fa6DC78d9BaAfa74be'
-    let indexAssetEntity = createOrLoadIndexAssetEntity(Bytes.fromHexString(ephtrAddress),Bytes.fromHexString(phtrAddress))
-    let phtrContract = erc20.bind(Address.fromHexString(phtrAddress))
-    let emissionsContract = emissions.bind(Address.fromHexString(emissionsAddress))
-    let phtrBalance = new BigDecimal(phtrContract.balanceOf(Address.fromHexString(ephtrAddress)))
-    let phtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadAssetEntity(Bytes.fromHexString(phtrAddress)).decimals)))
-    let withdrawableAmount = new BigDecimal(emissionsContract.withdrawable()).div(phtrScalar)
-    phtrBalance = phtrBalance.div(phtrScalar).plus(withdrawableAmount)
-    indexAssetEntity.balance = phtrBalance
-    let totalSupply = new BigDecimal(erc20.bind(Address.fromHexString(ephtrAddress)).totalSupply()).minus(new BigDecimal(BigInt.fromI32(10000)))
-    let ephtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadIndexEntity(Bytes.fromHexString(phtrAddress)).decimals)))
-    totalSupply = totalSupply.div(ephtrScalar)
-    let price = phtrBalance.div(totalSupply)
-    let historicalPrice = createOrLoadHistoricalPrice(Bytes.fromHexString(ephtrAddress),block.timestamp)
-    historicalPrice.price = price
+    let indexAssetEntity = createOrLoadIndexAssetEntity(Bytes.fromHexString(ephtrAddress), Bytes.fromHexString(phtrAddress))
+    let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(ephtrAddress), block.timestamp)
+    let phtrContract = erc20.bind(Address.fromString(phtrAddress))
+    let emissionsContract = emissions.bind(Address.fromString(emissionsAddress))
 
+    let phtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadAssetEntity(Bytes.fromHexString(phtrAddress)).decimals)))
+    let ephtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadIndexEntity(Bytes.fromHexString(phtrAddress)).decimals)))
+
+    
+    let phtrBalance = new BigDecimal(phtrContract.balanceOf(Address.fromString(ephtrAddress)))
+
+    if (phtrBalance > BigDecimal.zero()){
+        let withdrawableAmount = new BigDecimal(emissionsContract.withdrawable())
+        phtrBalance = phtrBalance.plus(withdrawableAmount).div(phtrScalar)
+    
+        indexAssetEntity.balance = phtrBalance
+    
+        let totalSupply = new BigDecimal(erc20.bind(Address.fromString(ephtrAddress)).totalSupply()).minus(new BigDecimal(BigInt.fromI32(10000)))
+        totalSupply = totalSupply.div(ephtrScalar)
+    
+        let price = phtrBalance.div(totalSupply)
+        
+        historicalPriceEntity.price = price
+        historicalPriceEntity.save()
+        indexAssetEntity.save()
+    }
+  
 }

@@ -16,6 +16,8 @@ export function handleManagedIndexCreated(
   let decimals = indexContract.decimals()
   let vTokenFactory = indexContract.vTokenFactory()
   let registry = indexContract.registry()
+  let name = indexContract.name()
+  let symbol = indexContract.symbol()
 
   indexToken.create(event.params.index)
 
@@ -32,6 +34,8 @@ export function handleManagedIndexCreated(
 
   let indexEntity = createOrLoadIndexEntity(event.params.index)
   indexEntity.decimals = decimals
+  indexEntity.name = name
+  indexEntity.symbol = symbol
 
   let indexAssetArray: Bytes[] = []
 

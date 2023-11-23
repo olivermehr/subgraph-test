@@ -57,6 +57,8 @@ dataSources:
       abis:
         - name: erc20
           file: ./abis/erc20.json
+        - name: emissions
+          file: ./abis/emissions.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
