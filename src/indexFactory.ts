@@ -1,4 +1,4 @@
-import { Address, BigDecimal, Bytes, DataSourceContext, log, BigInt } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, Bytes, DataSourceContext, log, BigInt, dataSource } from "@graphprotocol/graph-ts"
 import {
   ManagedIndexCreated as ManagedIndexCreatedEvent
 } from "../generated/indexFactory/indexFactory"
@@ -11,7 +11,7 @@ import { createOrLoadAssetEntity, createOrLoadIndexAssetEntity, createOrLoadInde
 export function handleManagedIndexCreated(
   event: ManagedIndexCreatedEvent
 ): void {
-
+  let chainID = dataSource.context().getI32('chainID')
   let indexContract = indexTokenContract.bind(event.params.index)
   let decimals = indexContract.decimals()
   let vTokenFactory = indexContract.vTokenFactory()
@@ -36,6 +36,7 @@ export function handleManagedIndexCreated(
   indexEntity.decimals = decimals
   indexEntity.name = name
   indexEntity.symbol = symbol
+  indexEntity.chainID = chainID
 
   let indexAssetArray: Bytes[] = []
 

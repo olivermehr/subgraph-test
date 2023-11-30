@@ -7,6 +7,10 @@ dataSources:
   - kind: ethereum
     name: indexFactory
     network: {{network}}
+    context:
+      chainID:
+      type: Int
+      data: {{chainID}}
     source:
       address: "{{indexFactory.address}}"
       abi: indexFactory

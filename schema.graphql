@@ -4,6 +4,7 @@ type Index @entity {
   name: String!
   symbol: String!
   decimals: Int!
+  chainID: Int!
   mintingFee: BigDecimal!
   redemptionFee: BigDecimal!
   aumFee: BigDecimal!
