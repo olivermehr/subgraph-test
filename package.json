@@ -11,7 +11,7 @@
     "test": "graph test",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
     "prepare:avalanche": "mustache config/avalanche.json subgraph.template.yaml > subgraph.yaml",
-    "clean": "rm -rf subgraph.yaml"
+    "clean": "rm -rf subgraph.yaml && graph clean "
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.59.0",

@@ -9,8 +9,8 @@ dataSources:
     network: {{network}}
     context:
       chainID:
-      type: Int
-      data: {{chainID}}
+        type: Int
+        data: {{chainID}}
     source:
       address: "{{indexFactory.address}}"
       abi: indexFactory
