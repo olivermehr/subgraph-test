@@ -11,7 +11,7 @@ import { createOrLoadAssetEntity, createOrLoadIndexAssetEntity, createOrLoadInde
 export function handleManagedIndexCreated(
   event: ManagedIndexCreatedEvent
 ): void {
-  let chainID = dataSource.context().getI32('chainID')
+  let chainID = dataSource.context().getBigInt('chainID')
   let indexContract = indexTokenContract.bind(event.params.index)
   let decimals = indexContract.decimals()
   let vTokenFactory = indexContract.vTokenFactory()

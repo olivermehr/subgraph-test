@@ -9,7 +9,7 @@ dataSources:
     network: {{network}}
     context:
       chainID:
-        type: Int
+        type: BigInt
         data: {{chainID}}
     source:
       address: "{{indexFactory.address}}"

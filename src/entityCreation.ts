@@ -13,7 +13,7 @@ export function createOrLoadIndexEntity(id: Bytes): Index {
             index.decimals = 0
             index.name = ""
             index.symbol = ""
-            index.chainID = 0
+            index.chainID = BigInt.zero()
             index.mintingFee = BigDecimal.zero()
             index.redemptionFee = BigDecimal.zero()
             index.aumFee = BigDecimal.zero()
