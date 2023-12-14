@@ -1,0 +1,17 @@
+{
+    "network": "mainnet",
+    "chainID": 1,
+    "v1": {
+        "indexFactory": {
+            "address": "0xb4e85a5BFCd5f247D4BDa1491F57921473dDcE2e",
+            "startBlock": 14832780
+        }
+    },
+    "ethereum": true,
+    "v2": {
+        "indexFactory": {
+            "address": "0x0000000000000000000000000000000000000000",
+            "startBlock": 1
+        }
+    }
+}
