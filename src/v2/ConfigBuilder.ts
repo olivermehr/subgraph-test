@@ -75,6 +75,4 @@ export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     indexAssetEntity.save()
 }
 
-export function handleRebalancingCompletion(event: FinishRebalancingEvent): void {
-
-}
+// export function handleRebalancingCompletion(event: FinishRebalancingEvent): void {}
