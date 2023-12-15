@@ -12,13 +12,9 @@ import { ERC20 } from "../../generated/IndexFactoryV1/ERC20"
 export function handleManagedIndexCreated(
   event: ManagedIndexCreatedEvent
 ): void {
-  let chainID = dataSource.context().getBigInt('chainID')
   let indexContract = indexTokenContract.bind(event.params.index)
-  let decimals = indexContract.decimals()
   let vTokenFactory = indexContract.vTokenFactory()
   let registry = indexContract.registry()
-  let name = indexContract.name()
-  let symbol = indexContract.symbol()
 
   IndexTokenV1.create(event.params.index)
 
@@ -34,10 +30,10 @@ export function handleManagedIndexCreated(
   FeePool.create(feePoolAddress)
 
   let indexEntity = createOrLoadIndexEntity(event.params.index)
-  indexEntity.decimals = decimals
-  indexEntity.name = name
-  indexEntity.symbol = symbol
-  indexEntity.chainID = chainID
+  indexEntity.decimals = indexContract.decimals()
+  indexEntity.name = indexContract.name()
+  indexEntity.symbol = indexContract.symbol()
+  indexEntity.chainID = dataSource.context().getBigInt('chainID')
   indexEntity.creationDate = event.block.timestamp
   indexEntity.version = "v1"
 
