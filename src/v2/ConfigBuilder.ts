@@ -1,5 +1,5 @@
 import { Bytes, BigInt, Address, ethereum, DataSourceContext, dataSource, BigDecimal, log } from "@graphprotocol/graph-ts";
-import {createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation";
+import { createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation";
 import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
 
@@ -25,7 +25,7 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
 
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
-    let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress,event.params.currency)
+    let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, event.params.currency)
     indexAssetEntity.chainID = event.params.chainId
     indexAssetEntity.name = event.params.name
     indexAssetEntity.symbol = event.params.symbol

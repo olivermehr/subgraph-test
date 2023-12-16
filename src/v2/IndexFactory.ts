@@ -22,6 +22,7 @@ export function handleIndexDeployed(event: DeployedEvent): void {
     index.chainID = chainID
     index.version = "v2"
     index.creationDate = event.block.timestamp
+    index.k = BigInt.fromI64(1e18)
     let reserveContract = ERC20.bind(event.params.reserve)
     let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index,event.params.reserve)
     indexAssetEntity.name = reserveContract.name()

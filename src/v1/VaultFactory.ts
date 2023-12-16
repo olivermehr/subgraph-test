@@ -11,5 +11,4 @@ export function handleVTokenCreated(event: VTokenCreatedEvent): void {
   context.setBytes('assetAddress', event.params.asset)
   context.setBytes('indexAddress', index)
   Vault.createWithContext(event.params.vToken, context)
-  log.debug("Vault contract should be created {}",[event.params.vToken.toHexString()])
 }
