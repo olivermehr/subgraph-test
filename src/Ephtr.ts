@@ -3,7 +3,7 @@ import {
     Transfer as TransferEvent, ERC20
 } from "../generated/IndexFactoryV1/ERC20"
 import { Emissions } from "../generated/ephtr/Emissions"
-import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalance, createOrLoadAccountEntity, createOrLoadHistoricalPrice } from "./EntityCreation"
+import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalanceEntity, createOrLoadAccountEntity, createOrLoadHistoricalPriceEntity } from "./EntityCreation"
 
 export function handleTransfer(event: TransferEvent): void {
     let index = createOrLoadIndexEntity(event.address)
@@ -43,7 +43,7 @@ export function handleTransfer(event: TransferEvent): void {
             index.holders = index.holders.minus(BigInt.fromI32(1))
         }
         fromAccount.save()
-        let historicalAccountBalanceEntity = createOrLoadHistoricalAccountBalance(event.address, event.params.from, event)
+        let historicalAccountBalanceEntity = createOrLoadHistoricalAccountBalanceEntity(event.address, event.params.from, event)
         historicalAccountBalanceEntity.balance = fromAccount.balance
         historicalAccountBalanceEntity.save()
     }
@@ -58,7 +58,7 @@ export function handleTransfer(event: TransferEvent): void {
         }
         toAccount.balance = toAccount.balance.plus(new BigDecimal(event.params.value).div(scalar))
         toAccount.save()
-        let historicalAccountBalanceEntity = createOrLoadHistoricalAccountBalance(event.address, event.params.to, event)
+        let historicalAccountBalanceEntity = createOrLoadHistoricalAccountBalanceEntity(event.address, event.params.to, event)
         historicalAccountBalanceEntity.balance = toAccount.balance
         historicalAccountBalanceEntity.save()
     }
@@ -73,7 +73,7 @@ export function ephtrBlockHandler(block: ethereum.Block): void {
     let phtrAddress = '0xE1Fc4455f62a6E89476f1072530C20CF1A0622dA'
     let emissionsAddress = '0x4819CecF672177F37e5450Fa6DC78d9BaAfa74be'
     let indexAssetEntity = createOrLoadIndexAssetEntity(Bytes.fromHexString(ephtrAddress), Bytes.fromHexString(phtrAddress))
-    let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(ephtrAddress), block.timestamp)
+    let historicalPriceEntity = createOrLoadHistoricalPriceEntity(Bytes.fromHexString(ephtrAddress), block.timestamp)
     let phtrContract = ERC20.bind(Address.fromString(phtrAddress))
     let emissionsContract = Emissions.bind(Address.fromString(emissionsAddress))
 

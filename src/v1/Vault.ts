@@ -2,7 +2,7 @@ import { Address, BigDecimal, BigInt, Bytes, dataSource, log } from "@graphproto
 import {
   VTokenTransfer as VTokenTransferEvent, Vault
 } from "../../generated/templates/Vault/Vault"
-import { createOrLoadHistoricalIndexAsset, createOrLoadHistoricalIndexBalance, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadIndexAssetEntity } from "../EntityCreation"
+import { createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadIndexAssetEntity } from "../EntityCreation"
 import { ERC20 } from "../../generated/IndexFactoryV1/ERC20"
 
 export function handleVTokenTransfer(event: VTokenTransferEvent): void {
@@ -22,11 +22,11 @@ export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   indexAssetEntity.balance = assetBalance.div(scalar)
   indexAssetEntity.save()
 
-  createOrLoadHistoricalIndexBalance(indexAddress, event)
+  createOrLoadHistoricalIndexBalanceEntity(indexAddress, event)
   let indexEntity = createOrLoadIndexEntity(indexAddress)
   for (let i = 0; i < indexEntity.assets.length; i++){
     let tempIndexAssetEntity = loadIndexAssetEntity(indexEntity.assets[i])
-    let historicalIndexAssetEntity = createOrLoadHistoricalIndexAsset(indexAddress, tempIndexAssetEntity.asset, event)
+    let historicalIndexAssetEntity = createOrLoadHistoricalIndexAssetEntity(indexAddress, tempIndexAssetEntity.asset, event)
     historicalIndexAssetEntity.balance = tempIndexAssetEntity.balance
     historicalIndexAssetEntity.weight = tempIndexAssetEntity.weight
     historicalIndexAssetEntity.save()

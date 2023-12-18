@@ -13,7 +13,7 @@ type Index @entity {
   k: BigInt
   totalSupply: BigDecimal!
   holders: BigInt!
-  assets: [IndexAsset!]!
+  assets: [ChainIDToAssetMapping!]!
   history: [HistoricalIndexBalance!]! @derivedFrom(field:"index")
 }
 
@@ -81,4 +81,10 @@ enum ProtocolVersion {
   Undefined
   v1
   v2
+}
+
+type ChainIDToAssetMapping @entity {
+  id: String!
+  chainID: BigInt!
+  assets: [IndexAsset!]!
 }

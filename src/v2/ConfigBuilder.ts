@@ -1,6 +1,6 @@
 import { Bytes, BigInt, Address, ethereum, DataSourceContext, dataSource, BigDecimal, log } from "@graphprotocol/graph-ts";
-import { createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation";
-import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
+import { createOrLoadChainIDToAssetMappingEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation";
+import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
 
 export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
@@ -34,4 +34,26 @@ export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     indexAssetEntity.save()
 }
 
-// export function handleRebalancingCompletion(event: FinishRebalancingEvent): void {}
+export function handleFinishChainRebalancing(event: FinishChainRebalancing): void {
+    let indexAddress = dataSource.context().getBytes('indexAddress')
+    let indexEntity = createOrLoadIndexEntity(indexAddress)
+    if (event.params.currencies.length == 0) {
+        let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(indexAddress, event.params.chainId)
+        let chainID
+        for (let i = 0; i < chainIDToAssetMappingEntity.assets.length; i++){
+
+
+        }
+
+
+            let indexAssets = indexEntity.assets
+        let idx = indexAssets.indexOf(chainIDToAssetMappingEntity.id)
+        indexAssets.splice(idx, 1)
+
+
+    }
+
+
+
+
+}

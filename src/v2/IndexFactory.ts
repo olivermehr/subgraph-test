@@ -1,5 +1,5 @@
 import { Deployed as DeployedEvent } from "../../generated/IndexFactoryV2/IndexFactoryV2"
-import { createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation"
+import { createOrLoadChainIDToAssetMappingEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation"
 import { Governance as GovernanceTemplate, IndexTokenV2 as indexTemplate } from "../../generated/templates"
 import { BigInt, Bytes, DataSourceContext, dataSource } from "@graphprotocol/graph-ts"
 import { IndexTokenV2 } from "../../generated/IndexFactoryV2/IndexTokenV2"
@@ -30,9 +30,17 @@ export function handleIndexDeployed(event: DeployedEvent): void {
     indexAssetEntity.decimals = reserveContract.decimals()
     indexAssetEntity.chainID = chainID
     indexAssetEntity.currencyID = BigInt.fromI32(0)
-    let indexAssetArray: Bytes[] = []
-    indexAssetArray.push(indexAssetEntity.id)
+
+    let chainIDAssetArray: Bytes[] = []
+    let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.params.index,chainID)
+    chainIDAssetArray.push(indexAssetEntity.id)
+    chainIDToAssetMappingEntity.assets = chainIDAssetArray
+    
+
+    let indexAssetArray : string[] = []
+    indexAssetArray.push(chainIDToAssetMappingEntity.id)
     index.assets = indexAssetArray
+    chainIDToAssetMappingEntity.save()
     indexAssetEntity.save()
     index.save()
 }

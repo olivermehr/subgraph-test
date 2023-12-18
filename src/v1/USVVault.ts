@@ -6,7 +6,7 @@ import {
   Withdraw as WithdrawEvent,
   USVVault
 } from "../../generated/USVVault/USVVault"
-import { createOrLoadAssetEntity, createOrLoadHistoricalIndexBalance, createOrLoadHistoricalPrice, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, createOrLoadHistoricalIndexAsset, loadIndexAssetEntity } from "../EntityCreation"
+import { createOrLoadAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadHistoricalPriceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, createOrLoadHistoricalIndexAssetEntity, loadIndexAssetEntity } from "../EntityCreation"
 import { ChainlinkFeedRegistry } from "../../generated/USVVault/ChainlinkFeedRegistry"
 export { handleTransfer } from "./IndexToken"
 import { convertAUMFeeRate } from "./FeePool"
@@ -61,11 +61,11 @@ export function updateBalances(event: ethereum.Event): void {
   indexAssetEntity.balance = new BigDecimal(totalAssets).div(scalar)
   indexAssetEntity.save()
 
-  createOrLoadHistoricalIndexBalance(event.address, event)
+  createOrLoadHistoricalIndexBalanceEntity(event.address, event)
   let indexEntity = createOrLoadIndexEntity(event.address)
   for (let i = 0; i < indexEntity.assets.length; i++) {
     let tempIndexAssetEntity = loadIndexAssetEntity(indexEntity.assets[i])
-    let historicalIndexAssetEntity = createOrLoadHistoricalIndexAsset(event.address, tempIndexAssetEntity.asset, event)
+    let historicalIndexAssetEntity = createOrLoadHistoricalIndexAssetEntity(event.address, tempIndexAssetEntity.asset, event)
     historicalIndexAssetEntity.balance = tempIndexAssetEntity.balance
     historicalIndexAssetEntity.weight = tempIndexAssetEntity.weight
     historicalIndexAssetEntity.save()
@@ -92,14 +92,14 @@ export function usvBlockHandler(block: ethereum.Block): void {
     totalSupplyValue = new BigDecimal(totalSupplyCall.value)
   }
   if (totalSupplyValue > BigDecimal.zero()) {
-    let historicalPriceEntity = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), block.timestamp)
+    let historicalPriceEntity = createOrLoadHistoricalPriceEntity(Bytes.fromHexString(vaultAddress), block.timestamp)
     let usdcPriceCall = ChainlinkFeedRegistry.bind(Address.fromString(chainlinkFeedRegistryAddress)).try_latestAnswer(Address.fromString(usdcAddress), Address.fromString(usdDenom))
     if (!usdcPriceCall.reverted) {
       let scalar = new BigDecimal(BigInt.fromI32(10).pow(8))
       let usdcPrice = new BigDecimal(usdcPriceCall.value).div(scalar)
       if (totalAssetsValue == BigDecimal.zero()) {
         let previousDayTimestamp = block.timestamp.minus(block.timestamp.mod(BigInt.fromI32(86400))).minus(BigInt.fromI32(86400))
-        let previousDayPrice = createOrLoadHistoricalPrice(Bytes.fromHexString(vaultAddress), previousDayTimestamp).price
+        let previousDayPrice = createOrLoadHistoricalPriceEntity(Bytes.fromHexString(vaultAddress), previousDayTimestamp).price
         historicalPriceEntity.price = previousDayPrice
         log.debug("Call for total assets returned 0 so previous day's price was used. Current timestamp: {}. Previous timestamp {}", [block.timestamp.toString(), previousDayTimestamp.toString()])
       }

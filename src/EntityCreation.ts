@@ -1,5 +1,5 @@
 import { Bytes, BigInt, BigDecimal, log, Address, ethereum } from "@graphprotocol/graph-ts"
-import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset } from "../generated/schema"
+import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset, ChainIDToAssetMapping } from "../generated/schema"
 import { VTokenTransfer as VTokenTransferEvent } from "../generated/templates/vault/vault"
 import { Transfer as TransferEvent } from "../generated/templates/IndexTokenV1/IndexTokenV1"
 import { ERC20 as erc20Contract } from "../generated/IndexFactoryV1/ERC20"
@@ -96,7 +96,7 @@ export function loadIndexAssetEntity(id: Bytes): IndexAsset {
 }
 
 
-export function createOrLoadHistoricalIndexBalance(index: Bytes, event: ethereum.Event): HistoricalIndexBalance {
+export function createOrLoadHistoricalIndexBalanceEntity(index: Bytes, event: ethereum.Event): HistoricalIndexBalance {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(timestamp.toString())
     let historicalIndexBalanceEntity = HistoricalIndexBalance.loadInBlock(id)
@@ -112,7 +112,7 @@ export function createOrLoadHistoricalIndexBalance(index: Bytes, event: ethereum
     return historicalIndexBalanceEntity
 }
 
-export function createOrLoadHistoricalAccountBalance(index: Bytes, account: Bytes, event: ethereum.Event): HistoricalAccountBalance {
+export function createOrLoadHistoricalAccountBalanceEntity(index: Bytes, account: Bytes, event: ethereum.Event): HistoricalAccountBalance {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(account.toHexString().concat(timestamp.toString()))
     let historicalAccountBalanceEntity = HistoricalAccountBalance.loadInBlock(id)
@@ -130,7 +130,7 @@ export function createOrLoadHistoricalAccountBalance(index: Bytes, account: Byte
     return historicalAccountBalanceEntity
 }
 
-export function createOrLoadHistoricalPrice(index: Bytes, blockTimestamp: BigInt): HistoricalPrice {
+export function createOrLoadHistoricalPriceEntity(index: Bytes, blockTimestamp: BigInt): HistoricalPrice {
     let timestamp = blockTimestamp.minus(blockTimestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(timestamp.toString())
     let historicalPriceEntity = HistoricalPrice.loadInBlock(id)
@@ -148,7 +148,7 @@ export function createOrLoadHistoricalPrice(index: Bytes, blockTimestamp: BigInt
     return historicalPriceEntity
 }
 
-export function createOrLoadHistoricalIndexAsset(index: Bytes, asset: Bytes, event: ethereum.Event): HistoricalIndexAsset {
+export function createOrLoadHistoricalIndexAssetEntity(index: Bytes, asset: Bytes, event: ethereum.Event): HistoricalIndexAsset {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(asset.toHexString().concat(timestamp.toString()))
     let historicalIndexAssetEntity = HistoricalIndexAsset.loadInBlock(id)
@@ -166,4 +166,36 @@ export function createOrLoadHistoricalIndexAsset(index: Bytes, asset: Bytes, eve
         }
     }
     return historicalIndexAssetEntity
+}
+
+export function createOrLoadChainIDToAssetMappingEntity(index : Bytes, chainID : BigInt): ChainIDToAssetMapping {
+    let id = index.toString().concat(chainID.toString())
+    let chainIDToAssetMappingEntity = ChainIDToAssetMapping.loadInBlock(id)
+    if (chainIDToAssetMappingEntity == null) {
+        chainIDToAssetMappingEntity = ChainIDToAssetMapping.load(id)
+        if (chainIDToAssetMappingEntity == null) {
+            chainIDToAssetMappingEntity = new ChainIDToAssetMapping(id)
+            chainIDToAssetMappingEntity.chainID = chainID
+            chainIDToAssetMappingEntity.assets = []
+            chainIDToAssetMappingEntity.save()
+        }
+    }
+    return chainIDToAssetMappingEntity
+
+}
+
+export function loadChainIDToAssetMappingEntity(id: string): ChainIDToAssetMapping {
+    let chainIDToAssetMappingEntity = ChainIDToAssetMapping.loadInBlock(id)
+    if (chainIDToAssetMappingEntity == null) {
+        chainIDToAssetMappingEntity = ChainIDToAssetMapping.load(id)
+        if (chainIDToAssetMappingEntity == null) {
+            log.debug("Should never enter this logic block of loadChainIDToAssetMappingEntity function", [])
+            chainIDToAssetMappingEntity = new ChainIDToAssetMapping(id)
+            chainIDToAssetMappingEntity.chainID = BigInt.zero()
+            chainIDToAssetMappingEntity.assets = []
+            chainIDToAssetMappingEntity.save()
+        }
+    }
+    return chainIDToAssetMappingEntity
+
 }

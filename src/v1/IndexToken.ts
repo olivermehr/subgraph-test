@@ -4,7 +4,7 @@ import {
   Transfer as TransferEvent,
   UpdateAnatomy as UpdateAnatomyEvent
 } from "../../generated/templates/IndexTokenV1/IndexTokenV1"
-import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalance, createOrLoadAccountEntity } from "../EntityCreation"
+import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalanceEntity, createOrLoadAccountEntity } from "../EntityCreation"
 import { ERC20 } from "../../generated/IndexFactoryV1/ERC20"
 
 export function handleTransfer(event: TransferEvent): void {
@@ -18,7 +18,7 @@ export function handleTransfer(event: TransferEvent): void {
       index.holders = index.holders.minus(BigInt.fromI32(1))
     }
     fromAccount.save()
-    let historicalAccountBalanceEntity = createOrLoadHistoricalAccountBalance(event.address, event.params.from, event)
+    let historicalAccountBalanceEntity = createOrLoadHistoricalAccountBalanceEntity(event.address, event.params.from, event)
     historicalAccountBalanceEntity.balance = fromAccount.balance
     historicalAccountBalanceEntity.save()
   }
@@ -34,7 +34,7 @@ export function handleTransfer(event: TransferEvent): void {
     toAccount.balance = toAccount.balance.plus(new BigDecimal(event.params.value).div(scalar))
     toAccount.save()
 
-    let historicalAccountBalanceEntity = createOrLoadHistoricalAccountBalance(event.address, event.params.to, event)
+    let historicalAccountBalanceEntity = createOrLoadHistoricalAccountBalanceEntity(event.address, event.params.to, event)
     historicalAccountBalanceEntity.balance = toAccount.balance
     historicalAccountBalanceEntity.save()
   }
