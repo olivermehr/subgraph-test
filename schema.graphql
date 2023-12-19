@@ -25,7 +25,7 @@ type Account @entity {
 }
 
 type IndexAsset @entity {
-  id: Bytes!
+  id: String!
   chainID: BigInt!
   currencyID: BigInt
   symbol: String!
@@ -64,6 +64,7 @@ type HistoricalIndexAsset @entity {
   indexTimestamp: HistoricalIndexBalance!
   index: Bytes!
   asset: Bytes!
+  chainID: BigInt!
   timestamp: BigInt!
   balance: BigDecimal!
   weight:Int! 

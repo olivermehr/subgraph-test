@@ -24,14 +24,14 @@ export function handleIndexDeployed(event: DeployedEvent): void {
     index.creationDate = event.block.timestamp
     index.k = BigInt.fromI64(1e18)
     let reserveContract = ERC20.bind(event.params.reserve)
-    let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index,event.params.reserve)
+    let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index,event.params.reserve,chainID)
     indexAssetEntity.name = reserveContract.name()
     indexAssetEntity.symbol = reserveContract.symbol()
     indexAssetEntity.decimals = reserveContract.decimals()
     indexAssetEntity.chainID = chainID
     indexAssetEntity.currencyID = BigInt.fromI32(0)
 
-    let chainIDAssetArray: Bytes[] = []
+    let chainIDAssetArray: string[] = []
     let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.params.index,chainID)
     chainIDAssetArray.push(indexAssetEntity.id)
     chainIDToAssetMappingEntity.assets = chainIDAssetArray

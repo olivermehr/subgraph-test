@@ -2,20 +2,23 @@ import { Deposit as DepositEvent, Withdraw as WithdrawEvent } from "../../genera
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, loadIndexAssetEntity, createOrLoadChainIDToAssetMappingEntity, loadChainIDToAssetMappingEntity } from "../EntityCreation"
 import { BigDecimal, Bytes, Address, BigInt, dataSource } from "@graphprotocol/graph-ts"
 export { handleTransfer } from "../v1/IndexToken"
+import { saveHistoricalData } from "./ConfigBuilder"
 
 export function handleDeposit(event: DepositEvent): void {
+    let indexEntity = createOrLoadIndexEntity(event.address)
     let reserveAsset = dataSource.context().getBytes('reserveAsset')
-    let reserveAssetEntity = createOrLoadIndexAssetEntity(event.address, reserveAsset)
-    let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadIndexAssetEntity(event.address, reserveAsset).decimals)))
+    let reserveAssetEntity = createOrLoadIndexAssetEntity(event.address, reserveAsset,indexEntity.chainID)
+    let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(reserveAssetEntity.decimals)))
     let amount = new BigDecimal(event.params.reserve).div(scalar)
     reserveAssetEntity.balance = reserveAssetEntity.balance.plus(amount)
     reserveAssetEntity.save()
+    saveHistoricalData(event.address,event)
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
     let indexEntity = createOrLoadIndexEntity(event.address)
     let reserveAsset = dataSource.context().getBytes('reserveAsset')
-    let reserveAssetEntity = createOrLoadIndexAssetEntity(event.address, reserveAsset)
+    let reserveAssetEntity = createOrLoadIndexAssetEntity(event.address, reserveAsset,indexEntity.chainID)
     let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(reserveAssetEntity.decimals)))
     let amount = new BigDecimal(event.params.reserve).div(scalar)
     reserveAssetEntity.balance = reserveAssetEntity.balance.minus(amount)
@@ -35,4 +38,5 @@ export function handleWithdraw(event: WithdrawEvent): void {
         indexEntity.k = indexEntity.k.minus(event.params.k)
         indexEntity.save()
     }
+    saveHistoricalData(event.address,event)
 }

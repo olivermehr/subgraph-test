@@ -56,8 +56,8 @@ export function createOrLoadIndexAccountEntity(index: Bytes, account: Bytes): In
     return indexAccount
 }
 
-export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes): IndexAsset {
-    let id = index.concat(asset)
+export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes, chainID: BigInt): IndexAsset {
+    let id = index.toString().concat(chainID.toString()).concat(asset.toString())
     let indexAsset = IndexAsset.loadInBlock(id)
     if (indexAsset == null) {
         indexAsset = IndexAsset.load(id)
@@ -77,7 +77,7 @@ export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes): IndexA
     return indexAsset
 }
 
-export function loadIndexAssetEntity(id: Bytes): IndexAsset {
+export function loadIndexAssetEntity(id: string): IndexAsset {
     let indexAsset = IndexAsset.loadInBlock(id)
     if (indexAsset == null) {
         indexAsset = IndexAsset.load(id)
@@ -86,6 +86,10 @@ export function loadIndexAssetEntity(id: Bytes): IndexAsset {
             indexAsset = new IndexAsset(id)
             indexAsset.index = Bytes.fromHexString('0x')
             indexAsset.asset = Bytes.fromHexString('0x')
+            indexAsset.chainID = BigInt.zero()
+            indexAsset.name = ""
+            indexAsset.symbol = ""
+            indexAsset.decimals = 0
             indexAsset.balance = BigDecimal.zero()
             indexAsset.weight = 0
             indexAsset.save()
@@ -114,7 +118,7 @@ export function createOrLoadHistoricalIndexBalanceEntity(index: Bytes, event: et
 
 export function createOrLoadHistoricalAccountBalanceEntity(index: Bytes, account: Bytes, event: ethereum.Event): HistoricalAccountBalance {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
-    let id = index.toHexString().concat(account.toHexString().concat(timestamp.toString()))
+    let id = index.toHexString().concat(account.toHexString()).concat(timestamp.toString())
     let historicalAccountBalanceEntity = HistoricalAccountBalance.loadInBlock(id)
     if (historicalAccountBalanceEntity == null) {
         historicalAccountBalanceEntity = HistoricalAccountBalance.load(id)
@@ -148,9 +152,9 @@ export function createOrLoadHistoricalPriceEntity(index: Bytes, blockTimestamp: 
     return historicalPriceEntity
 }
 
-export function createOrLoadHistoricalIndexAssetEntity(index: Bytes, asset: Bytes, event: ethereum.Event): HistoricalIndexAsset {
+export function createOrLoadHistoricalIndexAssetEntity(index: Bytes, asset: Bytes, chainID:BigInt, event: ethereum.Event): HistoricalIndexAsset {
     let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
-    let id = index.toHexString().concat(asset.toHexString().concat(timestamp.toString()))
+    let id = index.toHexString().concat(chainID.toString()).concat(asset.toHexString()).concat(timestamp.toString())
     let historicalIndexAssetEntity = HistoricalIndexAsset.loadInBlock(id)
     if (historicalIndexAssetEntity == null) {
         historicalIndexAssetEntity = HistoricalIndexAsset.load(id)
@@ -159,6 +163,7 @@ export function createOrLoadHistoricalIndexAssetEntity(index: Bytes, asset: Byte
             historicalIndexAssetEntity.indexTimestamp = index.toHexString().concat(timestamp.toString())
             historicalIndexAssetEntity.index = index
             historicalIndexAssetEntity.asset = asset
+            historicalIndexAssetEntity.chainID = chainID
             historicalIndexAssetEntity.timestamp = timestamp
             historicalIndexAssetEntity.balance = BigDecimal.zero()
             historicalIndexAssetEntity.weight = 0
@@ -168,7 +173,7 @@ export function createOrLoadHistoricalIndexAssetEntity(index: Bytes, asset: Byte
     return historicalIndexAssetEntity
 }
 
-export function createOrLoadChainIDToAssetMappingEntity(index : Bytes, chainID : BigInt): ChainIDToAssetMapping {
+export function createOrLoadChainIDToAssetMappingEntity(index: Bytes, chainID: BigInt): ChainIDToAssetMapping {
     let id = index.toString().concat(chainID.toString())
     let chainIDToAssetMappingEntity = ChainIDToAssetMapping.loadInBlock(id)
     if (chainIDToAssetMappingEntity == null) {
