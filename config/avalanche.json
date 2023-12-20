@@ -1,0 +1,14 @@
+{
+    "network": "avalanche",
+    "chainID": 43114,
+    "v1": {
+        "indexFactory": {
+            "address": "0x6d825cE7F220c6cc03fE156F28BE6318e6546Ca8",
+            "startBlock": 19403311
+        }
+    },
+    "v2": false,
+    "ephtr":false,
+    "savingsVaults":false
+
+}
