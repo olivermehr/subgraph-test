@@ -1,7 +1,0 @@
-{
-    "network": "arbitrum-one",
-    "chainID": 42161,
-    "v1": false,
-    "v2": true,
-    "ethereum": false
-}
