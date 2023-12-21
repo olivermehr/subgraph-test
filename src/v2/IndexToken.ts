@@ -36,7 +36,7 @@ export function handleWithdraw(event: WithdrawEvent): void {
                 indexAssetEntity.save()
             }
         }
-        indexEntity.k = indexEntity.k!.minus(event.params.k)
+        indexEntity.k = k.minus(event.params.k)
         indexEntity.save()
     }
     saveHistoricalData(event.address, event.block.timestamp)

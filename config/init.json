@@ -1,0 +1,27 @@
+{
+    "network": "mainnet",
+    "chainID": 1,
+    "v1": {
+        "indexFactory": {
+            "address": "0x0000000000000000000000000000000000000000",
+            "startBlock": 1
+        }
+    },
+    "v2": {
+        "indexFactory": {
+            "address": "0x0000000000000000000000000000000000000000",
+            "startBlock": 1
+        }
+    },
+    "ephtr": true,
+    "savingsVaults": [
+        {
+            "name": "USVVault",
+            "address": "0x0000000000000000000000000000000000000000",
+            "vaultAsset": "0x0000000000000000000000000000000000000000",
+            "viewAddress": "0x0000000000000000000000000000000000000000",
+            "chainlinkFeedRegistryAddress": "0x0000000000000000000000000000000000000000",
+            "startBlock": 1
+        }
+    ]
+}

@@ -7,12 +7,7 @@
             "startBlock": 14832780
         }
     },
-    "v2": {
-        "indexFactory": {
-            "address": "0x0000000000000000000000000000000000000000",
-            "startBlock": 1
-        }
-    },
+    "v2":false,
     "ephtr": true,
     "savingsVaults": [
         {
