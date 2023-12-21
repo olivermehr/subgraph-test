@@ -325,8 +325,6 @@ templates:
           handler: handleWithdraw
         - event: FeeAccrued(uint96,uint96)
           handler: handleFeeAccrued
-        - event: FeeSettled(uint96)
-          handler: handleFeeSettled
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/v2/IndexToken.ts

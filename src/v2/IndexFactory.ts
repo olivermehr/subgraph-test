@@ -1,7 +1,7 @@
 import { Deployed as DeployedEvent } from "../../generated/IndexFactoryV2/IndexFactoryV2"
 import { createOrLoadChainIDToAssetMappingEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation"
 import { Governance as GovernanceTemplate, IndexTokenV2 as indexTemplate } from "../../generated/templates"
-import { Address, BigInt, Bytes, DataSourceContext, dataSource, log } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, BigInt, Bytes, DataSourceContext, dataSource, log } from "@graphprotocol/graph-ts"
 import { IndexTokenV2 } from "../../generated/IndexFactoryV2/IndexTokenV2"
 import { ERC20 } from "../../generated/IndexFactoryV2/ERC20"
 
@@ -23,7 +23,8 @@ export function handleIndexDeployed(event: DeployedEvent): void {
     index.version = "v2"
     index.creationDate = event.block.timestamp
     index.k = BigInt.fromI32(1).pow(18)
-    index.latestSnapshot = BigInt.fromI32(0)
+    index.latestSnapshot = BigInt.zero()
+    index.totalFees = BigDecimal.zero()
     let reserveContract = ERC20.bind(event.params.reserve)
     let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index, event.params.reserve, chainID)
     if (event.params.reserve != Address.fromString('0x0000000000000000000000000000000000000000')) {

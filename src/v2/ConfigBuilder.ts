@@ -7,20 +7,15 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
     let decoded = ethereum.decode('((uint256,bool,address),(uint16,bool),(address,uint16,bool))', event.params.param0)!.toTuple()
-    if (decoded != null) {
-        log.debug("Decoded message: {}", [decoded.toString()])
-        let aumFee = decoded[0].toTuple()[0].toArray()[0].toBigInt()
-        convertAUMFeeRate(indexAddress, aumFee)
-        let scalar = new BigDecimal(BigInt.fromI32(10000))
-        let mintingFee = new BigDecimal(decoded[1].toTuple()[0].toArray()[0].toBigInt()).div(scalar)
-        let redemptionFee = new BigDecimal(decoded[2].toTuple()[0].toArray()[1].toBigInt()).div(scalar)
-        indexEntity.mintingFee = mintingFee
-        indexEntity.redemptionFee = redemptionFee
-        indexEntity.save()
-    }
-    else {
-        log.debug("Config was not successfully decoded.", [])
-    }
+    let aumFee = decoded[0].toTuple()[0].toBigInt()
+    convertAUMFeeRate(indexAddress, aumFee)
+    let scalar = new BigDecimal(BigInt.fromI32(10000))
+    let mintingFee = new BigDecimal(decoded[1].toTuple()[0].toBigInt()).div(scalar)
+    let redemptionFee = new BigDecimal(decoded[2].toTuple()[1].toBigInt()).div(scalar)
+    log.debug('fees: {},{}',[mintingFee.toString(),redemptionFee.toString()])
+    indexEntity.mintingFee = mintingFee
+    indexEntity.redemptionFee = redemptionFee
+    indexEntity.save()
 }
 
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
@@ -112,10 +107,10 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
             let indexAssetEntity = loadIndexAssetEntity(chainIDToAssetMappingEntity.assets[y])
             let historicalIndexAssetEntity = createOrLoadHistoricalIndexAssetEntity(index, indexAssetEntity.asset, chainID, timestamp)
             historicalIndexAssetEntity.balance = indexAssetEntity.balance
-            if (indexAssetEntity.weight!){
+            if (indexAssetEntity.weight!) {
                 historicalIndexAssetEntity.weight = indexAssetEntity.weight
             }
-                historicalIndexAssetEntity.save()
+            historicalIndexAssetEntity.save()
         }
     }
 }

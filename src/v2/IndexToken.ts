@@ -1,4 +1,4 @@
-import { Deposit as DepositEvent, Withdraw as WithdrawEvent } from "../../generated/templates/IndexTokenV2/IndexTokenV2"
+import { Deposit as DepositEvent, FeeAccrued, Withdraw as WithdrawEvent } from "../../generated/templates/IndexTokenV2/IndexTokenV2"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, loadIndexAssetEntity, loadChainIDToAssetMappingEntity } from "../EntityCreation"
 import { BigDecimal, Bytes, Address, BigInt, dataSource } from "@graphprotocol/graph-ts"
 export { handleTransfer } from "../v1/IndexToken"
@@ -40,4 +40,13 @@ export function handleWithdraw(event: WithdrawEvent): void {
         indexEntity.save()
     }
     saveHistoricalData(event.address, event.block.timestamp)
+}
+
+export function handleFeeAccrued(event:FeeAccrued):void {
+    let indexEntity = createOrLoadIndexEntity(event.address)
+    let fees = new BigDecimal(event.params.AUMFee.plus(event.params.baseFee))
+    let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexEntity.decimals)))
+    fees = fees.div(scalar)
+    indexEntity.totalFees = indexEntity.totalFees!.plus(fees)
+    indexEntity.save()
 }
