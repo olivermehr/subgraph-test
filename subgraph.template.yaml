@@ -81,7 +81,13 @@ dataSources:
     context:
       chainID:
         type: BigInt
-        data: {{chainID}}    
+        data: {{chainID}}
+      phtrAddress:
+        type: Bytes
+        data: "0xE1Fc4455f62a6E89476f1072530C20CF1A0622dA"
+      emissionsAddress:
+      type: Bytes
+      data: "0x4819CecF672177F37e5450Fa6DC78d9BaAfa74be"
     source:
       address: "0x3b9805E163b3750e7f13a26B06F030f2d3b799F5"
       abi: ERC20
@@ -122,9 +128,9 @@ dataSources:
       vaultAsset:
         type: Bytes
         data: "{{vaultAsset}}"
-      usvViewAddress:
+      viewAddress:
         type: Bytes
-        data: "{{usvViewAddress}}"
+        data: "{{viewAddress}}"
       chainlinkFeedRegistryAddress:
         type: Bytes
         data: "{{chainlinkFeedRegistryAddress}}"
@@ -163,11 +169,11 @@ dataSources:
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
       blockHandlers:
-        - handler: {{blockHandler}}
+        - handler: SavingsVaultBlockHandler
           filter:
             kind: polling
             every: 5000
-      file: ./src/v1/{{name}}.ts
+      file: ./src/v1/SavingsVault.ts
 {{/savingsVaults}}
 templates:
 {{#v1}}

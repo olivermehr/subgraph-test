@@ -19,10 +19,9 @@
             "name": "USVVault",
             "address": "0x6bAD6A9BcFdA3fd60Da6834aCe5F93B8cFed9598",
             "vaultAsset": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-            "usvViewAddress": "0xE574beBdDB460e3E0588F1001D24441102339429",
+            "viewAddress": "0xE574beBdDB460e3E0588F1001D24441102339429",
             "chainlinkFeedRegistryAddress": "0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf",
-            "startBlock": 15597128,
-            "blockHandler": "usvBlockHandler"
+            "startBlock": 15597128
         }
     ]
 }

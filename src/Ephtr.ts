@@ -3,35 +3,37 @@ import {
     Transfer as TransferEvent, ERC20
 } from "../generated/IndexFactoryV1/ERC20"
 import { Emissions } from "../generated/ephtr/Emissions"
-import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalanceEntity, createOrLoadAccountEntity, createOrLoadHistoricalPriceEntity } from "./EntityCreation"
+import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalanceEntity, createOrLoadAccountEntity, createOrLoadHistoricalPriceEntity, createOrLoadChainIDToAssetMappingEntity } from "./EntityCreation"
+import { saveHistoricalData } from "./v2/ConfigBuilder"
 
 export function handleTransfer(event: TransferEvent): void {
     let index = createOrLoadIndexEntity(event.address)
-    let phtrAddress = '0x3b9805E163b3750e7f13a26B06F030f2d3b799F5'
+    let phtrAddress = dataSource.context().getBytes("phtrAddress")
     if (index.decimals == 0) {
         let ephtrContract = ERC20.bind(event.address)
         let decimals = ephtrContract.decimals()
-        let name = ephtrContract.name()
-        let symbol = ephtrContract.symbol()
         let chainID = dataSource.context().getBigInt('chainID')
         index.decimals = decimals
-        index.name = name
-        index.symbol = symbol
+        index.name = ephtrContract.name()
+        index.symbol = ephtrContract.symbol()
         index.chainID = chainID
         index.creationDate = event.block.timestamp
         index.version = 'v1'
-        let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, Bytes.fromHexString(phtrAddress))
-        let phtrContract = ERC20.bind(Address.fromString(phtrAddress))
+        let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address,chainID)
+        let indexAssetEntity = createOrLoadIndexAssetEntity(event.address,phtrAddress,chainID)
+        let phtrContract = ERC20.bind(phtrAddress)
         indexAssetEntity.chainID = chainID
         indexAssetEntity.decimals = decimals
         indexAssetEntity.symbol = phtrContract.symbol()
-        indexAssetEntity.decimals = phtrContract.decimals()
         indexAssetEntity.name = phtrContract.name()
         indexAssetEntity.weight = 255
-        let indexAssetArray: Bytes[] = []
-        indexAssetArray.push(indexAssetEntity.id)
-        index.assets = indexAssetArray
         indexAssetEntity.save()
+
+        let chainIDAssetArray: string[] = []
+        chainIDAssetArray.push(indexAssetEntity.id)
+        chainIDToAssetMappingEntity.assets = chainIDAssetArray
+        chainIDToAssetMappingEntity.save()
+        index.assets = [chainIDToAssetMappingEntity.id]
         index.save()
     }
     let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(index.decimals)))
@@ -69,27 +71,26 @@ export function handleTransfer(event: TransferEvent): void {
 }
 
 export function ephtrBlockHandler(block: ethereum.Block): void {
-    let ephtrAddress = '0x3b9805E163b3750e7f13a26B06F030f2d3b799F5'
-    let phtrAddress = '0xE1Fc4455f62a6E89476f1072530C20CF1A0622dA'
-    let emissionsAddress = '0x4819CecF672177F37e5450Fa6DC78d9BaAfa74be'
-    let indexAssetEntity = createOrLoadIndexAssetEntity(Bytes.fromHexString(ephtrAddress), Bytes.fromHexString(phtrAddress))
-    let historicalPriceEntity = createOrLoadHistoricalPriceEntity(Bytes.fromHexString(ephtrAddress), block.timestamp)
-    let phtrContract = ERC20.bind(Address.fromString(phtrAddress))
-    let emissionsContract = Emissions.bind(Address.fromString(emissionsAddress))
+    let ephtrAddress = dataSource.address()
+    let phtrAddress = dataSource.context().getBytes("phtrAddress")
+    let emissionsAddress = dataSource.context().getBytes("emissionsAddress")
+    let indexEntity = createOrLoadIndexEntity(ephtrAddress)
+    let indexAssetEntity = createOrLoadIndexAssetEntity(ephtrAddress,phtrAddress,indexEntity.chainID)
 
-    let phtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(createOrLoadIndexAssetEntity(Bytes.fromHexString(ephtrAddress),Bytes.fromHexString(phtrAddress)).decimals)))
+    let historicalPriceEntity = createOrLoadHistoricalPriceEntity(ephtrAddress, block.timestamp)
+    let phtrContract = ERC20.bind(phtrAddress)
+    let emissionsContract = Emissions.bind(emissionsAddress)
 
-    let phtrBalance = new BigDecimal(phtrContract.balanceOf(Address.fromString(ephtrAddress)))
-    let totalSupply = createOrLoadIndexEntity(Bytes.fromHexString(ephtrAddress)).totalSupply
+    let phtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
+
+    let phtrBalance = new BigDecimal(phtrContract.balanceOf(ephtrAddress))
+    let totalSupply = indexEntity.totalSupply
     log.debug("balance :{} total supply : {}", [phtrBalance.toString(), totalSupply.toString()])
 
     if (phtrBalance > BigDecimal.zero() && totalSupply > BigDecimal.zero()) {
         let withdrawableAmount = new BigDecimal(emissionsContract.withdrawable())
         phtrBalance = phtrBalance.plus(withdrawableAmount).div(phtrScalar)
-
         indexAssetEntity.balance = phtrBalance
-
-
         totalSupply = totalSupply.div(phtrScalar)
 
         let price = phtrBalance.div(totalSupply)
@@ -97,6 +98,7 @@ export function ephtrBlockHandler(block: ethereum.Block): void {
         historicalPriceEntity.price = price
         historicalPriceEntity.save()
         indexAssetEntity.save()
+        saveHistoricalData(ephtrAddress,block.timestamp)
     }
     else {
         historicalPriceEntity.price = BigDecimal.fromString("1.00")

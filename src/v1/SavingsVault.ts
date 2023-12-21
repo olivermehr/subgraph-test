@@ -6,7 +6,7 @@ import {
   Withdraw as WithdrawEvent,
   SavingsVault
 } from "../../generated/USVVault/SavingsVault"
-import { createOrLoadHistoricalPriceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, createOrLoadChainIDToAssetMappingEntity } from "../EntityCreation"
+import { createOrLoadHistoricalPriceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, createOrLoadChainIDToAssetMappingEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation"
 import { ChainlinkFeedRegistry } from "../../generated/USVVault/ChainlinkFeedRegistry"
 export { handleTransfer } from "./IndexToken"
 import { convertAUMFeeRate } from "./FeePool"
@@ -14,7 +14,7 @@ import { SavingsVaultViews } from "../../generated/USVVault/SavingsVaultViews"
 import { saveHistoricalData } from "../v2/ConfigBuilder"
 
 export function handleDeposit(event: DepositEvent): void {
-  updateBalances(event)
+  updateBalances(event.address, event.block.timestamp)
 }
 
 export function handleUpgraded(event: UpgradedEvent): void {
@@ -47,63 +47,46 @@ export function handleUpgraded(event: UpgradedEvent): void {
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
-  updateBalances(event)
+  updateBalances(event.address, event.block.timestamp)
 }
 
 export function handleFCashMinted(event: FCashMintedEvent): void {
-  updateBalances(event)
+  updateBalances(event.address, event.block.timestamp)
 
 }
 
-export function updateBalances(event: ethereum.Event): void {
-  let vaultContract = SavingsVault.bind(event.address)
-  let indexEntity = createOrLoadIndexEntity(event.address)
+export function updateBalances(index: Bytes, timestamp: BigInt): void {
+  let vaultContract = SavingsVault.bind(index)
+  let indexEntity = createOrLoadIndexEntity(index)
   let vaultAsset = dataSource.context().getBytes('vaultAsset')
-  let totalAssets = vaultContract.totalAssets()
-  let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, vaultAsset, indexEntity.chainID)
-  let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
-  indexAssetEntity.balance = new BigDecimal(totalAssets).div(scalar)
-  indexAssetEntity.save()
-  saveHistoricalData(event.address, event)
+  let totalAssets = new BigDecimal(vaultContract.totalAssets())
+  if (totalAssets != BigDecimal.zero()) {
+    let indexAssetEntity = createOrLoadIndexAssetEntity(index, vaultAsset, indexEntity.chainID)
+    let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
+    indexAssetEntity.balance = totalAssets.div(scalar)
+    indexAssetEntity.save()
+    saveHistoricalData(index, timestamp)
+  }
 }
 
-export function usvBlockHandler(block: ethereum.Block): void {
+export function SavingsVaultBlockHandler(block: ethereum.Block): void {
   log.debug('Block handler being called at {}', [block.number.toString()])
   let vaultAddress = dataSource.address()
-  let usdcAddress = dataSource.context().getBytes("vaultAsset")
+  let vaultAsset = dataSource.context().getBytes("vaultAsset")
   let usdDenom = '0x0000000000000000000000000000000000000348'
   let chainlinkFeedRegistryAddress = dataSource.context().getBytes("chainlinkFeedRegistryAddress")
   let usvViewAddress = dataSource.context().getBytes("usvViewAddress")
   let vaultContract = SavingsVault.bind(vaultAddress)
-  let totalAssetsCall = vaultContract.try_totalAssets()
-  let totalAssetsValue = BigDecimal.zero()
-  if (!totalAssetsCall.reverted) {
-    totalAssetsValue = new BigDecimal(totalAssetsCall.value.times(BigInt.fromI32(10).pow(12)))
-  }
-  let totalSupplyCall = vaultContract.try_totalSupply()
-  let totalSupplyValue = BigDecimal.zero()
-  if (!totalSupplyCall.reverted) {
-    totalSupplyValue = new BigDecimal(totalSupplyCall.value)
-  }
-  if (totalSupplyValue > BigDecimal.zero()) {
+  updateBalances(vaultAddress, block.timestamp)
+  let totalSupply = new BigDecimal(vaultContract.totalSupply())
+  let indexEntity = createOrLoadIndexEntity(vaultAddress)
+  if (totalSupply > BigDecimal.zero()) {
+    let totalAssets = loadIndexAssetEntity(loadChainIDToAssetMappingEntity(indexEntity.assets[0]).assets[0]).balance
     let historicalPriceEntity = createOrLoadHistoricalPriceEntity(vaultAddress, block.timestamp)
-    let usdcPriceCall = ChainlinkFeedRegistry.bind(chainlinkFeedRegistryAddress).try_latestAnswer(usdcAddress, Address.fromString(usdDenom))
-    if (!usdcPriceCall.reverted) {
-      let scalar = new BigDecimal(BigInt.fromI32(10).pow(8))
-      let usdcPrice = new BigDecimal(usdcPriceCall.value).div(scalar)
-      if (totalAssetsValue == BigDecimal.zero()) {
-        let previousDayTimestamp = block.timestamp.minus(block.timestamp.mod(BigInt.fromI32(86400))).minus(BigInt.fromI32(86400))
-        let previousDayPrice = createOrLoadHistoricalPriceEntity(vaultAddress, previousDayTimestamp).price
-        historicalPriceEntity.price = previousDayPrice
-        log.debug("Call for total assets returned 0 so previous day's price was used. Current timestamp: {}. Previous timestamp {}", [block.timestamp.toString(), previousDayTimestamp.toString()])
-      }
-      else {
-        historicalPriceEntity.price = totalAssetsValue.div(totalSupplyValue).times(usdcPrice)
-      }
-    }
-    else {
-      log.debug("USDC price reverted at block number {}", [block.number.toString()])
-    }
+    let usdcPrice = new BigDecimal(ChainlinkFeedRegistry.bind(chainlinkFeedRegistryAddress).latestAnswer(vaultAsset, Address.fromString(usdDenom)))
+    let scalar = new BigDecimal(BigInt.fromI32(10).pow(8))
+    usdcPrice = usdcPrice.div(scalar)
+    historicalPriceEntity.price = totalAssets.div(totalSupply).times(usdcPrice)
     let usvViewsContract = SavingsVaultViews.bind(usvViewAddress)
     let apyCall = usvViewsContract.try_getAPY(vaultAddress)
     if (!apyCall.reverted && apyCall.value != BigInt.zero()) {

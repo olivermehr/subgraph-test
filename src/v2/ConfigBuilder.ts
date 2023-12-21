@@ -95,21 +95,21 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancing): voi
             indexEntity.save()
         }
     }
-    saveHistoricalData(indexAddress, event)
+    saveHistoricalData(indexAddress, event.block.timestamp)
     indexEntity.k = BigInt.fromI64(1e18)
     indexEntity.save()
 
 }
 
-export function saveHistoricalData(index: Bytes, event: ethereum.Event): void {
+export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
     let indexEntity = createOrLoadIndexEntity(index)
-    createOrLoadHistoricalIndexBalanceEntity(index, event)
+    createOrLoadHistoricalIndexBalanceEntity(index, timestamp)
     for (let i = 0; i < indexEntity.assets.length; i++) {
         let chainIDToAssetMappingEntity = loadChainIDToAssetMappingEntity(indexEntity.assets[i])
         let chainID = chainIDToAssetMappingEntity.chainID
         for (let y = 0; y < chainIDToAssetMappingEntity.assets.length; y++) {
             let indexAssetEntity = loadIndexAssetEntity(chainIDToAssetMappingEntity.assets[y])
-            let historicalIndexAssetEntity = createOrLoadHistoricalIndexAssetEntity(index, indexAssetEntity.asset, chainID, event)
+            let historicalIndexAssetEntity = createOrLoadHistoricalIndexAssetEntity(index, indexAssetEntity.asset, chainID, timestamp)
             historicalIndexAssetEntity.balance = indexAssetEntity.balance
             if (indexAssetEntity.weight != null){
                 historicalIndexAssetEntity.weight = indexAssetEntity.weight

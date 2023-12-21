@@ -60,8 +60,6 @@ export function handleManagedIndexCreated(
   }
   chainIDToAssetMappingEntity.assets = chainIDAssetArray
   chainIDToAssetMappingEntity.save()
-  let indexAssetArray:string[] = []
-  indexAssetArray.push(chainIDToAssetMappingEntity.id)
-  indexEntity.assets = indexAssetArray
+  indexEntity.assets = [chainIDToAssetMappingEntity.id]
   indexEntity.save()
 }

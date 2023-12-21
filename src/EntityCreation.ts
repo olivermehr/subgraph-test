@@ -95,8 +95,8 @@ export function loadIndexAssetEntity(id: string): IndexAsset {
 }
 
 
-export function createOrLoadHistoricalIndexBalanceEntity(index: Bytes, event: ethereum.Event): HistoricalIndexBalance {
-    let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
+export function createOrLoadHistoricalIndexBalanceEntity(index: Bytes, blockTimestamp: BigInt): HistoricalIndexBalance {
+    let timestamp = blockTimestamp.minus(blockTimestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(timestamp.toString())
     let historicalIndexBalanceEntity = HistoricalIndexBalance.loadInBlock(id)
     if (historicalIndexBalanceEntity == null) {
@@ -147,8 +147,8 @@ export function createOrLoadHistoricalPriceEntity(index: Bytes, blockTimestamp: 
     return historicalPriceEntity
 }
 
-export function createOrLoadHistoricalIndexAssetEntity(index: Bytes, asset: Bytes, chainID:BigInt, event: ethereum.Event): HistoricalIndexAsset {
-    let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
+export function createOrLoadHistoricalIndexAssetEntity(index: Bytes, asset: Bytes, chainID: BigInt, blockTimestamp: BigInt): HistoricalIndexAsset {
+    let timestamp = blockTimestamp.minus(blockTimestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(chainID.toString()).concat(asset.toHexString()).concat(timestamp.toString())
     let historicalIndexAssetEntity = HistoricalIndexAsset.loadInBlock(id)
     if (historicalIndexAssetEntity == null) {

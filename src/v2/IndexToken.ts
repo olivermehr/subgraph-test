@@ -12,7 +12,7 @@ export function handleDeposit(event: DepositEvent): void {
     let amount = new BigDecimal(event.params.reserve).div(scalar)
     reserveAssetEntity.balance = reserveAssetEntity.balance.plus(amount)
     reserveAssetEntity.save()
-    saveHistoricalData(event.address,event)
+    saveHistoricalData(event.address,event.block.timestamp)
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
@@ -38,5 +38,5 @@ export function handleWithdraw(event: WithdrawEvent): void {
         indexEntity.k = indexEntity.k.minus(event.params.k)
         indexEntity.save()
     }
-    saveHistoricalData(event.address,event)
+    saveHistoricalData(event.address,event.block.timestamp)
 }

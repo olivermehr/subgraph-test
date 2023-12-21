@@ -23,7 +23,7 @@ export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let assetBalance = new BigDecimal(vaultContract.lastAssetBalanceOf(Address.fromBytes(indexAddress)))
   indexAssetEntity.balance = assetBalance.div(scalar)
   indexAssetEntity.save()
-  saveHistoricalData(indexAddress,event)
+  saveHistoricalData(indexAddress,event.block.timestamp)
 }
 
 
