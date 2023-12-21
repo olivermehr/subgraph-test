@@ -50,6 +50,15 @@ dataSources:
       chainID:
         type: BigInt
         data: "{{chainID}}"
+      nativeAsset:
+        type: List
+        data:
+          - type: String
+            data: "{{indexFactory.nativeAsset.name}}"
+          - type: String
+            data: "{{indexFactory.nativeAsset.symbol}}"
+          - type: Int
+            data: {{indexFactory.nativeAsset.decimals}}
     source:
       address: "{{indexFactory.address}}"
       abi: IndexFactoryV2
