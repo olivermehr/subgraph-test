@@ -11,6 +11,7 @@ type Index @entity {
   redemptionFee: BigDecimal!
   aumFee: BigDecimal!
   k: BigInt
+  latestSnapshot: BigInt
   totalSupply: BigDecimal!
   holders: BigInt!
   assets: [ChainIDToAssetMapping!]!

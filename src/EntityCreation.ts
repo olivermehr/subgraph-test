@@ -54,7 +54,7 @@ export function createOrLoadIndexAccountEntity(index: Bytes, account: Bytes): In
 }
 
 export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes, chainID: BigInt): IndexAsset {
-    let id = index.toString().concat(chainID.toString()).concat(asset.toString())
+    let id = index.toHexString().concat(chainID.toString()).concat(asset.toHexString())
     let indexAsset = IndexAsset.loadInBlock(id)
     if (indexAsset == null) {
         indexAsset = IndexAsset.load(id)
@@ -168,7 +168,7 @@ export function createOrLoadHistoricalIndexAssetEntity(index: Bytes, asset: Byte
 }
 
 export function createOrLoadChainIDToAssetMappingEntity(index: Bytes, chainID: BigInt): ChainIDToAssetMapping {
-    let id = index.toString().concat(chainID.toString())
+    let id = index.toHexString().concat(chainID.toString())
     let chainIDToAssetMappingEntity = ChainIDToAssetMapping.loadInBlock(id)
     if (chainIDToAssetMappingEntity == null) {
         chainIDToAssetMappingEntity = ChainIDToAssetMapping.load(id)

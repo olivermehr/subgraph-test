@@ -97,6 +97,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancing): voi
     }
     saveHistoricalData(indexAddress, event.block.timestamp)
     indexEntity.k = BigInt.fromI32(1).pow(18)
+    indexEntity.latestSnapshot = event.params.snapshot
     indexEntity.save()
 
 }
