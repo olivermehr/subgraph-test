@@ -14,7 +14,6 @@
     "prepare:arbitrum": "npm run clean && npx mustache config/arbitrum.json subgraph.template.yaml > subgraph.yaml",
     "clean": "rm -rf subgraph.yaml",
     "init":"npm run clean && graph clean && npx mustache config/init.json subgraph.template.yaml > subgraph.yaml && graph codegen"
-
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.59.0",

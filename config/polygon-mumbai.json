@@ -1,0 +1,13 @@
+{
+    "network": "mumbai",
+    "chainID": 80001,
+    "v1": false,
+    "v2": {
+        "indexFactory": {
+            "address": "0x966f96d0b05F4A681a50928fA355a66288cEa6eA",
+            "startBlock": 43566810
+        }
+    },
+    "ephtr": false,
+    "savingsVaults":false
+}
