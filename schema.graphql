@@ -34,7 +34,7 @@ type IndexAsset @entity {
   index: Bytes!
   asset: Bytes!
   balance: BigDecimal!
-  weight: Int
+  weight: BigInt
 }
 
 type IndexAccount @entity {
@@ -67,7 +67,7 @@ type HistoricalIndexAsset @entity {
   chainID: BigInt!
   timestamp: BigInt!
   balance: BigDecimal!
-  weight:Int
+  weight:BigInt
 }
 
 type HistoricalPrice @entity {

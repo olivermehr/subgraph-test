@@ -12,7 +12,7 @@ export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let indexEntity = createOrLoadIndexEntity(indexAddress)
   let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, assetAddress, indexEntity.chainID)
   if (indexAssetEntity.decimals == 0) {
-    let tokenContract = ERC20.bind(assetAddress)
+    let tokenContract = ERC20.bind(Address.fromBytes(assetAddress))
     indexAssetEntity.name = tokenContract.name()
     indexAssetEntity.symbol = tokenContract.symbol()
     indexAssetEntity.decimals = tokenContract.decimals()

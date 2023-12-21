@@ -21,12 +21,12 @@ export function handleTransfer(event: TransferEvent): void {
         index.version = 'v1'
         let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address,chainID)
         let indexAssetEntity = createOrLoadIndexAssetEntity(event.address,phtrAddress,chainID)
-        let phtrContract = ERC20.bind(phtrAddress)
+        let phtrContract = ERC20.bind(Address.fromBytes(phtrAddress))
         indexAssetEntity.chainID = chainID
         indexAssetEntity.decimals = decimals
         indexAssetEntity.symbol = phtrContract.symbol()
         indexAssetEntity.name = phtrContract.name()
-        indexAssetEntity.weight = 255
+        indexAssetEntity.weight = BigInt.fromI32(255)
         indexAssetEntity.save()
 
         let chainIDAssetArray: string[] = []
@@ -78,8 +78,8 @@ export function ephtrBlockHandler(block: ethereum.Block): void {
     let indexAssetEntity = createOrLoadIndexAssetEntity(ephtrAddress,phtrAddress,indexEntity.chainID)
 
     let historicalPriceEntity = createOrLoadHistoricalPriceEntity(ephtrAddress, block.timestamp)
-    let phtrContract = ERC20.bind(phtrAddress)
-    let emissionsContract = Emissions.bind(emissionsAddress)
+    let phtrContract = ERC20.bind(Address.fromBytes(phtrAddress))
+    let emissionsContract = Emissions.bind(Address.fromBytes(emissionsAddress))
 
     let phtrScalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
 

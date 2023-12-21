@@ -33,7 +33,7 @@ export function handleUpgraded(event: UpgradedEvent): void {
   let chainID = dataSource.context().getBigInt('chainID')
   let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, chainID)
   let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, vaultAsset, chainID)
-  indexAssetEntity.weight = 255
+  indexAssetEntity.weight = BigInt.fromI32(255)
   indexAssetEntity.save()
 
   if (chainIDToAssetMappingEntity.assets.indexOf(indexAssetEntity.id) == -1) {
@@ -56,7 +56,7 @@ export function handleFCashMinted(event: FCashMintedEvent): void {
 }
 
 export function updateBalances(index: Bytes, timestamp: BigInt): void {
-  let vaultContract = SavingsVault.bind(index)
+  let vaultContract = SavingsVault.bind(Address.fromBytes(index))
   let indexEntity = createOrLoadIndexEntity(index)
   let vaultAsset = dataSource.context().getBytes('vaultAsset')
   let totalAssets = new BigDecimal(vaultContract.totalAssets())
@@ -83,11 +83,11 @@ export function SavingsVaultBlockHandler(block: ethereum.Block): void {
   if (totalSupply > BigDecimal.zero()) {
     let totalAssets = loadIndexAssetEntity(loadChainIDToAssetMappingEntity(indexEntity.assets[0]).assets[0]).balance
     let historicalPriceEntity = createOrLoadHistoricalPriceEntity(vaultAddress, block.timestamp)
-    let usdcPrice = new BigDecimal(ChainlinkFeedRegistry.bind(chainlinkFeedRegistryAddress).latestAnswer(vaultAsset, Address.fromString(usdDenom)))
+    let usdcPrice = new BigDecimal(ChainlinkFeedRegistry.bind(Address.fromBytes(chainlinkFeedRegistryAddress)).latestAnswer(Address.fromBytes(vaultAsset), Address.fromString(usdDenom)))
     let scalar = new BigDecimal(BigInt.fromI32(10).pow(8))
     usdcPrice = usdcPrice.div(scalar)
     historicalPriceEntity.price = totalAssets.div(totalSupply).times(usdcPrice)
-    let usvViewsContract = SavingsVaultViews.bind(usvViewAddress)
+    let usvViewsContract = SavingsVaultViews.bind(Address.fromBytes(usvViewAddress))
     let apyCall = usvViewsContract.try_getAPY(vaultAddress)
     if (!apyCall.reverted && apyCall.value != BigInt.zero()) {
       let scalar = new BigDecimal(BigInt.fromI32(10).pow(9))

@@ -53,7 +53,7 @@ export function handleAssetRemoved(event: AssetRemovedEvent): void {
   let idx = assets.indexOf(indexAssetEntity.id)
   assets.splice(idx, 1)
   chainIDToAssetMappingEntity.assets = assets
-  indexAssetEntity.weight = 0
+  indexAssetEntity.weight = BigInt.fromI32(0)
   indexAssetEntity.save()
   chainIDToAssetMappingEntity.save()
 }
@@ -68,7 +68,7 @@ export function handleUpdateAnatomy(event: UpdateAnatomyEvent): void {
     indexAssetEntity.symbol = tokenContract.symbol()
     indexAssetEntity.decimals = tokenContract.decimals()
   }
-  indexAssetEntity.weight = event.params.weight
+  indexAssetEntity.weight = BigInt.fromI32(event.params.weight)
   let assets = chainIDToAssetMappingEntity.assets
   let idx = assets.indexOf(indexAssetEntity.id)
   if (idx == -1) {

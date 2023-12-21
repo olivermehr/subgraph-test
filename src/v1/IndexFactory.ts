@@ -53,7 +53,7 @@ export function handleManagedIndexCreated(
       indexAssetEntity.name = tokenContract.name()
       indexAssetEntity.symbol = tokenContract.symbol()
       indexAssetEntity.decimals = tokenContract.decimals()
-      indexAssetEntity.weight = weight
+      indexAssetEntity.weight =BigInt.fromI32( weight)
       indexAssetEntity.save()
       chainIDAssetArray.push(indexAssetEntity.id)
     }

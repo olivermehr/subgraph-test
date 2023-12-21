@@ -6,7 +6,7 @@ import { convertAUMFeeRate } from "../v1/FeePool";
 export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
-    let decoded = ethereum.decode('((uint256,bool,address),(uint16,bool),(address,uint16,bool))', event.params.param0)?.toTuple()
+    let decoded = ethereum.decode('((uint256,bool,address),(uint16,bool),(address,uint16,bool))', event.params.param0)!.toTuple()
     if (decoded != null) {
         log.debug("Decoded message: {}", [decoded.toString()])
         let aumFee = decoded[0].toTuple()[0].toArray()[0].toBigInt()
@@ -96,7 +96,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancing): voi
         }
     }
     saveHistoricalData(indexAddress, event.block.timestamp)
-    indexEntity.k = BigInt.fromI64(1e18)
+    indexEntity.k = BigInt.fromI32(1).pow(18)
     indexEntity.save()
 
 }
@@ -111,7 +111,7 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
             let indexAssetEntity = loadIndexAssetEntity(chainIDToAssetMappingEntity.assets[y])
             let historicalIndexAssetEntity = createOrLoadHistoricalIndexAssetEntity(index, indexAssetEntity.asset, chainID, timestamp)
             historicalIndexAssetEntity.balance = indexAssetEntity.balance
-            if (indexAssetEntity.weight != null){
+            if (indexAssetEntity.weight!){
                 historicalIndexAssetEntity.weight = indexAssetEntity.weight
             }
                 historicalIndexAssetEntity.save()
