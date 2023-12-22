@@ -19,8 +19,8 @@ export function handleTransfer(event: TransferEvent): void {
         index.chainID = chainID
         index.creationDate = event.block.timestamp
         index.version = 'v1'
-        let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address,chainID)
-        let indexAssetEntity = createOrLoadIndexAssetEntity(event.address,phtrAddress,chainID)
+        let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, chainID)
+        let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, phtrAddress, chainID)
         let phtrContract = ERC20.bind(Address.fromBytes(phtrAddress))
         indexAssetEntity.chainID = chainID
         indexAssetEntity.decimals = decimals
@@ -75,7 +75,7 @@ export function ephtrBlockHandler(block: ethereum.Block): void {
     let phtrAddress = dataSource.context().getBytes("phtrAddress")
     let emissionsAddress = dataSource.context().getBytes("emissionsAddress")
     let indexEntity = createOrLoadIndexEntity(ephtrAddress)
-    let indexAssetEntity = createOrLoadIndexAssetEntity(ephtrAddress,phtrAddress,indexEntity.chainID)
+    let indexAssetEntity = createOrLoadIndexAssetEntity(ephtrAddress, phtrAddress, indexEntity.chainID)
 
     let historicalPriceEntity = createOrLoadHistoricalPriceEntity(ephtrAddress, block.timestamp)
     let phtrContract = ERC20.bind(Address.fromBytes(phtrAddress))
@@ -98,7 +98,7 @@ export function ephtrBlockHandler(block: ethereum.Block): void {
         historicalPriceEntity.price = price
         historicalPriceEntity.save()
         indexAssetEntity.save()
-        saveHistoricalData(ephtrAddress,block.timestamp)
+        saveHistoricalData(ephtrAddress, block.timestamp)
     }
     else {
         historicalPriceEntity.price = BigDecimal.fromString("1.00")

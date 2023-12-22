@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, ByteArray, Bytes, dataSource } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts"
 import {
   AssetRemoved as AssetRemovedEvent,
   Transfer as TransferEvent,
@@ -6,6 +6,7 @@ import {
 } from "../../generated/templates/IndexTokenV1/IndexTokenV1"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalanceEntity, createOrLoadAccountEntity, createOrLoadChainIDToAssetMappingEntity } from "../EntityCreation"
 import { ERC20 } from "../../generated/IndexFactoryV1/ERC20"
+
 
 export function handleTransfer(event: TransferEvent): void {
   let index = createOrLoadIndexEntity(event.address)
@@ -47,8 +48,8 @@ export function handleTransfer(event: TransferEvent): void {
 
 export function handleAssetRemoved(event: AssetRemovedEvent): void {
   let index = createOrLoadIndexEntity(event.address)
-  let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address,index.chainID)
-  let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, event.params.asset,index.chainID)
+  let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, index.chainID)
+  let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, event.params.asset, index.chainID)
   let assets = chainIDToAssetMappingEntity.assets
   let idx = assets.indexOf(indexAssetEntity.id)
   assets.splice(idx, 1)

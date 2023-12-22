@@ -8,6 +8,7 @@ import { IndexRegistry as indexRegistryContract } from "../../generated/template
 import { VaultFactory as vaultFactoryContract } from "../../generated/templates/VaultFactory/VaultFactory"
 import { createOrLoadChainIDToAssetMappingEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation"
 import { ERC20 } from "../../generated/IndexFactoryV1/ERC20"
+import { MakerERC20 } from "../../generated/IndexFactoryV1/MakerERC20"
 
 export function handleManagedIndexCreated(
   event: ManagedIndexCreatedEvent
@@ -48,12 +49,27 @@ export function handleManagedIndexCreated(
       context.setBytes('assetAddress', token)
       context.setBytes('indexAddress', event.params.index)
       Vault.createWithContext(vtokenAddress, context)
-      let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index, token,chainID)
+      let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index, token, chainID)
+
       let tokenContract = ERC20.bind(token)
-      indexAssetEntity.name = tokenContract.name()
-      indexAssetEntity.symbol = tokenContract.symbol()
+      let tokenName = tokenContract.try_name()
+      if (tokenName.reverted) {
+        let makerTokenName = MakerERC20.bind(token).name().toString()
+        indexAssetEntity.name = makerTokenName
+      }
+      else {
+        indexAssetEntity.name = tokenName.value
+      }
+      let tokenSymbol = tokenContract.try_symbol()
+      if (tokenSymbol.reverted) {
+        let makerTokenSymbol = MakerERC20.bind(token).symbol().toString()
+        indexAssetEntity.symbol = makerTokenSymbol
+      }
+      else {
+        indexAssetEntity.symbol = tokenSymbol.value
+      }
       indexAssetEntity.decimals = tokenContract.decimals()
-      indexAssetEntity.weight =BigInt.fromI32( weight)
+      indexAssetEntity.weight = BigInt.fromI32(weight)
       indexAssetEntity.save()
       chainIDAssetArray.push(indexAssetEntity.id)
     }

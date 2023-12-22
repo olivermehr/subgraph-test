@@ -35,6 +35,8 @@ dataSources:
           file: ./abis/v1/feePool.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MakerERC20
+          file: ./abis/v1/MakerERC20.json
         - name: VaultFactory
           file: ./abis/v1/VaultFactory.json
       eventHandlers:

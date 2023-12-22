@@ -42,7 +42,7 @@ export function handleWithdraw(event: WithdrawEvent): void {
     saveHistoricalData(event.address, event.block.timestamp)
 }
 
-export function handleFeeAccrued(event:FeeAccrued):void {
+export function handleFeeAccrued(event: FeeAccrued): void {
     let indexEntity = createOrLoadIndexEntity(event.address)
     let fees = new BigDecimal(event.params.AUMFee.plus(event.params.baseFee))
     let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexEntity.decimals)))

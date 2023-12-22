@@ -1,4 +1,4 @@
-import { ByteArray, Bytes, BigInt, DataSourceContext, dataSource, log } from "@graphprotocol/graph-ts"
+import { DataSourceContext, dataSource } from "@graphprotocol/graph-ts"
 import {
   VTokenCreated as VTokenCreatedEvent
 } from "../../generated/templates/VaultFactory/VaultFactory"

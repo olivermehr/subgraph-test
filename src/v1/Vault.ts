@@ -2,9 +2,10 @@ import { Address, BigDecimal, BigInt, Bytes, dataSource, log } from "@graphproto
 import {
   VTokenTransfer as VTokenTransferEvent, Vault
 } from "../../generated/templates/Vault/Vault"
-import { createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadIndexAssetEntity } from "../EntityCreation"
+import { createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation"
 import { ERC20 } from "../../generated/IndexFactoryV1/ERC20"
 import { saveHistoricalData } from "../v2/ConfigBuilder"
+import { MakerERC20 } from "../../generated/IndexFactoryV1/MakerERC20"
 
 export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let assetAddress = dataSource.context().getBytes('assetAddress')
@@ -13,8 +14,22 @@ export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, assetAddress, indexEntity.chainID)
   if (indexAssetEntity.decimals == 0) {
     let tokenContract = ERC20.bind(Address.fromBytes(assetAddress))
-    indexAssetEntity.name = tokenContract.name()
-    indexAssetEntity.symbol = tokenContract.symbol()
+    let tokenName = tokenContract.try_name()
+    if (tokenName.reverted) {
+      let makerTokenName = MakerERC20.bind(Address.fromBytes(assetAddress)).name().toString()
+      indexAssetEntity.name = makerTokenName
+    }
+    else {
+      indexAssetEntity.name = tokenName.value
+    }
+    let tokenSymbol = tokenContract.try_symbol()
+    if (tokenSymbol.reverted) {
+      let makerTokenSymbol = MakerERC20.bind(Address.fromBytes(assetAddress)).symbol().toString()
+      indexAssetEntity.symbol = makerTokenSymbol
+    }
+    else {
+      indexAssetEntity.symbol = tokenSymbol.value
+    }
     indexAssetEntity.decimals = tokenContract.decimals()
     indexAssetEntity.save()
   }
@@ -23,7 +38,7 @@ export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let assetBalance = new BigDecimal(vaultContract.lastAssetBalanceOf(Address.fromBytes(indexAddress)))
   indexAssetEntity.balance = assetBalance.div(scalar)
   indexAssetEntity.save()
-  saveHistoricalData(indexAddress,event.block.timestamp)
+  saveHistoricalData(indexAddress, event.block.timestamp)
 }
 
 
