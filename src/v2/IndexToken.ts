@@ -1,6 +1,6 @@
 import { Deposit as DepositEvent, FeeAccrued, Withdraw as WithdrawEvent } from "../../generated/templates/IndexTokenV2/IndexTokenV2"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, loadIndexAssetEntity, loadChainIDToAssetMappingEntity } from "../EntityCreation"
-import { BigDecimal, Bytes, Address, BigInt, dataSource } from "@graphprotocol/graph-ts"
+import { BigDecimal, Bytes, Address, BigInt, dataSource, log } from "@graphprotocol/graph-ts"
 export { handleTransfer } from "../v1/IndexToken"
 import { saveHistoricalData } from "./ConfigBuilder"
 
@@ -25,7 +25,8 @@ export function handleWithdraw(event: WithdrawEvent): void {
     reserveAssetEntity.save()
     let k = indexEntity.k!
     if (event.params.k > BigInt.zero()) {
-        let assetScalar = new BigDecimal(k.minus(event.params.k).div(k))
+        let assetScalar = new BigDecimal(BigInt.fromI32(1).minus(event.params.k.div(k)))
+        log.debug('asset scalar :{},redeemed k: {},saved k: {}',[assetScalar.toString(),event.params.k.toString(),k.toString()])
         let indexAssets = indexEntity.assets
         for (let i = 0; i < indexAssets.length; i++) {
             let chainIDToAssetMappingEntity = loadChainIDToAssetMappingEntity(indexAssets[i])

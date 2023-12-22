@@ -1,6 +1,6 @@
-import { Bytes, BigInt, Address, ethereum, DataSourceContext, dataSource, BigDecimal, log } from "@graphprotocol/graph-ts";
+import { Bytes, BigInt, Address, ethereum, dataSource, BigDecimal, log } from "@graphprotocol/graph-ts";
 import { createOrLoadChainIDToAssetMappingEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
-import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
+import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
 
 export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
@@ -12,7 +12,6 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     let scalar = new BigDecimal(BigInt.fromI32(10000))
     let mintingFee = new BigDecimal(decoded[1].toTuple()[0].toBigInt()).div(scalar)
     let redemptionFee = new BigDecimal(decoded[2].toTuple()[1].toBigInt()).div(scalar)
-    log.debug('fees: {},{}',[mintingFee.toString(),redemptionFee.toString()])
     indexEntity.mintingFee = mintingFee
     indexEntity.redemptionFee = redemptionFee
     indexEntity.save()
@@ -29,7 +28,7 @@ export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     indexAssetEntity.save()
 }
 
-export function handleFinishChainRebalancing(event: FinishChainRebalancing): void {
+export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let reserveAsset = dataSource.context().getBytes('reserveAsset')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
@@ -65,7 +64,8 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancing): voi
         }
         for (let i = 0; i < event.params.currencies.length; i++) {
             let balance = new BigDecimal(event.params.currencies[i].rightShift(160))
-            let asset = Bytes.fromHexString(event.params.currencies[i].bitAnd(BigInt.fromString("0xffffffffffffffffffffffffffffffffffffffff")).toHex())
+            let asset = Address.fromBytes(Bytes.fromHexString(event.params.currencies[i].bitAnd(BigInt.fromI32(2).pow(160).minus(BigInt.fromI32(1))).toHexString()))
+            log.debug("decoded asset = {}, decoded balance {}, chainID {}", [asset.toHexString(), balance.toString(), event.params.chainId.toString()])
             let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, asset, event.params.chainId)
             let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
             indexAssetEntity.balance = balance.div(scalar)
@@ -91,7 +91,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancing): voi
         }
     }
     saveHistoricalData(indexAddress, event.block.timestamp)
-    indexEntity.k = BigInt.fromI32(1).pow(18)
+    indexEntity.k = BigInt.fromI32(1).times(BigInt.fromI32(10).pow(18))
     indexEntity.latestSnapshot = event.params.snapshot
     indexEntity.save()
 
@@ -107,10 +107,12 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
             let indexAssetEntity = loadIndexAssetEntity(chainIDToAssetMappingEntity.assets[y])
             let historicalIndexAssetEntity = createOrLoadHistoricalIndexAssetEntity(index, indexAssetEntity.asset, chainID, timestamp)
             historicalIndexAssetEntity.balance = indexAssetEntity.balance
-            if (indexAssetEntity.weight!) {
+            if (indexAssetEntity.weight) {
                 historicalIndexAssetEntity.weight = indexAssetEntity.weight
             }
             historicalIndexAssetEntity.save()
         }
     }
 }
+
+12921558732313029914103325320357278440289168229147416

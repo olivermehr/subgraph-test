@@ -80,8 +80,8 @@ export function loadIndexAssetEntity(id: string): IndexAsset {
         if (indexAsset == null) {
             log.debug("Should never enter this logic block of loadIndexAssetEntity function", [])
             indexAsset = new IndexAsset(id)
-            indexAsset.index = Bytes.fromHexString('0x')
-            indexAsset.asset = Bytes.fromHexString('0x')
+            indexAsset.index = Bytes.empty()
+            indexAsset.asset = Bytes.empty()
             indexAsset.chainID = BigInt.zero()
             indexAsset.name = ""
             indexAsset.symbol = ""
@@ -191,7 +191,7 @@ export function loadChainIDToAssetMappingEntity(id: string): ChainIDToAssetMappi
         if (chainIDToAssetMappingEntity == null) {
             log.debug("Should never enter this logic block of loadChainIDToAssetMappingEntity function", [])
             chainIDToAssetMappingEntity = new ChainIDToAssetMapping(id)
-            chainIDToAssetMappingEntity.index = Bytes.fromHexString("0x")
+            chainIDToAssetMappingEntity.index = Bytes.empty()
             chainIDToAssetMappingEntity.chainID = BigInt.zero()
             chainIDToAssetMappingEntity.assets = []
             chainIDToAssetMappingEntity.save()

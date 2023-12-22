@@ -22,7 +22,7 @@ export function handleIndexDeployed(event: DeployedEvent): void {
     index.chainID = chainID
     index.version = "v2"
     index.creationDate = event.block.timestamp
-    index.k = BigInt.fromI32(1).pow(18)
+    index.k = BigInt.fromI32(1).times(BigInt.fromI32(10).pow(18))
     index.latestSnapshot = BigInt.zero()
     index.totalFees = BigDecimal.zero()
     let reserveContract = ERC20.bind(event.params.reserve)
