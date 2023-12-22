@@ -1,6 +1,6 @@
 import { Bytes, BigInt, Address, ethereum, dataSource, BigDecimal, log } from "@graphprotocol/graph-ts";
 import { createOrLoadChainIDToAssetMappingEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
-import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
+import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent, RegisterChain as RegisterChainEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
 
 export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
@@ -94,6 +94,14 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
     indexEntity.latestSnapshot = event.params.snapshot
     indexEntity.save()
 
+}
+
+export function handleRegisterChain(event: RegisterChainEvent): void {
+    let indexAddress = dataSource.context().getBytes('indexAddress')
+    let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(indexAddress,event.params.chainId)
+    chainIDToAssetMappingEntity.chainIndex = event.params.chainIndex
+    chainIDToAssetMappingEntity.save()
+    
 }
 
 export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {

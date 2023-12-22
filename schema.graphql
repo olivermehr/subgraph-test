@@ -90,5 +90,6 @@ type ChainIDToAssetMapping @entity {
   id: String!
   index: Bytes!
   chainID: BigInt!
+  chainIndex: BigInt!
   assets: [IndexAsset!]!
 }

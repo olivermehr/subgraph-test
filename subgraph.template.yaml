@@ -352,6 +352,8 @@ templates:
           handler: handleCurrencyRegistered
         - event: FinishChainRebalancing(uint256,uint256,uint256[],uint256[])
           handler: handleFinishChainRebalancing
+        - event: RegisterChain(uint256,uint256)
+          handler: handleRegisterChain
       file: ./src/v2/ConfigBuilder.ts
   - kind: ethereum
     name: Governance
