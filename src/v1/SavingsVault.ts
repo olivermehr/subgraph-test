@@ -12,7 +12,7 @@ export { handleTransfer } from "./IndexToken"
 import { convertAUMFeeRate } from "./FeePool"
 import { SavingsVaultViews } from "../../generated/USVVault/SavingsVaultViews"
 import { saveHistoricalData } from "../v2/ConfigBuilder"
-import { ERC20 } from "../../generated/IndexFactoryV1/ERC20"
+import { getTokenInfoV1 } from "./IndexFactory"
 
 export function handleDeposit(event: DepositEvent): void {
   updateBalances(event.address, event.block.timestamp)
@@ -34,10 +34,7 @@ export function handleUpgraded(event: UpgradedEvent): void {
   let chainID = dataSource.context().getBigInt('chainID')
   let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, chainID)
   let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, vaultAsset, chainID)
-  let indexAssetContract = ERC20.bind(vaultAsset)
-  indexAssetEntity.name = indexAssetContract.name()
-  indexAssetEntity.symbol = indexAssetContract.symbol()
-  indexAssetEntity.decimals = indexAssetContract.decimals()
+  getTokenInfoV1(indexAssetEntity,vaultAsset)
   indexAssetEntity.weight = BigInt.fromI32(255)
   indexAssetEntity.save()
 

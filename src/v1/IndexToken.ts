@@ -5,8 +5,7 @@ import {
   UpdateAnatomy as UpdateAnatomyEvent
 } from "../../generated/templates/IndexTokenV1/IndexTokenV1"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalanceEntity, createOrLoadAccountEntity, createOrLoadChainIDToAssetMappingEntity } from "../EntityCreation"
-import { ERC20 } from "../../generated/IndexFactoryV1/ERC20"
-import { MakerERC20 } from "../../generated/IndexFactoryV1/MakerERC20"
+import { getTokenInfoV1 } from "./IndexFactory"
 
 
 export function handleTransfer(event: TransferEvent): void {
@@ -65,24 +64,7 @@ export function handleUpdateAnatomy(event: UpdateAnatomyEvent): void {
   let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, index.chainID)
   let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, event.params.asset, index.chainID)
   if (indexAssetEntity.decimals == 0) {
-    let tokenContract = ERC20.bind(event.params.asset)
-    let tokenName = tokenContract.try_name()
-      if (tokenName.reverted) {
-        let makerTokenName = MakerERC20.bind(event.params.asset).name().toString()
-        indexAssetEntity.name = makerTokenName
-      }
-      else {
-        indexAssetEntity.name = tokenName.value
-      }
-      let tokenSymbol = tokenContract.try_symbol()
-      if (tokenSymbol.reverted) {
-        let makerTokenSymbol = MakerERC20.bind(event.params.asset).symbol().toString()
-        indexAssetEntity.symbol = makerTokenSymbol
-      }
-      else {
-        indexAssetEntity.symbol = tokenSymbol.value
-      }
-    indexAssetEntity.decimals = tokenContract.decimals()
+    getTokenInfoV1(indexAssetEntity,event.params.asset)
   }
   indexAssetEntity.weight = BigInt.fromI32(event.params.weight)
   let assets = chainIDToAssetMappingEntity.assets
