@@ -62,7 +62,7 @@ export function createOrLoadIndexAssetEntity(index: Bytes, asset: Bytes, chainID
             indexAsset = new IndexAsset(id)
             indexAsset.index = index
             indexAsset.asset = asset
-            indexAsset.chainID = BigInt.zero()
+            indexAsset.chainID = chainID
             indexAsset.name = ""
             indexAsset.symbol = ""
             indexAsset.decimals = 0

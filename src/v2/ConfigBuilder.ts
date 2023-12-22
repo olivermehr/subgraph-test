@@ -20,7 +20,6 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, event.params.currency, event.params.chainId)
-    indexAssetEntity.chainID = event.params.chainId
     indexAssetEntity.name = event.params.name
     indexAssetEntity.symbol = event.params.symbol
     indexAssetEntity.decimals = event.params.decimals
