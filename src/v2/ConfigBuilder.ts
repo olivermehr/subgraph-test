@@ -114,5 +114,3 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
         }
     }
 }
-
-12921558732313029914103325320357278440289168229147416
