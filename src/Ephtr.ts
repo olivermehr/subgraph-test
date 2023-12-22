@@ -5,6 +5,7 @@ import {
 import { Emissions } from "../generated/ephtr/Emissions"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalanceEntity, createOrLoadAccountEntity, createOrLoadHistoricalPriceEntity, createOrLoadChainIDToAssetMappingEntity } from "./EntityCreation"
 import { saveHistoricalData } from "./v2/ConfigBuilder"
+import { getTokenInfo } from "./v1/IndexFactory"
 
 export function handleTransfer(event: TransferEvent): void {
     let index = createOrLoadIndexEntity(event.address)
@@ -21,11 +22,7 @@ export function handleTransfer(event: TransferEvent): void {
         index.version = 'v1'
         let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, chainID)
         let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, phtrAddress, chainID)
-        let phtrContract = ERC20.bind(Address.fromBytes(phtrAddress))
-        indexAssetEntity.chainID = chainID
-        indexAssetEntity.decimals = decimals
-        indexAssetEntity.symbol = phtrContract.symbol()
-        indexAssetEntity.name = phtrContract.name()
+        getTokenInfo(indexAssetEntity,phtrAddress)
         indexAssetEntity.weight = BigInt.fromI32(255)
         indexAssetEntity.save()
 

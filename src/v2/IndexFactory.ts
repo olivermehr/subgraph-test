@@ -3,7 +3,7 @@ import { createOrLoadChainIDToAssetMappingEntity, createOrLoadIndexAssetEntity, 
 import { Governance as GovernanceTemplate, IndexTokenV2 as indexTemplate } from "../../generated/templates"
 import { Address, BigDecimal, BigInt, Bytes, DataSourceContext, dataSource, log } from "@graphprotocol/graph-ts"
 import { IndexTokenV2 } from "../../generated/IndexFactoryV2/IndexTokenV2"
-import { ERC20 } from "../../generated/IndexFactoryV2/ERC20"
+import { getTokenInfo } from "../v1/IndexFactory"
 
 
 export function handleIndexDeployed(event: DeployedEvent): void {
@@ -25,13 +25,9 @@ export function handleIndexDeployed(event: DeployedEvent): void {
     index.k = BigInt.fromI32(1).times(BigInt.fromI32(10).pow(18))
     index.latestSnapshot = BigInt.zero()
     index.totalFees = BigDecimal.zero()
-    let reserveContract = ERC20.bind(event.params.reserve)
     let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index, event.params.reserve, chainID)
     if (event.params.reserve != Address.fromString('0x0000000000000000000000000000000000000000')) {
-        indexAssetEntity.name = reserveContract.name()
-        indexAssetEntity.symbol = reserveContract.symbol()
-        indexAssetEntity.decimals = reserveContract.decimals()
-
+        getTokenInfo(indexAssetEntity, event.params.reserve)
     }
     else {
         let nativeAssetInfo = dataSource.context().get("nativeAsset")!
@@ -39,7 +35,6 @@ export function handleIndexDeployed(event: DeployedEvent): void {
         indexAssetEntity.symbol = nativeAssetInfo.toArray()[1].toString()
         indexAssetEntity.decimals = nativeAssetInfo.toArray()[2].toI32()
     }
-    indexAssetEntity.chainID = chainID
     indexAssetEntity.currencyID = BigInt.fromI32(0)
 
     let chainIDAssetArray: string[] = []

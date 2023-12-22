@@ -4,7 +4,7 @@ import {
 } from "../../generated/templates/Vault/Vault"
 import { createOrLoadIndexAssetEntity, createOrLoadIndexEntity } from "../EntityCreation"
 import { saveHistoricalData } from "../v2/ConfigBuilder"
-import { getTokenInfoV1 } from "./IndexFactory"
+import { getTokenInfo } from "./IndexFactory"
 
 export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let assetAddress = dataSource.context().getBytes('assetAddress')
@@ -12,7 +12,7 @@ export function handleVTokenTransfer(event: VTokenTransferEvent): void {
   let indexEntity = createOrLoadIndexEntity(indexAddress)
   let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, assetAddress, indexEntity.chainID)
   if (indexAssetEntity.decimals == 0) {
-    getTokenInfoV1(indexAssetEntity,assetAddress)
+    getTokenInfo(indexAssetEntity,assetAddress)
   }
   let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
   let vaultContract = Vault.bind(event.address)

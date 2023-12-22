@@ -5,7 +5,7 @@ import {
   UpdateAnatomy as UpdateAnatomyEvent
 } from "../../generated/templates/IndexTokenV1/IndexTokenV1"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalanceEntity, createOrLoadAccountEntity, createOrLoadChainIDToAssetMappingEntity } from "../EntityCreation"
-import { getTokenInfoV1 } from "./IndexFactory"
+import { getTokenInfo } from "./IndexFactory"
 
 
 export function handleTransfer(event: TransferEvent): void {
@@ -64,7 +64,7 @@ export function handleUpdateAnatomy(event: UpdateAnatomyEvent): void {
   let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, index.chainID)
   let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, event.params.asset, index.chainID)
   if (indexAssetEntity.decimals == 0) {
-    getTokenInfoV1(indexAssetEntity,event.params.asset)
+    getTokenInfo(indexAssetEntity,event.params.asset)
   }
   indexAssetEntity.weight = BigInt.fromI32(event.params.weight)
   let assets = chainIDToAssetMappingEntity.assets

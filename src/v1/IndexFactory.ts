@@ -51,7 +51,7 @@ export function handleManagedIndexCreated(
       context.setBytes('indexAddress', event.params.index)
       Vault.createWithContext(vtokenAddress, context)
       let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index, token, chainID)
-      getTokenInfoV1(indexAssetEntity,token)
+      getTokenInfo(indexAssetEntity,token)
       indexAssetEntity.weight = BigInt.fromI32(weight)
       indexAssetEntity.save()
       chainIDAssetArray.push(indexAssetEntity.id)
@@ -63,20 +63,21 @@ export function handleManagedIndexCreated(
   indexEntity.save()
 }
 
-export function getTokenInfoV1(indexAssetEntity: IndexAsset, tokenAddress: Bytes): void {
+export function getTokenInfo(indexAssetEntity: IndexAsset, tokenAddress: Bytes): void {
   let tokenContract = ERC20.bind(Address.fromBytes(tokenAddress))
+  let makerERC20Contract = MakerERC20.bind(Address.fromBytes(tokenAddress))
   let tokenName = tokenContract.try_name()
   if (tokenName.reverted) {
-    let makerTokenName = MakerERC20.bind(tokenAddress).name().toString()
-    indexAssetEntity.name = makerTokenName
+    let tokenName = makerERC20Contract.name().toString()
+    indexAssetEntity.name = tokenName
   }
   else {
     indexAssetEntity.name = tokenName.value
   }
   let tokenSymbol = tokenContract.try_symbol()
   if (tokenSymbol.reverted) {
-    let makerTokenSymbol = MakerERC20.bind(tokenAddress).symbol().toString()
-    indexAssetEntity.symbol = makerTokenSymbol
+    let tokenSymbol = makerERC20Contract.symbol().toString()
+    indexAssetEntity.symbol = tokenSymbol
   }
   else {
     indexAssetEntity.symbol = tokenSymbol.value
