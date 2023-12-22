@@ -25,8 +25,7 @@ export function handleWithdraw(event: WithdrawEvent): void {
     reserveAssetEntity.save()
     let k = indexEntity.k!
     if (event.params.k > BigInt.zero()) {
-        let assetScalar = new BigDecimal(BigInt.fromI32(1).minus(event.params.k.div(k)))
-        log.debug('asset scalar :{},redeemed k: {},saved k: {}',[assetScalar.toString(),event.params.k.toString(),k.toString()])
+        let assetScalar = BigDecimal.fromString("1").minus(new BigDecimal(event.params.k).div(new BigDecimal(k)))
         let indexAssets = indexEntity.assets
         for (let i = 0; i < indexAssets.length; i++) {
             let chainIDToAssetMappingEntity = loadChainIDToAssetMappingEntity(indexAssets[i])
