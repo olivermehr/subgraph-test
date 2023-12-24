@@ -80,6 +80,8 @@ dataSources:
           file: ./abis/v2/Governance.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MakerERC20
+          file: ./abis/v1/MakerERC20.json
       eventHandlers:
         - event: Deployed(address,string,string,address,address)
           handler: handleIndexDeployed
@@ -168,6 +170,8 @@ dataSources:
           file: ./abis/v1/ChainlinkFeedRegistry.json    
         - name: SavingsVaultViews
           file: ./abis/v1/SavingsVaultViews.json
+        - name: MakerERC20
+          file: ./abis/v1/MakerERC20.json
       eventHandlers:
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
@@ -206,6 +210,8 @@ templates:
           file: ./abis/v1/Vault.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MakerERC20
+          file: ./abis/v1/MakerERC20.json
       eventHandlers:
         - event: VTokenTransfer(indexed address,indexed address,uint256)
           handler: handleVTokenTransfer
@@ -229,6 +235,8 @@ templates:
           file: ./abis/v1/IndexToken.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MakerERC20
+          file: ./abis/v1/MakerERC20.json
       eventHandlers:
         - event: AssetRemoved(address)
           handler: handleAssetRemoved
@@ -320,6 +328,8 @@ templates:
           file: ./abis/v2/IndexToken.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MakerERC20
+          file: ./abis/v1/MakerERC20.json
       eventHandlers:
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
