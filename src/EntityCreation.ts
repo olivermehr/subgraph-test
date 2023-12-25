@@ -176,7 +176,6 @@ export function createOrLoadChainIDToAssetMappingEntity(index: Bytes, chainID: B
             chainIDToAssetMappingEntity = new ChainIDToAssetMapping(id)
             chainIDToAssetMappingEntity.index = index
             chainIDToAssetMappingEntity.chainID = chainID
-            chainIDToAssetMappingEntity.chainIndex = BigInt.zero()
             chainIDToAssetMappingEntity.assets = []
             chainIDToAssetMappingEntity.save()
         }
@@ -194,7 +193,6 @@ export function loadChainIDToAssetMappingEntity(id: string): ChainIDToAssetMappi
             chainIDToAssetMappingEntity = new ChainIDToAssetMapping(id)
             chainIDToAssetMappingEntity.index = Bytes.empty()
             chainIDToAssetMappingEntity.chainID = BigInt.zero()
-            chainIDToAssetMappingEntity.chainIndex = BigInt.zero()
             chainIDToAssetMappingEntity.assets = []
             chainIDToAssetMappingEntity.save()
         }

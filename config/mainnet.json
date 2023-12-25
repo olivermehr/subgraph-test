@@ -1,14 +1,9 @@
 {
     "network": "mainnet",
     "chainID": 1,
-    "v1": {
-        "indexFactory": {
-            "address": "0xb4e85a5BFCd5f247D4BDa1491F57921473dDcE2e",
-            "startBlock": 14832780
-        }
-    },
+    "v1": false,
     "v2":false,
-    "ephtr": true,
+    "ephtr": false,
     "savingsVaults": [
         {
             "name": "USVVault",

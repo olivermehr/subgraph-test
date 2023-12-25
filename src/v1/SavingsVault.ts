@@ -26,6 +26,8 @@ export function handleUpgraded(event: UpgradedEvent): void {
   indexEntity.decimals = usvContract.decimals()
   indexEntity.name = name
   indexEntity.symbol = symbol
+  indexEntity.version = "v1"
+  indexEntity.creationDate = event.block.timestamp
   indexEntity.mintingFee = new BigDecimal(usvContract.MINTING_FEE_IN_BP()).div(new BigDecimal(BigInt.fromI32(10000)))
   indexEntity.redemptionFee = new BigDecimal(usvContract.BURNING_FEE_IN_BP()).div(new BigDecimal(BigInt.fromI32(10000)))
   let aumFee = usvContract.AUM_SCALED_PER_SECONDS_RATE()
@@ -34,7 +36,7 @@ export function handleUpgraded(event: UpgradedEvent): void {
   let chainID = dataSource.context().getBigInt('chainID')
   let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, chainID)
   let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, vaultAsset, chainID)
-  getTokenInfo(indexAssetEntity,vaultAsset)
+  getTokenInfo(indexAssetEntity, vaultAsset)
   indexAssetEntity.weight = BigInt.fromI32(255)
   indexAssetEntity.save()
 
@@ -62,8 +64,9 @@ export function updateBalances(index: Bytes, timestamp: BigInt): void {
   let indexEntity = createOrLoadIndexEntity(index)
   let vaultAsset = dataSource.context().getBytes('vaultAsset')
   let totalAssets = new BigDecimal(vaultContract.totalAssets())
-  if (totalAssets != BigDecimal.zero()) {
-    let indexAssetEntity = createOrLoadIndexAssetEntity(index, vaultAsset, indexEntity.chainID)
+  if (totalAssets > BigDecimal.zero()) {
+    let chainID = dataSource.context().getBigInt('chainID')
+    let indexAssetEntity = createOrLoadIndexAssetEntity(index, vaultAsset, chainID)
     let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
     indexAssetEntity.balance = totalAssets.div(scalar)
     indexAssetEntity.save()
@@ -72,16 +75,14 @@ export function updateBalances(index: Bytes, timestamp: BigInt): void {
 }
 
 export function SavingsVaultBlockHandler(block: ethereum.Block): void {
-  log.debug('Block handler being called at {}', [block.number.toString()])
   let vaultAddress = dataSource.address()
   let vaultAsset = dataSource.context().getBytes("vaultAsset")
   let usdDenom = '0x0000000000000000000000000000000000000348'
   let chainlinkFeedRegistryAddress = dataSource.context().getBytes("chainlinkFeedRegistryAddress")
-  let usvViewAddress = dataSource.context().getBytes("usvViewAddress")
-  let vaultContract = SavingsVault.bind(vaultAddress)
+  let usvViewAddress = dataSource.context().getBytes("viewAddress")
   updateBalances(vaultAddress, block.timestamp)
-  let totalSupply = new BigDecimal(vaultContract.totalSupply())
   let indexEntity = createOrLoadIndexEntity(vaultAddress)
+  let totalSupply = indexEntity.totalSupply
   if (totalSupply > BigDecimal.zero()) {
     let totalAssets = loadIndexAssetEntity(loadChainIDToAssetMappingEntity(indexEntity.assets[0]).assets[0]).balance
     let historicalPriceEntity = createOrLoadHistoricalPriceEntity(vaultAddress, block.timestamp)
