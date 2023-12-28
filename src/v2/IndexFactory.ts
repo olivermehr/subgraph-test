@@ -23,7 +23,6 @@ export function handleIndexDeployed(event: DeployedEvent): void {
     index.version = "v2"
     index.creationDate = event.block.timestamp
     index.k = BigInt.fromI32(1).times(BigInt.fromI32(10).pow(18))
-    index.latestSnapshot = BigInt.zero()
     index.totalFees = BigDecimal.zero()
     let indexAssetEntity = createOrLoadIndexAssetEntity(event.params.index, event.params.reserve, chainID)
     if (event.params.reserve != Address.fromString('0x0000000000000000000000000000000000000000')) {
@@ -41,7 +40,8 @@ export function handleIndexDeployed(event: DeployedEvent): void {
     let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.params.index, chainID)
     chainIDAssetArray.push(indexAssetEntity.id)
     chainIDToAssetMappingEntity.assets = chainIDAssetArray
-
+    chainIDToAssetMappingEntity.chainIndex = BigInt.zero()
+    chainIDToAssetMappingEntity.latestSnapshot = BigInt.zero()
 
     let indexAssetArray: string[] = []
     indexAssetArray.push(chainIDToAssetMappingEntity.id)
