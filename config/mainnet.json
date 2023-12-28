@@ -8,7 +8,7 @@
         }
     },
     "v2": false,
-    "ephtr": false,
+    "ephtr": true,
     "savingsVaults": [
         {
             "name": "USVVault",
