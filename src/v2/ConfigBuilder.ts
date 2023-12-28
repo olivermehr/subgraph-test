@@ -32,6 +32,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
     let reserveAsset = dataSource.context().getBytes('reserveAsset')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
     let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(indexAddress, event.params.chainId)
+    chainIDToAssetMappingEntity.latestSnapshot = event.params.snapshot
     if (event.params.currencies.length == 0) {
         for (let i = 0; i < chainIDToAssetMappingEntity.assets.length; i++) {
             let indexAssetEntity = loadIndexAssetEntity(chainIDToAssetMappingEntity.assets[i])
@@ -80,8 +81,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
             }
         }
         chainIDToAssetMappingEntity.assets = chainIDAssetArray
-        chainIDToAssetMappingEntity.latestSnapshot = event.params.snapshot
-        chainIDToAssetMappingEntity.save()
+
 
         if (!indexEntity.assets.includes(chainIDToAssetMappingEntity.id)) {
             let indexAssetArray = indexEntity.assets
@@ -92,6 +92,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
     }
     saveHistoricalData(indexAddress, event.block.timestamp)
     indexEntity.k = BigInt.fromI32(1).times(BigInt.fromI32(10).pow(18))
+    chainIDToAssetMappingEntity.save()
     indexEntity.save()
 
 }
@@ -100,7 +101,7 @@ export function handleRegisterChain(event: RegisterChainEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(indexAddress, event.params.chainId)
     chainIDToAssetMappingEntity.chainIndex = event.params.chainIndex
-    chainIDToAssetMappingEntity.latestSnapshot =  BigInt.zero()
+    chainIDToAssetMappingEntity.latestSnapshot = BigInt.zero()
     chainIDToAssetMappingEntity.save()
 
 }
