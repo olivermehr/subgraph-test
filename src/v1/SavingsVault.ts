@@ -61,17 +61,17 @@ export function handleFCashMinted(event: FCashMintedEvent): void {
 
 export function updateBalances(index: Bytes, timestamp: BigInt): void {
   let vaultContract = SavingsVault.bind(Address.fromBytes(index))
-  let indexEntity = createOrLoadIndexEntity(index)
   let vaultAsset = dataSource.context().getBytes('vaultAsset')
-  let totalAssets = new BigDecimal(vaultContract.totalAssets())
-  if (totalAssets > BigDecimal.zero()) {
+  let totalAssetsCall = vaultContract.try_totalAssets()
+  if (!totalAssetsCall.reverted && totalAssetsCall.value > BigInt.zero()) {
+    let totalAssets = new BigDecimal(totalAssetsCall.value)
     let chainID = dataSource.context().getBigInt('chainID')
     let indexAssetEntity = createOrLoadIndexAssetEntity(index, vaultAsset, chainID)
     let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
     indexAssetEntity.balance = totalAssets.div(scalar)
     indexAssetEntity.save()
-    saveHistoricalData(index, timestamp)
   }
+  saveHistoricalData(index, timestamp)
 }
 
 export function SavingsVaultBlockHandler(block: ethereum.Block): void {

@@ -2,7 +2,7 @@
     "network": "mainnet",
     "chainID": 1,
     "v1": false,
-    "v2":false,
+    "v2": false,
     "ephtr": false,
     "savingsVaults": [
         {
