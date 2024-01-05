@@ -64,9 +64,17 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
         }
         for (let i = 0; i < event.params.currencies.length; i++) {
             let balance = new BigDecimal(event.params.currencies[i].rightShift(160))
-            let asset = Address.fromBytes(Bytes.fromHexString(event.params.currencies[i].bitAnd(BigInt.fromI32(2).pow(160).minus(BigInt.fromI32(1))).toHexString()))
-            log.debug("decoded asset = {}, decoded balance {}, chainID {}", [asset.toHexString(), balance.toString(), event.params.chainId.toString()])
-            let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, asset, event.params.chainId)
+            let asset = event.params.currencies[i].bitAnd(BigInt.fromI32(2).pow(160).minus(BigInt.fromI32(1))).toHex()
+            log.debug("{}",[asset.toString()])
+            let assetConverted : Bytes
+            if (asset.length != 20) {
+                assetConverted = Address.fromString("0x0000000000000000000000000000000000000000")
+            }
+            else {
+                assetConverted = Address.fromHexString(asset)
+            }
+            log.debug("decoded asset = {}, decoded balance {}, chainID {}", [assetConverted.toHexString(), balance.toString(), event.params.chainId.toString()])
+            let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, assetConverted, event.params.chainId)
             let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
             indexAssetEntity.balance = balance.div(scalar)
             indexAssetEntity.save()

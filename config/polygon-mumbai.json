@@ -3,16 +3,45 @@
     "chainID": 80001,
     "v1": false,
     "v2": {
-        "indexFactory": {
-            "address": "0x966f96d0b05F4A681a50928fA355a66288cEa6eA",
-            "startBlock": 43566810,
-            "nativeAsset": {
-                "name": "Matic",
-                "symbol": "MATIC",
-                "decimals": 18
+        "indexFactory": [
+            {
+                "address": "0x966f96d0b05F4A681a50928fA355a66288cEa6eA",
+                "startBlock": 43566810,
+                "nativeAsset": {
+                    "name": "Matic",
+                    "symbol": "MATIC",
+                    "decimals": 18
+                }
+            },
+            {
+                "address": "0x04Ef8FEF8cD2A7272feCA445CbdE300d1033811E",
+                "startBlock": 43485329,
+                "nativeAsset": {
+                    "name": "Matic",
+                    "symbol": "MATIC",
+                    "decimals": 18
+                }
+            },
+            {
+                "address": "0x1451Aa326BBF48ea420B9a4C388789f9964A28Ba",
+                "startBlock": 43568721,
+                "nativeAsset": {
+                    "name": "Matic",
+                    "symbol": "MATIC",
+                    "decimals": 18
+                }
+            },
+            {
+                "address": "0x13cDfC089D74eeE51959A111F0067ACD0a2DEb9A",
+                "startBlock": 43761351,
+                "nativeAsset": {
+                    "name": "Matic",
+                    "symbol": "MATIC",
+                    "decimals": 18
+                }
             }
-        }
+        ]
     },
     "ephtr": false,
-    "savingsVaults":false
+    "savingsVaults": false
 }

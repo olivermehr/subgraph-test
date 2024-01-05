@@ -45,6 +45,7 @@ dataSources:
       file: ./src/v1/IndexFactory.ts
 {{/v1}}
 {{#v2}}
+{{#indexFactory}}
   - kind: ethereum
     name: IndexFactoryV2
     network: {{network}}
@@ -56,15 +57,15 @@ dataSources:
         type: List
         data:
           - type: String
-            data: "{{indexFactory.nativeAsset.name}}"
+            data: "{{nativeAsset.name}}"
           - type: String
-            data: "{{indexFactory.nativeAsset.symbol}}"
+            data: "{{nativeAsset.symbol}}"
           - type: Int
-            data: {{indexFactory.nativeAsset.decimals}}
+            data: {{nativeAsset.decimals}}
     source:
-      address: "{{indexFactory.address}}"
+      address: "{{address}}"
       abi: IndexFactoryV2
-      startBlock: {{indexFactory.startBlock}}
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -86,6 +87,7 @@ dataSources:
         - event: Deployed(address,string,string,address,address)
           handler: handleIndexDeployed
       file: ./src/v2/IndexFactory.ts
+{{/indexFactory}}      
 {{/v2}}
 {{#ephtr}}
   - kind: ethereum

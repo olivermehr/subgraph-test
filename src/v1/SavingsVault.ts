@@ -19,6 +19,7 @@ export function handleDeposit(event: DepositEvent): void {
 }
 
 export function handleUpgraded(event: UpgradedEvent): void {
+  let chainID = dataSource.context().getBigInt('chainID')
   let indexEntity = createOrLoadIndexEntity(event.address)
   let usvContract = SavingsVault.bind(event.address)
   let name = usvContract.name()
@@ -27,13 +28,16 @@ export function handleUpgraded(event: UpgradedEvent): void {
   indexEntity.name = name
   indexEntity.symbol = symbol
   indexEntity.version = "v1"
-  indexEntity.creationDate = event.block.timestamp
+  if (indexEntity.creationDate == BigInt.zero()){
+    indexEntity.creationDate = event.block.timestamp
+  }
+  indexEntity.chainID = chainID
   indexEntity.mintingFee = new BigDecimal(usvContract.MINTING_FEE_IN_BP()).div(new BigDecimal(BigInt.fromI32(10000)))
   indexEntity.redemptionFee = new BigDecimal(usvContract.BURNING_FEE_IN_BP()).div(new BigDecimal(BigInt.fromI32(10000)))
   let aumFee = usvContract.AUM_SCALED_PER_SECONDS_RATE()
   convertAUMFeeRate(event.address, aumFee)
   let vaultAsset = usvContract.asset()
-  let chainID = dataSource.context().getBigInt('chainID')
+  
   let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, chainID)
   let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, vaultAsset, chainID)
   getTokenInfo(indexAssetEntity, vaultAsset)
