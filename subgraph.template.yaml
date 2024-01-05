@@ -47,7 +47,7 @@ dataSources:
 {{#v2}}
 {{#indexFactory}}
   - kind: ethereum
-    name: IndexFactoryV2
+    name: {{name}}
     network: {{network}}
     context:
       chainID:
