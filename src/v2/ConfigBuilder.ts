@@ -19,14 +19,14 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
 
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
-    log.debug("Currency registered event: {} {} {} {} {}", [event.params.name, event.params.symbol, event.params.decimals.toString(), event.params.currency.toHexString(), event.params.currencyId.toString()])
+    log.debug("Currency registered event: {} {} {} {} {} {}", [event.params.name, event.params.symbol, event.params.decimals.toString(), event.params.currency.toHexString(), event.params.currencyId.toString(),event.params.chainId.toString()])
     let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, event.params.currency, event.params.chainId)
     if (event.params.currency == Address.fromString("0x0000000000000000000000000000000000000000")) {
         let tokenInfo = selectNativeAsset(event.params.chainId)
         if (tokenInfo) {
-            indexAssetEntity.name = tokenInfo[0] as string
-            indexAssetEntity.symbol = tokenInfo[1] as string
-            indexAssetEntity.decimals = tokenInfo[2] as number
+            indexAssetEntity.name = tokenInfo[0] 
+            indexAssetEntity.symbol = tokenInfo[1] 
+            indexAssetEntity.decimals = BigInt.fromString(tokenInfo[2]).toI32()
         }
         else {
             indexAssetEntity.name = event.params.name
@@ -83,7 +83,8 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
             let asset = event.params.currencies[i].bitAnd(BigInt.fromI32(2).pow(160).minus(BigInt.fromI32(1))).toHex()
             log.debug("{}", [asset.toString()])
             let assetConverted: Bytes
-            if (asset.length != 20) {
+            log.debug("{} length = {}",[asset,asset.length.toString()])
+            if (asset.length != 42) {
                 assetConverted = Address.fromString("0x0000000000000000000000000000000000000000")
             }
             else {
@@ -148,37 +149,37 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
     }
 }
 
-export function selectNativeAsset(chainID: BigInt): Array<string | number> | null {
-    let chainIDMap = new TypedMap<BigInt, Array<string | number>>()
-    chainIDMap.set(BigInt.fromI32(43114), ["Avalanche", "AVAX", 18])
-    chainIDMap.set(BigInt.fromI32(43113), ["Avalanche", "AVAX", 18])
-    chainIDMap.set(BigInt.fromI32(80001), ["Matic", "MATIC", 18])
-    chainIDMap.set(BigInt.fromI32(137), ["Matic", "MATIC", 18])
-    chainIDMap.set(BigInt.fromI32(97), ["Binance Coin", "BNB", 18])
-    chainIDMap.set(BigInt.fromI32(56), ["Binance Coin", "BNB", 18])
-    chainIDMap.set(BigInt.fromI32(1), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(42161), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(10), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(8453), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(100), ["XDAI", "XDAI", 18])
-    chainIDMap.set(BigInt.fromI32(10200), ["XDAI", "XDAI", 18])
-    chainIDMap.set(BigInt.fromI32(5000), ["Mantle", "MNT", 18])
-    chainIDMap.set(BigInt.fromI32(250), ["Fantom", "FTM", 18])
-    chainIDMap.set(BigInt.fromI32(4002), ["Fantom", "FTM", 18])
-    chainIDMap.set(BigInt.fromI32(1088), ["Metis", "METIS", 18])
-    chainIDMap.set(BigInt.fromI32(59144), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(40), ["Telos", "TLOS", 18])
-    chainIDMap.set(BigInt.fromI32(1313161554), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(204), ["Binance Coin", "BNB", 18])
-    chainIDMap.set(BigInt.fromI32(41), ["Telos", "TLOS", 18])
-    chainIDMap.set(BigInt.fromI32(5003), ["Mantle", "MNT", 18])
-    chainIDMap.set(BigInt.fromI32(84532), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(421614), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(11155111), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(11155420), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(7700), ["Canto", "CANTO", 18])
-    chainIDMap.set(BigInt.fromI32(59140), ["Ethereum", "ETH", 18])
-    chainIDMap.set(BigInt.fromI32(5611), ["Binance Coin", "tBNB", 18])
+export function selectNativeAsset(chainID: BigInt): Array<string> | null {
+    let chainIDMap = new TypedMap<BigInt,Array<string>>()
+    chainIDMap.set(BigInt.fromI32(43114), ["Avalanche", "AVAX", "18"])
+    chainIDMap.set(BigInt.fromI32(43113), ["Avalanche", "AVAX", "18"])
+    chainIDMap.set(BigInt.fromI32(80001), ["Matic", "MATIC", "18"])
+    chainIDMap.set(BigInt.fromI32(137), ["Matic", "MATIC", "18"])
+    chainIDMap.set(BigInt.fromI32(97), ["Binance Coin", "BNB", "18"])
+    chainIDMap.set(BigInt.fromI32(56), ["Binance Coin", "BNB", "18"])
+    chainIDMap.set(BigInt.fromI32(1), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(42161), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(10), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(8453), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(100), ["XDAI", "XDAI", "18"])
+    chainIDMap.set(BigInt.fromI32(10200), ["XDAI", "XDAI", "18"])
+    chainIDMap.set(BigInt.fromI32(5000), ["Mantle", "MNT", "18"])
+    chainIDMap.set(BigInt.fromI32(250), ["Fantom", "FTM", "18"])
+    chainIDMap.set(BigInt.fromI32(4002), ["Fantom", "FTM", "18"])
+    chainIDMap.set(BigInt.fromI32(1088), ["Metis", "METIS", "18"])
+    chainIDMap.set(BigInt.fromI32(59144), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(40), ["Telos", "TLOS", "18"])
+    chainIDMap.set(BigInt.fromI32(1313161554), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(204), ["Binance Coin", "BNB", "18"])
+    chainIDMap.set(BigInt.fromI32(41), ["Telos", "TLOS", "18"])
+    chainIDMap.set(BigInt.fromI32(5003), ["Mantle", "MNT", "18"])
+    chainIDMap.set(BigInt.fromI32(84532), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(421614), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(11155111), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(11155420), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(7700), ["Canto", "CANTO", "18"])
+    chainIDMap.set(BigInt.fromI32(59140), ["Ethereum", "ETH", "18"])
+    chainIDMap.set(BigInt.fromI32(5611), ["Binance Coin", "tBNB", "18"])
 
     let data = chainIDMap.get(chainID)
 
