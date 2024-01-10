@@ -21,7 +21,7 @@ export function convertAUMFeeRate(index: Bytes, aumFee: BigInt): void {
   let one = new BigDecimal(BigInt.fromI32(1))
   let two = new BigDecimal(BigInt.fromI32(2))
   let scalar = BigInt.fromI64(1000000000000000000).toBigDecimal()
-  let roundingPrecision = BigInt.fromString(scalar.times(BigDecimal.fromString('0.001')).toString())
+  let roundingPrecision = BigInt.fromString(scalar.times(BigDecimal.fromString('0.0005')).toString())
 
   // e = 1 - C / s = 1 - q
   let e = one.minus(q)

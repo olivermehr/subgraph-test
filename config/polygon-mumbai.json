@@ -6,48 +6,8 @@
         "indexFactory": [
             {
                 "name": "IndexFactoryV2-1",
-                "address": "0x966f96d0b05F4A681a50928fA355a66288cEa6eA",
-                "startBlock": 43566810,
-                "nativeAsset": {
-                    "name": "Matic",
-                    "symbol": "MATIC",
-                    "decimals": 18
-                }
-            },
-            {
-                "name": "IndexFactoryV2-2",
-                "address": "0x04Ef8FEF8cD2A7272feCA445CbdE300d1033811E",
-                "startBlock": 43485329,
-                "nativeAsset": {
-                    "name": "Matic",
-                    "symbol": "MATIC",
-                    "decimals": 18
-                }
-            },
-            {
-                "name": "IndexFactoryV2-3",
-                "address": "0x1451Aa326BBF48ea420B9a4C388789f9964A28Ba",
-                "startBlock": 43568721,
-                "nativeAsset": {
-                    "name": "Matic",
-                    "symbol": "MATIC",
-                    "decimals": 18
-                }
-            },
-            {
-                "name": "IndexFactoryV2-4",
-                "address": "0x13cDfC089D74eeE51959A111F0067ACD0a2DEb9A",
-                "startBlock": 43761351,
-                "nativeAsset": {
-                    "name": "Matic",
-                    "symbol": "MATIC",
-                    "decimals": 18
-                }
-            },
-            {
-                "name": "IndexFactoryV2-5",
-                "address": "0xe4587116Af72fb81e1CAE93C4A363EB146e4e856",
-                "startBlock": 44112691,
+                "address": "0xdD875d56e601798B1a809198AbaaB2CC615e4d16",
+                "startBlock": 44431623,
                 "nativeAsset": {
                     "name": "Matic",
                     "symbol": "MATIC",
