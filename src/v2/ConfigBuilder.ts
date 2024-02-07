@@ -133,7 +133,7 @@ export function handleRegisterChain(event: RegisterChainEvent): void {
 
 export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
     let indexEntity = createOrLoadIndexEntity(index)
-    createOrLoadHistoricalIndexBalanceEntity(index, timestamp)
+    createOrLoadHistoricalIndexBalanceEntity(index, timestamp,indexEntity.totalSupply)
     for (let i = 0; i < indexEntity.assets.length; i++) {
         let chainIDToAssetMappingEntity = loadChainIDToAssetMappingEntity(indexEntity.assets[i])
         let chainID = chainIDToAssetMappingEntity.chainID

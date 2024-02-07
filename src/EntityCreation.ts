@@ -95,7 +95,7 @@ export function loadIndexAssetEntity(id: string): IndexAsset {
 }
 
 
-export function createOrLoadHistoricalIndexBalanceEntity(index: Bytes, blockTimestamp: BigInt): HistoricalIndexBalance {
+export function createOrLoadHistoricalIndexBalanceEntity(index: Bytes, blockTimestamp: BigInt, totalSupply: BigDecimal): HistoricalIndexBalance {
     let timestamp = blockTimestamp.minus(blockTimestamp.mod(BigInt.fromI32(86400)))
     let id = index.toHexString().concat(timestamp.toString())
     let historicalIndexBalanceEntity = HistoricalIndexBalance.loadInBlock(id)
@@ -105,6 +105,7 @@ export function createOrLoadHistoricalIndexBalanceEntity(index: Bytes, blockTime
             historicalIndexBalanceEntity = new HistoricalIndexBalance(id)
             historicalIndexBalanceEntity.timestamp = timestamp
             historicalIndexBalanceEntity.index = index
+            historicalIndexBalanceEntity.totalSupply = totalSupply
             historicalIndexBalanceEntity.save()
         }
     }

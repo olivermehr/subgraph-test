@@ -9,6 +9,7 @@
     },
     "v2": {
         "indexFactory": {
+            "name": "InitFactory",
             "address": "0x0000000000000000000000000000000000000000",
             "startBlock": 1
         }
