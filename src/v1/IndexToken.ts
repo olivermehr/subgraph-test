@@ -6,6 +6,7 @@ import {
 } from "../../generated/templates/IndexTokenV1/IndexTokenV1"
 import { createOrLoadIndexEntity, createOrLoadIndexAssetEntity, createOrLoadIndexAccountEntity, createOrLoadHistoricalAccountBalanceEntity, createOrLoadAccountEntity, createOrLoadChainIDToAssetMappingEntity } from "../EntityCreation"
 import { getTokenInfo } from "./IndexFactory"
+import { saveHistoricalData } from "../v2/ConfigBuilder"
 
 
 export function handleTransfer(event: TransferEvent): void {
@@ -44,6 +45,7 @@ export function handleTransfer(event: TransferEvent): void {
   }
 
   index.save()
+  saveHistoricalData(event.address, event.block.timestamp)
 }
 
 export function handleAssetRemoved(event: AssetRemovedEvent): void {
@@ -64,7 +66,7 @@ export function handleUpdateAnatomy(event: UpdateAnatomyEvent): void {
   let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.address, index.chainID)
   let indexAssetEntity = createOrLoadIndexAssetEntity(event.address, event.params.asset, index.chainID)
   if (indexAssetEntity.decimals == 0) {
-    getTokenInfo(indexAssetEntity,event.params.asset)
+    getTokenInfo(indexAssetEntity, event.params.asset)
   }
   indexAssetEntity.weight = BigInt.fromI32(event.params.weight)
   let assets = chainIDToAssetMappingEntity.assets
