@@ -19,26 +19,11 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
 
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
-    log.debug("Currency registered event: {} {} {} {} {} {}", [event.params.name, event.params.symbol, event.params.decimals.toString(), event.params.currency.toHexString(), event.params.currencyId.toString(),event.params.chainId.toString()])
+    log.debug("Currency registered event: {} {} {} {} {} {}", [event.params.name, event.params.symbol, event.params.decimals.toString(), event.params.currency.toHexString(), event.params.currencyId.toString(), event.params.chainId.toString()])
     let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, event.params.currency, event.params.chainId)
-    if (event.params.currency == Address.fromString("0x0000000000000000000000000000000000000000")) {
-        let tokenInfo = selectNativeAsset(event.params.chainId)
-        if (tokenInfo) {
-            indexAssetEntity.name = tokenInfo[0] 
-            indexAssetEntity.symbol = tokenInfo[1] 
-            indexAssetEntity.decimals = BigInt.fromString(tokenInfo[2]).toI32()
-        }
-        else {
-            indexAssetEntity.name = event.params.name
-            indexAssetEntity.symbol = event.params.symbol
-            indexAssetEntity.decimals = event.params.decimals
-        }
-    }
-    else {
-        indexAssetEntity.name = event.params.name
-        indexAssetEntity.symbol = event.params.symbol
-        indexAssetEntity.decimals = event.params.decimals
-    }
+    indexAssetEntity.name = event.params.name
+    indexAssetEntity.symbol = event.params.symbol
+    indexAssetEntity.decimals = event.params.decimals
     indexAssetEntity.currencyID = event.params.currencyId
     indexAssetEntity.save()
 }
@@ -83,7 +68,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
             let asset = event.params.currencies[i].bitAnd(BigInt.fromI32(2).pow(160).minus(BigInt.fromI32(1))).toHex()
             log.debug("{}", [asset.toString()])
             let assetConverted: Bytes
-            log.debug("{} length = {}",[asset,asset.length.toString()])
+            log.debug("{} length = {}", [asset, asset.length.toString()])
             if (asset.length != 42) {
                 assetConverted = Address.fromString("0x0000000000000000000000000000000000000000")
             }
@@ -152,7 +137,7 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
 }
 
 export function selectNativeAsset(chainID: BigInt): Array<string> | null {
-    let chainIDMap = new TypedMap<BigInt,Array<string>>()
+    let chainIDMap = new TypedMap<BigInt, Array<string>>()
     chainIDMap.set(BigInt.fromI32(43114), ["Avalanche", "AVAX", "18"])
     chainIDMap.set(BigInt.fromI32(43113), ["Avalanche", "AVAX", "18"])
     chainIDMap.set(BigInt.fromI32(80001), ["Matic", "MATIC", "18"])
