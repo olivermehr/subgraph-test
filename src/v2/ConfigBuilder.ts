@@ -11,7 +11,7 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     convertAUMFeeRate(indexAddress, aumFee)
     let scalar = new BigDecimal(BigInt.fromI32(10000))
     let mintingFee = new BigDecimal(decoded[1].toTuple()[0].toBigInt()).div(scalar)
-    let redemptionFee = new BigDecimal(decoded[2].toTuple()[1].toBigInt()).div(scalar)
+    let redemptionFee = new BigDecimal(decoded[2].toTuple()[0].toBigInt()).div(scalar)
     indexEntity.mintingFee = mintingFee
     indexEntity.redemptionFee = redemptionFee
     indexEntity.save()
@@ -19,12 +19,11 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
 
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
-    log.debug("Currency registered event: {} {} {} {} {} {}", [event.params.name, event.params.symbol, event.params.decimals.toString(), event.params.currency.toHexString(), event.params.currencyId.toString(), event.params.chainId.toString()])
+    log.debug("Currency registered event: {} {} {} {} {}", [event.params.name, event.params.symbol, event.params.decimals.toString(), event.params.currency.toHexString(), event.params.chainId.toString()])
     let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, event.params.currency, event.params.chainId)
     indexAssetEntity.name = event.params.name
     indexAssetEntity.symbol = event.params.symbol
     indexAssetEntity.decimals = event.params.decimals
-    indexAssetEntity.currencyID = event.params.currencyId
     indexAssetEntity.save()
 }
 
@@ -66,14 +65,14 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
         for (let i = 0; i < event.params.currencies.length; i++) {
             let balance = new BigDecimal(event.params.currencies[i].rightShift(160))
             let asset = event.params.currencies[i].bitAnd(BigInt.fromI32(2).pow(160).minus(BigInt.fromI32(1))).toHex()
-            log.debug("{}", [asset.toString()])
+            log.debug("{}", [asset])
             let assetConverted: Bytes
             log.debug("{} length = {}", [asset, asset.length.toString()])
-            if (asset.length != 42) {
+            if (asset.length == 3) {
                 assetConverted = Address.fromString("0x0000000000000000000000000000000000000000")
             }
             else {
-                assetConverted = Address.fromHexString(asset)
+                assetConverted = Address.fromHexString('0x'.concat("0".repeat(42-asset.length)).concat(asset.slice(2)))
             }
             log.debug("decoded asset = {}, decoded balance {}, chainID {}", [assetConverted.toHexString(), balance.toString(), event.params.chainId.toString()])
             let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, assetConverted, event.params.chainId)

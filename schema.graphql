@@ -28,7 +28,6 @@ type Account @entity {
 type IndexAsset @entity {
   id: String!
   chainID: BigInt!
-  currencyID: BigInt
   symbol: String!
   name: String!
   decimals: Int!

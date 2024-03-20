@@ -34,7 +34,6 @@ export function handleIndexDeployed(event: DeployedEvent): void {
         indexAssetEntity.symbol = nativeAssetInfo.toArray()[1].toString()
         indexAssetEntity.decimals = nativeAssetInfo.toArray()[2].toI32()
     }
-    indexAssetEntity.currencyID = BigInt.fromI32(0)
 
     let chainIDAssetArray: string[] = []
     let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(event.params.index, chainID)
