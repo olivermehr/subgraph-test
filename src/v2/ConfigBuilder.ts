@@ -6,7 +6,7 @@ import { convertAUMFeeRate } from "../v1/FeePool";
 export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
-    let decoded = ethereum.decode('((uint256,bool,address),(uint16,bool),(address,uint16,bool))', event.params.param0)!.toTuple()
+    let decoded = ethereum.decode('((uint256,bool,address),(uint16,bool),(uint16,bool))', event.params.param0)!.toTuple()
     let aumFee = decoded[0].toTuple()[0].toBigInt()
     convertAUMFeeRate(indexAddress, aumFee)
     let scalar = new BigDecimal(BigInt.fromI32(10000))
