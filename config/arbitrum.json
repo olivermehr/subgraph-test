@@ -2,7 +2,20 @@
     "network": "arbitrum-one",
     "chainID": 42161,
     "v1": false,
-    "v2": true,
+    "v2": {
+        "indexFactory": [
+            {
+                "name": "IndexFactoryV2",
+                "address": "0xCca67eB8dd6dd3fA07B78Ae020E37e674c6277DF",
+                "startBlock": 192035549,
+                "nativeAsset": {
+                    "name": "Ethereum",
+                    "symbol": "ETH",
+                    "decimals": 18
+                }
+            }
+        ]
+    },
     "ephtr": false,
     "savingsVaults":false
 }
