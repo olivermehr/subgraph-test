@@ -11,6 +11,7 @@ type Index @entity {
   redemptionFee: BigDecimal!
   aumFee: BigDecimal!
   k: BigInt
+  config : Config @derivedFrom(field:"id")
   totalFees: BigDecimal
   totalSupply: BigDecimal!
   holders: BigInt!
@@ -92,4 +93,15 @@ type ChainIDToAssetMapping @entity {
   chainIndex: BigInt
   latestSnapshot: BigInt
   assets: [IndexAsset!]!
+}
+
+type Config @entity {
+  id: Bytes!
+  AUMDilutionPerSecond: BigInt!
+  useCustomAUMFee: Boolean!
+  metadata: Bytes!
+  depositFeeInBP: BigInt!
+  depositCustomCallback: Boolean!
+  redemptionFeeInBP: BigInt!
+  redemptionCustomCallback: Boolean!
 }

@@ -1,5 +1,5 @@
 import { Bytes, BigInt, BigDecimal, log, Address, ethereum } from "@graphprotocol/graph-ts"
-import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset, ChainIDToAssetMapping } from "../generated/schema"
+import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset, ChainIDToAssetMapping, Config } from "../generated/schema"
 
 export function createOrLoadIndexEntity(id: Bytes): Index {
     let index = Index.loadInBlock(id)
@@ -201,3 +201,25 @@ export function loadChainIDToAssetMappingEntity(id: string): ChainIDToAssetMappi
     return chainIDToAssetMappingEntity
 
 }
+
+export function createOrLoadConfigEntity(index: Bytes): Config {
+    let id = index.toHexString()
+    let configEntity = Config.loadInBlock(id)
+    if (configEntity == null) {
+        configEntity = Config.load(id)
+        if (configEntity == null) {
+            configEntity = new Config(id)
+            configEntity.AUMDilutionPerSecond = BigInt.zero()
+            configEntity.useCustomAUMFee = false
+            configEntity.metadata = Bytes.empty()
+            configEntity.depositFeeInBP = BigInt.zero()
+            configEntity.depositCustomCallback = false
+            configEntity.redemptionFeeInBP = BigInt.zero()
+            configEntity.redemptionCustomCallback = false
+            configEntity.save()
+        }   
+    }
+    return configEntity
+
+}
+
