@@ -1,13 +1,20 @@
 import { Bytes, BigInt, Address, ethereum, dataSource, BigDecimal, log, ByteArray, TypedMap } from "@graphprotocol/graph-ts";
-import { createOrLoadChainIDToAssetMappingEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
+import { createOrLoadChainIDToAssetMappingEntity, createOrLoadConfigEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
 import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent, RegisterChain as RegisterChainEvent, FinishRebalancing as FinishRebalancingEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
 
 export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
-    
+    let configEntity = createOrLoadConfigEntity(indexAddress)
     let decoded = ethereum.decode('((uint256,bool,address),(uint16,bool),(uint16,bool))', event.params.param0)!.toTuple()
+    configEntity.AUMDilutionPerSecond = decoded[0].toTuple()[0].toBigInt()
+    configEntity.useCustomAUMFee = decoded[0].toTuple()[1].toBoolean()
+    configEntity.metadata = decoded[0].toTuple()[2].toAddress()
+    configEntity.depositFeeInBP = decoded[1].toTuple()[0].toBigInt()
+    configEntity.depositCustomCallback = decoded[1].toTuple()[1].toBoolean()
+    configEntity.redemptionFeeInBP = decoded[2].toTuple()[0].toBigInt()
+    configEntity.redemptionCustomCallback = decoded[2].toTuple()[1].toBoolean()
     let aumFee = decoded[0].toTuple()[0].toBigInt()
     convertAUMFeeRate(indexAddress, aumFee)
     let scalar = new BigDecimal(BigInt.fromI32(10000))
@@ -16,6 +23,7 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     indexEntity.mintingFee = mintingFee
     indexEntity.redemptionFee = redemptionFee
     indexEntity.save()
+    configEntity.save()
 }
 
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {

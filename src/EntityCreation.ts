@@ -203,12 +203,13 @@ export function loadChainIDToAssetMappingEntity(id: string): ChainIDToAssetMappi
 }
 
 export function createOrLoadConfigEntity(index: Bytes): Config {
-    let id = index.toHexString()
+    let id = index
     let configEntity = Config.loadInBlock(id)
     if (configEntity == null) {
         configEntity = Config.load(id)
         if (configEntity == null) {
             configEntity = new Config(id)
+            configEntity.index = index
             configEntity.AUMDilutionPerSecond = BigInt.zero()
             configEntity.useCustomAUMFee = false
             configEntity.metadata = Bytes.empty()
