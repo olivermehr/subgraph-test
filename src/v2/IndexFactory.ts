@@ -41,6 +41,7 @@ export function handleIndexDeployed(event: DeployedEvent): void {
     chainIDToAssetMappingEntity.assets = chainIDAssetArray
     chainIDToAssetMappingEntity.chainIndex = BigInt.zero()
     chainIDToAssetMappingEntity.latestSnapshot = BigInt.zero()
+    chainIDToAssetMappingEntity.registeredAssets = BigInt.zero()
 
     let indexAssetArray: string[] = []
     indexAssetArray.push(chainIDToAssetMappingEntity.id)
