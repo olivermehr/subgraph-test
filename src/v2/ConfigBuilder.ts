@@ -30,9 +30,15 @@ export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     log.debug("Currency registered event: {} {} {} {} {}", [event.params.name, event.params.symbol, event.params.decimals.toString(), event.params.currency.toHexString(), event.params.chainId.toString()])
     let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, event.params.currency, event.params.chainId)
+    let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(indexAddress,event.params.chainId)
     indexAssetEntity.name = event.params.name
     indexAssetEntity.symbol = event.params.symbol
     indexAssetEntity.decimals = event.params.decimals
+    indexAssetEntity.currencyID = chainIDToAssetMappingEntity.registeredAssets
+
+    chainIDToAssetMappingEntity.registeredAssets = chainIDToAssetMappingEntity.registeredAssets!.plus(BigInt.fromI32(1))
+    
+    chainIDToAssetMappingEntity.save()
     indexAssetEntity.save()
 }
 
@@ -120,6 +126,7 @@ export function handleRegisterChain(event: RegisterChainEvent): void {
     let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(indexAddress, event.params.chainId)
     chainIDToAssetMappingEntity.chainIndex = event.params.chainIndex
     chainIDToAssetMappingEntity.latestSnapshot = BigInt.zero()
+    chainIDToAssetMappingEntity.registeredAssets = BigInt.zero()
     chainIDToAssetMappingEntity.save()
 
 }

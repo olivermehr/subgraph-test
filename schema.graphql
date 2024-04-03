@@ -32,6 +32,7 @@ type IndexAsset @entity {
   symbol: String!
   name: String!
   decimals: Int!
+  currencyID: BigInt
   index: Bytes!
   asset: Bytes!
   balance: BigDecimal!
@@ -92,6 +93,7 @@ type ChainIDToAssetMapping @entity {
   chainID: BigInt!
   chainIndex: BigInt
   latestSnapshot: BigInt
+  registeredAssets: BigInt
   assets: [IndexAsset!]!
 }
 
