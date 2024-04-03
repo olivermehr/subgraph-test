@@ -30,14 +30,14 @@ export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     log.debug("Currency registered event: {} {} {} {} {}", [event.params.name, event.params.symbol, event.params.decimals.toString(), event.params.currency.toHexString(), event.params.chainId.toString()])
     let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, event.params.currency, event.params.chainId)
-    let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(indexAddress,event.params.chainId)
+    let chainIDToAssetMappingEntity = createOrLoadChainIDToAssetMappingEntity(indexAddress, event.params.chainId)
     indexAssetEntity.name = event.params.name
     indexAssetEntity.symbol = event.params.symbol
     indexAssetEntity.decimals = event.params.decimals
     indexAssetEntity.currencyID = chainIDToAssetMappingEntity.registeredAssets
 
     chainIDToAssetMappingEntity.registeredAssets = chainIDToAssetMappingEntity.registeredAssets!.plus(BigInt.fromI32(1))
-    
+
     chainIDToAssetMappingEntity.save()
     indexAssetEntity.save()
 }
@@ -87,7 +87,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
                 assetConverted = Address.fromString("0x0000000000000000000000000000000000000000")
             }
             else {
-                assetConverted = Address.fromHexString('0x'.concat("0".repeat(42-asset.length)).concat(asset.slice(2)))
+                assetConverted = Address.fromHexString('0x'.concat("0".repeat(42 - asset.length)).concat(asset.slice(2)))
             }
             log.debug("decoded asset = {}, decoded balance {}, chainID {}", [assetConverted.toHexString(), balance.toString(), event.params.chainId.toString()])
             let indexAssetEntity = createOrLoadIndexAssetEntity(indexAddress, assetConverted, event.params.chainId)
