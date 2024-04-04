@@ -154,27 +154,38 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
 }
 
 export function handleFinishRebalancing(event: FinishRebalancingEvent): void {
+    log.debug("weights {}",[event.params.weights.toString()])
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
     let chainIndexArray = convertBitSetToIDs(convertBigIntsToBitArray(event.params.newAnatomy.chainIdSet))
+    log.debug(" chain index array {}",[chainIndexArray.toString()])
     let count = 0
     for (let i = 0; i < chainIndexArray.length; i++) {
         let currencyIndexArray = convertBitSetToIDs(convertBigIntsToBitArray(event.params.newAnatomy.currencyIdSets[i]))
+        log.debug("Currency index array output {} for chain index {}",[currencyIndexArray.toString(),chainIndexArray[i].toString()])
         for (let y = 0; y < indexEntity.assets.length; y++) {
             let chainIDToAssetMappingEntity = loadChainIDToAssetMappingEntity(indexEntity.assets[y])
-            if (chainIDToAssetMappingEntity.chainIndex && chainIDToAssetMappingEntity.chainID == chainIndexArray[i]) {
+            let chainIndex = chainIDToAssetMappingEntity.chainIndex
+            if (chainIndex && chainIndex == chainIndexArray[i]) {
                 while (currencyIndexArray.length > 0) {
                     for (let x = 0; x < chainIDToAssetMappingEntity.assets.length; x++) {
                         let indexAssetEntity = loadIndexAssetEntity(chainIDToAssetMappingEntity.assets[x])
                         let currencyID = indexAssetEntity.currencyID
+                        if (currencyIndexArray.length == 0){
+                            break
+                        }
                         if (currencyID && currencyID == currencyIndexArray[0]) {
                             indexAssetEntity.weight = event.params.weights[count]
                             currencyIndexArray.splice(0, 1)
                             indexAssetEntity.save()
                             count++
+                            log.debug("currency array length {}",[currencyIndexArray.length.toString()])
+                            log.debug("count {}",[count.toString()])
                         }
+                        
                     }
                 }
+                
                 break
 
             }
@@ -201,7 +212,7 @@ export function convertBigIntsToBitArray(array: BigInt[]): BigInt[] {
             bitArray.push(chainBitSet.bitAnd(BigInt.fromI32(1)))
             chainBitSet = chainBitSet.rightShift(1)
         }
-        expandedBitArray.concat(bitArray)
+        expandedBitArray = expandedBitArray.concat(bitArray)
     }
     return expandedBitArray
 }
