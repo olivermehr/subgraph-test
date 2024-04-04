@@ -52,6 +52,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
         for (let i = 0; i < chainIDToAssetMappingEntity.assets.length; i++) {
             let indexAssetEntity = loadIndexAssetEntity(chainIDToAssetMappingEntity.assets[i])
             indexAssetEntity.balance = BigDecimal.zero()
+            indexAssetEntity.weight = BigInt.zero()
             indexAssetEntity.save()
         }
         let emptyAssetArray: string[] = []
@@ -101,6 +102,7 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
             if (!chainIDAssetArray.includes(id)) {
                 let indexAssetEntity = loadIndexAssetEntity(id)
                 indexAssetEntity.balance = BigDecimal.zero()
+                indexAssetEntity.weight = BigInt.zero()
                 indexAssetEntity.save()
             }
         }
@@ -150,6 +152,61 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
         }
     }
 }
+
+export function handleFinishRebalancing(event: FinishRebalancingEvent): void {
+    let indexAddress = dataSource.context().getBytes('indexAddress')
+    let indexEntity = createOrLoadIndexEntity(indexAddress)
+    let chainIndexArray = convertBitSetToIDs(convertBigIntsToBitArray(event.params.newAnatomy.chainIdSet))
+    let count = 0
+    for (let i = 0; i < chainIndexArray.length; i++) {
+        let currencyIndexArray = convertBitSetToIDs(convertBigIntsToBitArray(event.params.newAnatomy.currencyIdSets[i]))
+        for (let y = 0; y < indexEntity.assets.length; y++) {
+            let chainIDToAssetMappingEntity = loadChainIDToAssetMappingEntity(indexEntity.assets[y])
+            if (chainIDToAssetMappingEntity.chainIndex && chainIDToAssetMappingEntity.chainID == chainIndexArray[i]) {
+                while (currencyIndexArray.length > 0) {
+                    for (let x = 0; x < chainIDToAssetMappingEntity.assets.length; x++) {
+                        let indexAssetEntity = loadIndexAssetEntity(chainIDToAssetMappingEntity.assets[x])
+                        let currencyID = indexAssetEntity.currencyID
+                        if (currencyID && currencyID == currencyIndexArray[0]) {
+                            indexAssetEntity.weight = event.params.weights[count]
+                            currencyIndexArray.splice(0, 1)
+                            indexAssetEntity.save()
+                            count++
+                        }
+                    }
+                }
+                break
+
+            }
+        }
+    }
+}
+
+export function convertBitSetToIDs(array: BigInt[]): BigInt[] {
+    let IDArray: BigInt[] = []
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] == BigInt.fromI32(1)) {
+            IDArray.push(BigInt.fromI32(i))
+        }
+    }
+    return IDArray
+}
+
+export function convertBigIntsToBitArray(array: BigInt[]): BigInt[] {
+    let expandedBitArray: BigInt[] = []
+    for (let i = 0; i < array.length; i++) {
+        let bitArray: BigInt[] = []
+        let chainBitSet = array[i]
+        while (chainBitSet > BigInt.zero()) {
+            bitArray.push(chainBitSet.bitAnd(BigInt.fromI32(1)))
+            chainBitSet = chainBitSet.rightShift(1)
+        }
+        expandedBitArray.concat(bitArray)
+    }
+    return expandedBitArray
+}
+
+
 
 export function selectNativeAsset(chainID: BigInt): Array<string> | null {
     let chainIDMap = new TypedMap<BigInt, Array<string>>()
