@@ -1,5 +1,5 @@
 import { Bytes, BigInt, BigDecimal, log, Address, ethereum } from "@graphprotocol/graph-ts"
-import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset, ChainIDToAssetMapping, Config } from "../generated/schema"
+import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset, ChainIDToAssetMapping, Config, LZConfig } from "../generated/schema"
 
 export function createOrLoadIndexEntity(id: Bytes): Index {
     let index = Index.loadInBlock(id)
@@ -218,7 +218,26 @@ export function createOrLoadConfigEntity(index: Bytes): Config {
             configEntity.redemptionFeeInBP = BigInt.zero()
             configEntity.redemptionCustomCallback = false
             configEntity.save()
-        }   
+        }
+    }
+    return configEntity
+
+}
+
+
+export function createOrLoadLZConfigEntity(index: Bytes): LZConfig {
+    let id = index
+    let configEntity = LZConfig.loadInBlock(id)
+    if (configEntity == null) {
+        configEntity = LZConfig.load(id)
+        if (configEntity == null) {
+            configEntity = new LZConfig(id)
+            configEntity.index = index
+            configEntity.eIds = BigInt.zero()
+            configEntity.multipliers = BigInt.zero()
+            configEntity.minGas = []
+            configEntity.save()
+        }
     }
     return configEntity
 

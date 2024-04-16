@@ -182,12 +182,9 @@ export function handleFinishRebalancing(event: FinishRebalancingEvent): void {
                             log.debug("currency array length {}", [currencyIndexArray.length.toString()])
                             log.debug("count {}", [count.toString()])
                         }
-
                     }
                 }
-
                 break
-
             }
         }
     }

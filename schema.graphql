@@ -11,6 +11,7 @@ type Index @entity {
   redemptionFee: BigDecimal!
   aumFee: BigDecimal!
   k: BigInt
+  lzConfig: LZConfig @derivedFrom(field:"index")
   config : Config @derivedFrom(field:"index")
   totalFees: BigDecimal
   totalSupply: BigDecimal!
@@ -107,4 +108,12 @@ type Config @entity {
   depositCustomCallback: Boolean!
   redemptionFeeInBP: BigInt!
   redemptionCustomCallback: Boolean!
+}
+
+type LZConfig @entity {
+  id: Bytes!
+  index: Index!
+  eIds:BigInt!
+  multipliers: BigInt!
+  minGas: [BigInt!]!
 }

@@ -381,12 +381,32 @@ templates:
       language: wasm/assemblyscript
       entities: 
         - Index
-        - IndexAsset
       abis: 
         - name: Governance
           file: ./abis/v2/Governance.json
+        - name: ConfigBuilder
+          file: ./abis/v2/ConfigBuilder.json
       eventHandlers:
         - event: SetConfigBuilder(address)
           handler: handleSetConfigBuilder
       file: ./src/v2/Governance.ts
+  - kind: ethereum
+    name: Messenger
+    network: {{network}}
+    source:
+      abi: Messenger
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: 
+        - LZConfig
+      abis: 
+        - name: Messenger
+          file: ./abis/v2/Messenger.json
+      eventHandlers:
+        - event: SetLZConfig((uint256,uint256,uint256[]))
+          handler: handleSetLZConfig
+      file: ./src/v2/Messenger.ts
+  
 {{/v2}}
