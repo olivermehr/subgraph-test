@@ -11,6 +11,7 @@ type Index @entity {
   redemptionFee: BigDecimal!
   aumFee: BigDecimal!
   k: BigInt
+  anatomy: Anatomy @derivedFrom(field:"index")
   lzConfig: LZConfig @derivedFrom(field:"index")
   config : Config @derivedFrom(field:"index")
   totalFees: BigDecimal
@@ -116,4 +117,11 @@ type LZConfig @entity {
   eIds:BigInt!
   multipliers: BigInt!
   minGas: [BigInt!]!
+}
+
+type Anatomy @entity {
+  id: Bytes!
+  index: Index!
+  chainIdSet: [BigInt!]!
+  currencyIdSets: [[BigInt!]!]!
 }

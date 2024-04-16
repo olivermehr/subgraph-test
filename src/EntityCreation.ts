@@ -1,5 +1,5 @@
 import { Bytes, BigInt, BigDecimal, log, Address, ethereum } from "@graphprotocol/graph-ts"
-import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset, ChainIDToAssetMapping, Config, LZConfig } from "../generated/schema"
+import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset, ChainIDToAssetMapping, Config, LZConfig, Anatomy } from "../generated/schema"
 
 export function createOrLoadIndexEntity(id: Bytes): Index {
     let index = Index.loadInBlock(id)
@@ -240,6 +240,23 @@ export function createOrLoadLZConfigEntity(index: Bytes): LZConfig {
         }
     }
     return configEntity
+
+}
+
+export function createOrLoadAnatomyEntity(index: Bytes): Anatomy {
+    let id = index
+    let anatomyEntity = Anatomy.loadInBlock(id)
+    if (anatomyEntity == null) {
+        anatomyEntity = Anatomy.load(id)
+        if (anatomyEntity == null) {
+            anatomyEntity = new Anatomy(id)
+            anatomyEntity.index = index
+            anatomyEntity.chainIdSet = []
+            anatomyEntity.currencyIdSets = [[]]
+            anatomyEntity.save()
+        }
+    }
+    return anatomyEntity
 
 }
 

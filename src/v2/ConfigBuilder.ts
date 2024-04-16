@@ -1,5 +1,5 @@
 import { Bytes, BigInt, Address, ethereum, dataSource, BigDecimal, log, ByteArray, TypedMap } from "@graphprotocol/graph-ts";
-import { createOrLoadChainIDToAssetMappingEntity, createOrLoadConfigEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
+import { createOrLoadAnatomyEntity, createOrLoadChainIDToAssetMappingEntity, createOrLoadConfigEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
 import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent, RegisterChain as RegisterChainEvent, FinishRebalancing as FinishRebalancingEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
 
@@ -188,6 +188,10 @@ export function handleFinishRebalancing(event: FinishRebalancingEvent): void {
             }
         }
     }
+    let anatomyEntity = createOrLoadAnatomyEntity(indexAddress)
+    anatomyEntity.chainIdSet = event.params.newAnatomy.chainIdSet
+    anatomyEntity.currencyIdSets = event.params.newAnatomy.currencyIdSets
+    anatomyEntity.save()
 }
 
 export function convertBitSetToIDs(array: BigInt[]): BigInt[] {
