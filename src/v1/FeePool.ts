@@ -15,8 +15,14 @@ export function handleSetAUMScaledPerSecondsRate(
 export function convertAUMFeeRate(index: Bytes, aumFee: BigInt): void {
   let indexEntity = createOrLoadIndexEntity(index)
   let scaledPerSecondRate = new BigDecimal(aumFee)
-  let constant = BigDecimal.fromString('1000000000000000000000000000');
-  let seconds_per_year = new BigDecimal(BigInt.fromI32(31536000))
+  let constant = BigDecimal.fromString('1000000000000000000000000000')
+  let seconds_per_year: BigDecimal
+  if (indexEntity.version == "v2") {
+    seconds_per_year = new BigDecimal(BigInt.fromI32(31556952))
+  }
+  else {
+    seconds_per_year = new BigDecimal(BigInt.fromI32(31536000))
+  }
   let q = constant.div(scaledPerSecondRate);
   let one = new BigDecimal(BigInt.fromI32(1))
   let two = new BigDecimal(BigInt.fromI32(2))

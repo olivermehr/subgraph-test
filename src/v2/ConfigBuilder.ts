@@ -1,7 +1,8 @@
 import { Bytes, BigInt, Address, ethereum, dataSource, BigDecimal, log, ByteArray, TypedMap } from "@graphprotocol/graph-ts";
-import { createOrLoadAnatomyEntity, createOrLoadChainIDToAssetMappingEntity, createOrLoadConfigEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
+import { createOrLoadAnatomyEntity, createOrLoadChainIDToAssetMappingEntity, createOrLoadConfigEntity, createOrLoadCurrencySetEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
 import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent, RegisterChain as RegisterChainEvent, FinishRebalancing as FinishRebalancingEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
+import { CurrencySet } from "../../generated/schema";
 
 export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
@@ -157,10 +158,17 @@ export function handleFinishRebalancing(event: FinishRebalancingEvent): void {
     log.debug("weights {}", [event.params.weights.toString()])
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
+    let anatomyEntity = createOrLoadAnatomyEntity(indexAddress)
+    let anatomyArray : string[] = []
     let chainIndexArray = convertBitSetToIDs(convertBigIntsToBitArray(event.params.newAnatomy.chainIdSet))
     log.debug(" chain index array {}", [chainIndexArray.toString()])
     let count = 0
     for (let i = 0; i < chainIndexArray.length; i++) {
+        let currencySetEntity = createOrLoadCurrencySetEntity(indexAddress,chainIndexArray[i])
+        currencySetEntity.sets = event.params.newAnatomy.currencyIdSets[i]
+        currencySetEntity.save()
+        anatomyArray.push(currencySetEntity.id)
+
         let currencyIndexArray = convertBitSetToIDs(convertBigIntsToBitArray(event.params.newAnatomy.currencyIdSets[i]))
         log.debug("Currency index array output {} for chain index {}", [currencyIndexArray.toString(), chainIndexArray[i].toString()])
         for (let y = 0; y < indexEntity.assets.length; y++) {
@@ -188,9 +196,7 @@ export function handleFinishRebalancing(event: FinishRebalancingEvent): void {
             }
         }
     }
-    let anatomyEntity = createOrLoadAnatomyEntity(indexAddress)
-    anatomyEntity.chainIdSet = event.params.newAnatomy.chainIdSet
-    anatomyEntity.currencyIdSets = event.params.newAnatomy.currencyIdSets
+    anatomyEntity.currencyIdSets = anatomyArray
     anatomyEntity.save()
 }
 

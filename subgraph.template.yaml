@@ -405,7 +405,7 @@ templates:
         - name: Messenger
           file: ./abis/v2/Messenger.json
       eventHandlers:
-        - event: SetLZConfig((uint256,uint256,uint256[]))
+        - event: SetLZConfig((uint256,uint256[]))
           handler: handleSetLZConfig
       file: ./src/v2/Messenger.ts
   

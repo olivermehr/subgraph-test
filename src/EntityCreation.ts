@@ -1,5 +1,5 @@
 import { Bytes, BigInt, BigDecimal, log, Address, ethereum } from "@graphprotocol/graph-ts"
-import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset, ChainIDToAssetMapping, Config, LZConfig, Anatomy } from "../generated/schema"
+import { Index, Account, IndexAsset, IndexAccount, HistoricalAccountBalance, HistoricalIndexBalance, HistoricalPrice, HistoricalIndexAsset, ChainIDToAssetMapping, Config, LZConfig, Anatomy, CurrencySet } from "../generated/schema"
 
 export function createOrLoadIndexEntity(id: Bytes): Index {
     let index = Index.loadInBlock(id)
@@ -234,7 +234,6 @@ export function createOrLoadLZConfigEntity(index: Bytes): LZConfig {
             configEntity = new LZConfig(id)
             configEntity.index = index
             configEntity.eIds = BigInt.zero()
-            configEntity.multipliers = BigInt.zero()
             configEntity.minGas = []
             configEntity.save()
         }
@@ -252,11 +251,28 @@ export function createOrLoadAnatomyEntity(index: Bytes): Anatomy {
             anatomyEntity = new Anatomy(id)
             anatomyEntity.index = index
             anatomyEntity.chainIdSet = []
-            anatomyEntity.currencyIdSets = [[]]
+            anatomyEntity.currencyIdSets = []
             anatomyEntity.save()
         }
     }
     return anatomyEntity
+
+}
+
+export function createOrLoadCurrencySetEntity(index: Bytes, chainIndex:BigInt): CurrencySet {
+    let id = index.toHexString().concat(chainIndex.toString())
+    let currencySetEntity = CurrencySet.loadInBlock(id)
+    if (currencySetEntity == null) {
+        currencySetEntity = CurrencySet.load(id)
+        if (currencySetEntity == null) {
+            currencySetEntity = new CurrencySet(id)
+            currencySetEntity.index = index
+            currencySetEntity.chainIndex = chainIndex
+            currencySetEntity.sets = []
+            currencySetEntity.save()
+        }
+    }
+    return currencySetEntity
 
 }
 

@@ -115,7 +115,6 @@ type LZConfig @entity {
   id: Bytes!
   index: Index!
   eIds:BigInt!
-  multipliers: BigInt!
   minGas: [BigInt!]!
 }
 
@@ -123,5 +122,12 @@ type Anatomy @entity {
   id: Bytes!
   index: Index!
   chainIdSet: [BigInt!]!
-  currencyIdSets: [[BigInt!]!]!
+  currencyIdSets: [CurrencySet!]!
+}
+
+type CurrencySet @entity {
+  id: String!
+  index: Bytes!
+  chainIndex: BigInt!
+  sets: [BigInt!]!
 }
