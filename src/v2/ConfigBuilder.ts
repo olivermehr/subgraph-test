@@ -17,7 +17,6 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     configEntity.redemptionFeeInBP = decoded[2].toTuple()[0].toBigInt()
     configEntity.redemptionCustomCallback = decoded[2].toTuple()[1].toBoolean()
     let aumFee = decoded[0].toTuple()[0].toBigInt()
-    log.debug("aum fee {}",[aumFee.toString()])
     let scalar = new BigDecimal(BigInt.fromI32(10000))
     let mintingFee = new BigDecimal(decoded[1].toTuple()[0].toBigInt()).div(scalar)
     let redemptionFee = new BigDecimal(decoded[2].toTuple()[0].toBigInt()).div(scalar)
