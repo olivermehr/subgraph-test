@@ -2,7 +2,7 @@ import { Bytes, BigInt, Address, ethereum, dataSource, BigDecimal, log, ByteArra
 import { createOrLoadAnatomyEntity, createOrLoadChainIDToAssetMappingEntity, createOrLoadConfigEntity, createOrLoadCurrencySetEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
 import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent, RegisterChain as RegisterChainEvent, FinishRebalancing as FinishRebalancingEvent, SetMessenger as SetMessengerEvent, StartRebalancing as StartRebalancingEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
-import { CurrencySet } from "../../generated/schema";
+import { CurrencySet, HistoricalIndexAsset } from "../../generated/schema";
 import { Messenger } from "../../generated/templates";
 
 export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
@@ -134,11 +134,10 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
             indexEntity.save()
         }
     }
-    saveHistoricalData(indexAddress, event.block.timestamp)
-    indexEntity.k = BigInt.fromI32(1).times(BigInt.fromI32(10).pow(18))
     chainIDToAssetMappingEntity.save()
+    indexEntity.k = BigInt.fromI32(1).times(BigInt.fromI32(10).pow(18))
     indexEntity.save()
-
+    saveHistoricalData(indexAddress, event.block.timestamp)
 }
 
 export function handleRegisterChain(event: RegisterChainEvent): void {
@@ -155,7 +154,7 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
     let indexEntity = createOrLoadIndexEntity(index)
     let historicalIndexBalanceEntity = createOrLoadHistoricalIndexBalanceEntity(index, timestamp)
     historicalIndexBalanceEntity.totalSupply = indexEntity.totalSupply
-    historicalIndexBalanceEntity.save()
+    let historicalIndexAssetArray : string[] = []
     for (let i = 0; i < indexEntity.assets.length; i++) {
         let chainIDToAssetMappingEntity = loadChainIDToAssetMappingEntity(indexEntity.assets[i])
         let chainID = chainIDToAssetMappingEntity.chainID
@@ -167,8 +166,11 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
                 historicalIndexAssetEntity.weight = indexAssetEntity.weight
             }
             historicalIndexAssetEntity.save()
+            historicalIndexAssetArray.push(historicalIndexAssetEntity.id)
         }
     }
+    historicalIndexBalanceEntity.assets = historicalIndexAssetArray
+    historicalIndexBalanceEntity.save()
 }
 
 export function handleFinishRebalancing(event: FinishRebalancingEvent): void {

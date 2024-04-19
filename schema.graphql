@@ -54,7 +54,7 @@ type HistoricalIndexBalance @entity {
   timestamp: BigInt!
   index: Index!
   totalSupply: BigDecimal!
-  assets: [HistoricalIndexAsset!]! @derivedFrom(field:"indexTimestamp")
+  assets: [HistoricalIndexAsset!]!
 }
 
 type HistoricalAccountBalance @entity {
