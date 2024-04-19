@@ -17,7 +17,6 @@
     "init": "npm run clean && graph clean && npx mustache config/init.json subgraph.template.yaml > subgraph.yaml && graph codegen"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.70.0",
     "@graphprotocol/graph-ts": "^0.35.0",
     "mustache": "^4.2.0"
   },

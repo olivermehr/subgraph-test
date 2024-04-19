@@ -368,7 +368,8 @@ templates:
           handler: handleRegisterChain
         - event: FinishRebalancing(uint256,(uint256[],uint256[][]),uint256[])
           handler: handleFinishRebalancing
-        
+        - event: SetMessenger(address)
+          handler: handleSetMessenger
       file: ./src/v2/ConfigBuilder.ts
   - kind: ethereum
     name: Governance

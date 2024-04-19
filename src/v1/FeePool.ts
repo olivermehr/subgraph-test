@@ -6,6 +6,7 @@ import {
 import { createOrLoadIndexEntity } from "../EntityCreation"
 import { BigDecimal, BigInt, Bytes, log } from "@graphprotocol/graph-ts"
 
+
 export function handleSetAUMScaledPerSecondsRate(
   event: SetAUMScaledPerSecondsRateEvent
 ): void {

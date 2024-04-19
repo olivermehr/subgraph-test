@@ -1,8 +1,9 @@
-import { Bytes, BigInt, Address, ethereum, dataSource, BigDecimal, log, ByteArray, TypedMap } from "@graphprotocol/graph-ts";
+import { Bytes, BigInt, Address, ethereum, dataSource, BigDecimal, log, ByteArray, TypedMap, DataSourceContext } from "@graphprotocol/graph-ts";
 import { createOrLoadAnatomyEntity, createOrLoadChainIDToAssetMappingEntity, createOrLoadConfigEntity, createOrLoadCurrencySetEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
-import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent, RegisterChain as RegisterChainEvent, FinishRebalancing as FinishRebalancingEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
+import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent, RegisterChain as RegisterChainEvent, FinishRebalancing as FinishRebalancingEvent, SetMessenger } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
 import { CurrencySet } from "../../generated/schema";
+import { Messenger } from "../../generated/templates";
 
 export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
@@ -25,6 +26,15 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     indexEntity.save()
     configEntity.save()
     convertAUMFeeRate(indexAddress, aumFee)
+}
+
+export function handleSetMessenger(event:SetMessenger): void {
+    let indexAddress = dataSource.context().getBytes('indexAddress')
+    let reserveAsset = dataSource.context().getBytes('reserveAsset')
+    let context = new DataSourceContext()
+    context.setBytes('indexAddress', indexAddress)
+    context.setBytes('reserveAsset', reserveAsset)
+    Messenger.createWithContext(event.params.param0,context)    
 }
 
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
@@ -159,12 +169,12 @@ export function handleFinishRebalancing(event: FinishRebalancingEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
     let anatomyEntity = createOrLoadAnatomyEntity(indexAddress)
-    let anatomyArray : string[] = []
+    let anatomyArray: string[] = []
     let chainIndexArray = convertBitSetToIDs(convertBigIntsToBitArray(event.params.newAnatomy.chainIdSet))
     log.debug(" chain index array {}", [chainIndexArray.toString()])
     let count = 0
     for (let i = 0; i < chainIndexArray.length; i++) {
-        let currencySetEntity = createOrLoadCurrencySetEntity(indexAddress,chainIndexArray[i])
+        let currencySetEntity = createOrLoadCurrencySetEntity(indexAddress, chainIndexArray[i])
         currencySetEntity.sets = event.params.newAnatomy.currencyIdSets[i]
         currencySetEntity.save()
         anatomyArray.push(currencySetEntity.id)
