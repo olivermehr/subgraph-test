@@ -1,6 +1,6 @@
 import { Bytes, BigInt, Address, ethereum, dataSource, BigDecimal, log, ByteArray, TypedMap, DataSourceContext } from "@graphprotocol/graph-ts";
 import { createOrLoadAnatomyEntity, createOrLoadChainIDToAssetMappingEntity, createOrLoadConfigEntity, createOrLoadCurrencySetEntity, createOrLoadHistoricalIndexAssetEntity, createOrLoadHistoricalIndexBalanceEntity, createOrLoadIndexAssetEntity, createOrLoadIndexEntity, loadChainIDToAssetMappingEntity, loadIndexAssetEntity } from "../EntityCreation";
-import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent, RegisterChain as RegisterChainEvent, FinishRebalancing as FinishRebalancingEvent, SetMessenger } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
+import { ConfigUpdated as ConfigUpdatedEvent, CurrencyRegistered as CurrencyRegisteredEvent, FinishChainRebalancing as FinishChainRebalancingEvent, RegisterChain as RegisterChainEvent, FinishRebalancing as FinishRebalancingEvent, SetMessenger as SetMessengerEvent, StartRebalancing as StartRebalancingEvent } from "../../generated/templates/ConfigBuilder/ConfigBuilder"
 import { convertAUMFeeRate } from "../v1/FeePool";
 import { CurrencySet } from "../../generated/schema";
 import { Messenger } from "../../generated/templates";
@@ -28,13 +28,20 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     convertAUMFeeRate(indexAddress, aumFee)
 }
 
-export function handleSetMessenger(event:SetMessenger): void {
+export function handleSetMessenger(event: SetMessengerEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let reserveAsset = dataSource.context().getBytes('reserveAsset')
     let context = new DataSourceContext()
     context.setBytes('indexAddress', indexAddress)
     context.setBytes('reserveAsset', reserveAsset)
-    Messenger.createWithContext(event.params.param0,context)    
+    Messenger.createWithContext(event.params.param0, context)
+}
+
+export function handleStartRebalancing(event:StartRebalancingEvent): void {
+    let indexAddress = dataSource.context().getBytes('indexAddress')
+    let indexEntity = createOrLoadIndexEntity(indexAddress)
+    indexEntity.isRebalancing = true
+    indexEntity.save()
 }
 
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
@@ -206,9 +213,11 @@ export function handleFinishRebalancing(event: FinishRebalancingEvent): void {
             }
         }
     }
+    indexEntity.isRebalancing = false
     anatomyEntity.chainIdSet = event.params.newAnatomy.chainIdSet
     anatomyEntity.currencyIdSets = anatomyArray
     anatomyEntity.save()
+    indexEntity.save()
 }
 
 export function convertBitSetToIDs(array: BigInt[]): BigInt[] {

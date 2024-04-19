@@ -11,6 +11,7 @@ type Index @entity {
   redemptionFee: BigDecimal!
   aumFee: BigDecimal!
   k: BigInt
+  isRebalancing: Boolean
   anatomy: Anatomy @derivedFrom(field:"index")
   lzConfig: LZConfig @derivedFrom(field:"index")
   config : Config @derivedFrom(field:"index")
