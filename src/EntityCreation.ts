@@ -106,6 +106,7 @@ export function createOrLoadHistoricalIndexBalanceEntity(index: Bytes, blockTime
             historicalIndexBalanceEntity.timestamp = timestamp
             historicalIndexBalanceEntity.index = index
             historicalIndexBalanceEntity.totalSupply = BigDecimal.zero()
+            historicalIndexBalanceEntity.assets = []
             historicalIndexBalanceEntity.save()
         }
     }
