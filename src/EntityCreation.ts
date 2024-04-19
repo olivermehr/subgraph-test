@@ -259,7 +259,7 @@ export function createOrLoadAnatomyEntity(index: Bytes): Anatomy {
 
 }
 
-export function createOrLoadCurrencySetEntity(index: Bytes, chainIndex:BigInt): CurrencySet {
+export function createOrLoadCurrencySetEntity(index: Bytes, chainIndex: BigInt): CurrencySet {
     let id = index.toHexString().concat(chainIndex.toString())
     let currencySetEntity = CurrencySet.loadInBlock(id)
     if (currencySetEntity == null) {

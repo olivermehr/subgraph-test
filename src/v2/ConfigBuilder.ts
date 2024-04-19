@@ -17,7 +17,7 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     configEntity.redemptionFeeInBP = decoded[2].toTuple()[0].toBigInt()
     configEntity.redemptionCustomCallback = decoded[2].toTuple()[1].toBoolean()
     let aumFee = decoded[0].toTuple()[0].toBigInt()
-    convertAUMFeeRate(indexAddress, aumFee)
+    log.debug("aum fee {}",[aumFee.toString()])
     let scalar = new BigDecimal(BigInt.fromI32(10000))
     let mintingFee = new BigDecimal(decoded[1].toTuple()[0].toBigInt()).div(scalar)
     let redemptionFee = new BigDecimal(decoded[2].toTuple()[0].toBigInt()).div(scalar)
@@ -25,6 +25,7 @@ export function handleConfigUpdate(event: ConfigUpdatedEvent): void {
     indexEntity.redemptionFee = redemptionFee
     indexEntity.save()
     configEntity.save()
+    convertAUMFeeRate(indexAddress, aumFee)
 }
 
 export function handleCurrencyRegistered(event: CurrencyRegisteredEvent): void {
@@ -196,6 +197,7 @@ export function handleFinishRebalancing(event: FinishRebalancingEvent): void {
             }
         }
     }
+    anatomyEntity.chainIdSet = event.params.newAnatomy.chainIdSet
     anatomyEntity.currencyIdSets = anatomyArray
     anatomyEntity.save()
 }

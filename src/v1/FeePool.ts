@@ -4,7 +4,7 @@ import {
   SetMintingFeeInBP as SetMintingFeeInBPEvent,
 } from "../../generated/templates/FeePool/FeePool"
 import { createOrLoadIndexEntity } from "../EntityCreation"
-import { BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts"
+import { BigDecimal, BigInt, Bytes, log } from "@graphprotocol/graph-ts"
 
 export function handleSetAUMScaledPerSecondsRate(
   event: SetAUMScaledPerSecondsRateEvent
@@ -47,17 +47,15 @@ export function convertAUMFeeRate(index: Bytes, aumFee: BigInt): void {
   let x4_big = BigInt.fromString(x4.toString())
   let mod = x4_big.mod(roundingPrecision)
   let wholeNumber = x4_big.minus(mod)
+  let fee: BigDecimal
   if (mod >= roundingPrecision.div(BigInt.fromI32(2))) {
-    let fee = new BigDecimal(wholeNumber.plus(roundingPrecision)).div(scalar)
-    indexEntity.aumFee = fee
+    fee = new BigDecimal(wholeNumber.plus(roundingPrecision)).div(scalar)
   }
   else {
-    let fee = new BigDecimal(wholeNumber).div(scalar)
-    indexEntity.aumFee = fee
+    fee = new BigDecimal(wholeNumber).div(scalar)
   }
+  indexEntity.aumFee = fee
   indexEntity.save()
-
-
 }
 
 export function handleSetBurningFeeInBP(event: SetBurningFeeInBPEvent): void {
