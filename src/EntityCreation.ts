@@ -114,7 +114,7 @@ export function createOrLoadHistoricalIndexBalanceEntity(index: Bytes, blockTime
 }
 
 export function createOrLoadHistoricalAccountBalanceEntity(index: Bytes, account: Bytes, event: ethereum.Event): HistoricalAccountBalance {
-    let timestamp = event.block.timestamp.minus(event.block.timestamp.mod(BigInt.fromI32(86400)))
+    let timestamp = event.block.timestamp
     let id = index.toHexString().concat(account.toHexString()).concat(timestamp.toString())
     let historicalAccountBalanceEntity = HistoricalAccountBalance.loadInBlock(id)
     if (historicalAccountBalanceEntity == null) {
