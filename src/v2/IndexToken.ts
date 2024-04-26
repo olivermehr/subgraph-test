@@ -48,5 +48,6 @@ export function handleFeeAccrued(event: FeeAccrued): void {
     let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexEntity.decimals)))
     fees = fees.div(scalar)
     indexEntity.totalFees = indexEntity.totalFees!.plus(fees)
+    indexEntity.totalSupply = indexEntity.totalSupply.plus(fees)
     indexEntity.save()
 }
