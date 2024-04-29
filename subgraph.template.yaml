@@ -337,7 +337,7 @@ templates:
           handler: handleDeposit
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256,uint256)
           handler: handleWithdraw
-        - event: FeeAccrued(uint96,uint96)
+        - event: FeeAccrued(uint96,uint96,uint96)
           handler: handleFeeAccrued
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer

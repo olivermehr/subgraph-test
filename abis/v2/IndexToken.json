@@ -1,1852 +1,1607 @@
 {
-  "abi": [
-    {
-      "type": "constructor",
-      "inputs": [
+    "abi": [
         {
-          "name": "_name",
-          "type": "string",
-          "internalType": "string"
-        },
-        {
-          "name": "_symbol",
-          "type": "string",
-          "internalType": "string"
-        },
-        {
-          "name": "_reserve",
-          "type": "address",
-          "internalType": "Currency"
-        },
-        {
-          "name": "_governance",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "_messenger",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "_maxDepositFeeInBPs",
-          "type": "uint16",
-          "internalType": "uint16"
-        },
-        {
-          "name": "_maxRedemptionFeeInBPs",
-          "type": "uint16",
-          "internalType": "uint16"
-        },
-        {
-          "name": "_maxAUMDilutionPerSecond",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "receive",
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "DOMAIN_SEPARATOR",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "bytes32",
-          "internalType": "bytes32"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "accrueFee",
-      "inputs": [
-        {
-          "name": "recipient",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "allowance",
-      "inputs": [
-        {
-          "name": "",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "approve",
-      "inputs": [
-        {
-          "name": "spender",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "amount",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool",
-          "internalType": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "balanceOf",
-      "inputs": [
-        {
-          "name": "",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "consume",
-      "inputs": [
-        {
-          "name": "currency",
-          "type": "address",
-          "internalType": "Currency"
-        },
-        {
-          "name": "amount",
-          "type": "uint96",
-          "internalType": "uint96"
-        },
-        {
-          "name": "target",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "data",
-          "type": "bytes",
-          "internalType": "bytes"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "decimals",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint8",
-          "internalType": "uint8"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "deposit",
-      "inputs": [
-        {
-          "name": "params",
-          "type": "tuple",
-          "internalType": "struct IBaseIndex.DepositParams",
-          "components": [
-            {
-              "name": "config",
-              "type": "tuple",
-              "internalType": "struct IBaseIndex.DepositConfig",
-              "components": [
+            "type": "constructor",
+            "inputs": [
                 {
-                  "name": "shared",
-                  "type": "tuple",
-                  "internalType": "struct IBaseIndex.Config",
-                  "components": [
-                    {
-                      "name": "latestSnapshot",
-                      "type": "uint256",
-                      "internalType": "uint256"
-                    },
-                    {
-                      "name": "AUMDilutionPerSecond",
-                      "type": "uint256",
-                      "internalType": "uint256"
-                    },
-                    {
-                      "name": "useCustomAUMFee",
-                      "type": "bool",
-                      "internalType": "bool"
-                    },
-                    {
-                      "name": "staticPriceOracle",
-                      "type": "address",
-                      "internalType": "address"
-                    },
-                    {
-                      "name": "metadata",
-                      "type": "address",
-                      "internalType": "address"
-                    }
-                  ]
+                    "name": "_name",
+                    "type": "string",
+                    "internalType": "string"
                 },
                 {
-                  "name": "fee",
-                  "type": "tuple",
-                  "internalType": "struct IBaseIndex.FeeConfig",
-                  "components": [
-                    {
-                      "name": "BPs",
-                      "type": "uint16",
-                      "internalType": "uint16"
-                    },
-                    {
-                      "name": "useCustomCallback",
-                      "type": "bool",
-                      "internalType": "bool"
-                    }
-                  ]
+                    "name": "_symbol",
+                    "type": "string",
+                    "internalType": "string"
+                },
+                {
+                    "name": "_reserve",
+                    "type": "address",
+                    "internalType": "Currency"
+                },
+                {
+                    "name": "_governance",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "_messenger",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "_maxDepositFeeInBPs",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "_maxRedemptionFeeInBPs",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "_maxAUMDilutionPerSecond",
+                    "type": "uint256",
+                    "internalType": "uint256"
                 }
-              ]
-            },
-            {
-              "name": "amount",
-              "type": "uint96",
-              "internalType": "uint96"
-            },
-            {
-              "name": "recipient",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "payload",
-              "type": "bytes",
-              "internalType": "bytes"
-            }
-          ]
+            ],
+            "stateMutability": "nonpayable"
         },
         {
-          "name": "commandParams",
-          "type": "tuple",
-          "internalType": "struct IIndex.DepositCommandParams",
-          "components": [
-            {
-              "name": "currency",
-              "type": "address",
-              "internalType": "Currency"
-            },
-            {
-              "name": "command",
-              "type": "tuple",
-              "internalType": "struct CommandLib.CommandTarget",
-              "components": [
+            "type": "receive",
+            "stateMutability": "payable"
+        },
+        {
+            "type": "function",
+            "name": "DOMAIN_SEPARATOR",
+            "inputs": [],
+            "outputs": [
                 {
-                  "name": "target",
-                  "type": "uint256",
-                  "internalType": "a160u96"
-                },
-                {
-                  "name": "spender",
-                  "type": "address",
-                  "internalType": "address"
-                },
-                {
-                  "name": "mapTarget",
-                  "type": "bool",
-                  "internalType": "bool"
-                },
-                {
-                  "name": "datas",
-                  "type": "bytes[]",
-                  "internalType": "bytes[]"
-                },
-                {
-                  "name": "packedConfigs",
-                  "type": "uint256[]",
-                  "internalType": "uint256[]"
+                    "name": "",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
                 }
-              ]
-            }
-          ]
+            ],
+            "stateMutability": "view"
         },
         {
-          "name": "permitParams",
-          "type": "tuple",
-          "internalType": "struct IIndex.PermitParams",
-          "components": [
-            {
-              "name": "deadline",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "v",
-              "type": "uint8",
-              "internalType": "uint8"
-            },
-            {
-              "name": "r",
-              "type": "bytes32",
-              "internalType": "bytes32"
-            },
-            {
-              "name": "s",
-              "type": "bytes32",
-              "internalType": "bytes32"
-            }
-          ]
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "donate",
-      "inputs": [
-        {
-          "name": "currency",
-          "type": "address",
-          "internalType": "Currency"
-        },
-        {
-          "name": "data",
-          "type": "bytes",
-          "internalType": "bytes"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "finishRebalancingPhase",
-      "inputs": [
-        {
-          "name": "params",
-          "type": "tuple",
-          "internalType": "struct IVault.EndRebalancingParams",
-          "components": [
-            {
-              "name": "anatomyCurrencies",
-              "type": "uint256[]",
-              "internalType": "a160u96[]"
-            },
-            {
-              "name": "newAnatomy",
-              "type": "tuple",
-              "internalType": "struct IVault.SnapshotAnatomy",
-              "components": [
+            "type": "function",
+            "name": "accrueFee",
+            "inputs": [
                 {
-                  "name": "currencies",
-                  "type": "uint256[]",
-                  "internalType": "a160u96[]"
-                },
-                {
-                  "name": "currencyIndexSet",
-                  "type": "uint256[]",
-                  "internalType": "uint256[]"
+                    "name": "recipient",
+                    "type": "address",
+                    "internalType": "address"
                 }
-              ]
-            },
-            {
-              "name": "withdrawals",
-              "type": "tuple",
-              "internalType": "struct IVault.CurrencyWithdrawal",
-              "components": [
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "allowance",
+            "inputs": [
                 {
-                  "name": "currencyIndexSet",
-                  "type": "uint256[]",
-                  "internalType": "uint256[]"
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
                 },
                 {
-                  "name": "amounts",
-                  "type": "uint96[]",
-                  "internalType": "uint96[]"
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
                 }
-              ]
-            },
-            {
-              "name": "lastKBalance",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "currencies",
-              "type": "address[]",
-              "internalType": "Currency[]"
-            }
-          ]
-        }
-      ],
-      "outputs": [
-        {
-          "name": "resultHash",
-          "type": "bytes32",
-          "internalType": "bytes32"
-        }
-      ],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "kBalanceWads",
-      "inputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        },
-        {
-          "name": "",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "kSelf",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "name",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "string",
-          "internalType": "string"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "nonces",
-      "inputs": [
-        {
-          "name": "",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "owner",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "permit",
-      "inputs": [
-        {
-          "name": "owner",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "spender",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "value",
-          "type": "uint256",
-          "internalType": "uint256"
-        },
-        {
-          "name": "deadline",
-          "type": "uint256",
-          "internalType": "uint256"
-        },
-        {
-          "name": "v",
-          "type": "uint8",
-          "internalType": "uint8"
-        },
-        {
-          "name": "r",
-          "type": "bytes32",
-          "internalType": "bytes32"
-        },
-        {
-          "name": "s",
-          "type": "bytes32",
-          "internalType": "bytes32"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "redeem",
-      "inputs": [
-        {
-          "name": "params",
-          "type": "tuple",
-          "internalType": "struct IBaseIndex.RedemptionParams",
-          "components": [
-            {
-              "name": "config",
-              "type": "tuple",
-              "internalType": "struct IBaseIndex.RedemptionConfig",
-              "components": [
+            ],
+            "outputs": [
                 {
-                  "name": "shared",
-                  "type": "tuple",
-                  "internalType": "struct IBaseIndex.Config",
-                  "components": [
-                    {
-                      "name": "latestSnapshot",
-                      "type": "uint256",
-                      "internalType": "uint256"
-                    },
-                    {
-                      "name": "AUMDilutionPerSecond",
-                      "type": "uint256",
-                      "internalType": "uint256"
-                    },
-                    {
-                      "name": "useCustomAUMFee",
-                      "type": "bool",
-                      "internalType": "bool"
-                    },
-                    {
-                      "name": "staticPriceOracle",
-                      "type": "address",
-                      "internalType": "address"
-                    },
-                    {
-                      "name": "metadata",
-                      "type": "address",
-                      "internalType": "address"
-                    }
-                  ]
-                },
-                {
-                  "name": "fee",
-                  "type": "tuple",
-                  "internalType": "struct IBaseIndex.FeeConfig",
-                  "components": [
-                    {
-                      "name": "BPs",
-                      "type": "uint16",
-                      "internalType": "uint16"
-                    },
-                    {
-                      "name": "useCustomCallback",
-                      "type": "bool",
-                      "internalType": "bool"
-                    }
-                  ]
-                },
-                {
-                  "name": "forwarder",
-                  "type": "address",
-                  "internalType": "address"
-                },
-                {
-                  "name": "homeCurrencies",
-                  "type": "uint256[]",
-                  "internalType": "a160u96[]"
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
                 }
-              ]
-            },
-            {
-              "name": "expectedReserveValuation",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "AUMScaledK",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "owner",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "shares",
-              "type": "uint128",
-              "internalType": "uint128"
-            },
-            {
-              "name": "payload",
-              "type": "bytes",
-              "internalType": "bytes"
-            },
-            {
-              "name": "recipient",
-              "type": "address",
-              "internalType": "address payable"
-            }
-          ]
+            ],
+            "stateMutability": "view"
         },
         {
-          "name": "commandParams",
-          "type": "tuple",
-          "internalType": "struct IIndex.RedemptionCommandParams",
-          "components": [
-            {
-              "name": "currencyCommands",
-              "type": "tuple[]",
-              "internalType": "struct CommandLib.CommandTarget[]",
-              "components": [
+            "type": "function",
+            "name": "approve",
+            "inputs": [
                 {
-                  "name": "target",
-                  "type": "uint256",
-                  "internalType": "a160u96"
+                    "name": "spender",
+                    "type": "address",
+                    "internalType": "address"
                 },
                 {
-                  "name": "spender",
-                  "type": "address",
-                  "internalType": "address"
-                },
-                {
-                  "name": "mapTarget",
-                  "type": "bool",
-                  "internalType": "bool"
-                },
-                {
-                  "name": "datas",
-                  "type": "bytes[]",
-                  "internalType": "bytes[]"
-                },
-                {
-                  "name": "packedConfigs",
-                  "type": "uint256[]",
-                  "internalType": "uint256[]"
+                    "name": "amount",
+                    "type": "uint256",
+                    "internalType": "uint256"
                 }
-              ]
-            },
-            {
-              "name": "additionalCurrencies",
-              "type": "address[]",
-              "internalType": "Currency[]"
-            }
-          ]
-        },
-        {
-          "name": "forwardedSender",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "redeemed",
-          "type": "tuple",
-          "internalType": "struct IBaseIndex.RedeemedInfo",
-          "components": [
-            {
-              "name": "reserve",
-              "type": "uint96",
-              "internalType": "uint96"
-            },
-            {
-              "name": "reserveValuation",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "k",
-              "type": "uint256",
-              "internalType": "uint256"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "redeemK",
-      "inputs": [
-        {
-          "name": "params",
-          "type": "tuple",
-          "internalType": "struct IIndex.RedeemKParams",
-          "components": [
-            {
-              "name": "snapshot",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "k",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "currencies",
-              "type": "uint256[]",
-              "internalType": "a160u96[]"
-            },
-            {
-              "name": "config",
-              "type": "tuple",
-              "internalType": "struct IBaseIndex.RedemptionConfig",
-              "components": [
+            ],
+            "outputs": [
                 {
-                  "name": "shared",
-                  "type": "tuple",
-                  "internalType": "struct IBaseIndex.Config",
-                  "components": [
-                    {
-                      "name": "latestSnapshot",
-                      "type": "uint256",
-                      "internalType": "uint256"
-                    },
-                    {
-                      "name": "AUMDilutionPerSecond",
-                      "type": "uint256",
-                      "internalType": "uint256"
-                    },
-                    {
-                      "name": "useCustomAUMFee",
-                      "type": "bool",
-                      "internalType": "bool"
-                    },
-                    {
-                      "name": "staticPriceOracle",
-                      "type": "address",
-                      "internalType": "address"
-                    },
-                    {
-                      "name": "metadata",
-                      "type": "address",
-                      "internalType": "address"
-                    }
-                  ]
-                },
-                {
-                  "name": "fee",
-                  "type": "tuple",
-                  "internalType": "struct IBaseIndex.FeeConfig",
-                  "components": [
-                    {
-                      "name": "BPs",
-                      "type": "uint16",
-                      "internalType": "uint16"
-                    },
-                    {
-                      "name": "useCustomCallback",
-                      "type": "bool",
-                      "internalType": "bool"
-                    }
-                  ]
-                },
-                {
-                  "name": "forwarder",
-                  "type": "address",
-                  "internalType": "address"
-                },
-                {
-                  "name": "homeCurrencies",
-                  "type": "uint256[]",
-                  "internalType": "a160u96[]"
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
                 }
-              ]
-            },
-            {
-              "name": "commandParams",
-              "type": "tuple",
-              "internalType": "struct IIndex.RedemptionCommandParams",
-              "components": [
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "balanceOf",
+            "inputs": [
                 {
-                  "name": "currencyCommands",
-                  "type": "tuple[]",
-                  "internalType": "struct CommandLib.CommandTarget[]",
-                  "components": [
-                    {
-                      "name": "target",
-                      "type": "uint256",
-                      "internalType": "a160u96"
-                    },
-                    {
-                      "name": "spender",
-                      "type": "address",
-                      "internalType": "address"
-                    },
-                    {
-                      "name": "mapTarget",
-                      "type": "bool",
-                      "internalType": "bool"
-                    },
-                    {
-                      "name": "datas",
-                      "type": "bytes[]",
-                      "internalType": "bytes[]"
-                    },
-                    {
-                      "name": "packedConfigs",
-                      "type": "uint256[]",
-                      "internalType": "uint256[]"
-                    }
-                  ]
-                },
-                {
-                  "name": "additionalCurrencies",
-                  "type": "address[]",
-                  "internalType": "Currency[]"
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
                 }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "forwardedSender",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "registerCurrencies",
-      "inputs": [
-        {
-          "name": "currencies",
-          "type": "address[]",
-          "internalType": "Currency[]"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "result",
-          "type": "tuple",
-          "internalType": "struct IVault.RegisterCurrenciesResult",
-          "components": [
-            {
-              "name": "currencies",
-              "type": "address[]",
-              "internalType": "Currency[]"
-            },
-            {
-              "name": "currenciesHash",
-              "type": "bytes32",
-              "internalType": "bytes32"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "reserve",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "address",
-          "internalType": "Currency"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "reserveBalance",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint96",
-          "internalType": "uint96"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "setConfig",
-      "inputs": [
-        {
-          "name": "_prevConfig",
-          "type": "tuple",
-          "internalType": "struct IBaseIndex.Config",
-          "components": [
-            {
-              "name": "latestSnapshot",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "AUMDilutionPerSecond",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "useCustomAUMFee",
-              "type": "bool",
-              "internalType": "bool"
-            },
-            {
-              "name": "staticPriceOracle",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "metadata",
-              "type": "address",
-              "internalType": "address"
-            }
-          ]
-        },
-        {
-          "name": "_depositConfig",
-          "type": "tuple",
-          "internalType": "struct IBaseIndex.DepositConfig",
-          "components": [
-            {
-              "name": "shared",
-              "type": "tuple",
-              "internalType": "struct IBaseIndex.Config",
-              "components": [
+            ],
+            "outputs": [
                 {
-                  "name": "latestSnapshot",
-                  "type": "uint256",
-                  "internalType": "uint256"
-                },
-                {
-                  "name": "AUMDilutionPerSecond",
-                  "type": "uint256",
-                  "internalType": "uint256"
-                },
-                {
-                  "name": "useCustomAUMFee",
-                  "type": "bool",
-                  "internalType": "bool"
-                },
-                {
-                  "name": "staticPriceOracle",
-                  "type": "address",
-                  "internalType": "address"
-                },
-                {
-                  "name": "metadata",
-                  "type": "address",
-                  "internalType": "address"
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
                 }
-              ]
-            },
-            {
-              "name": "fee",
-              "type": "tuple",
-              "internalType": "struct IBaseIndex.FeeConfig",
-              "components": [
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "consume",
+            "inputs": [
                 {
-                  "name": "BPs",
-                  "type": "uint16",
-                  "internalType": "uint16"
+                    "name": "currency",
+                    "type": "address",
+                    "internalType": "Currency"
                 },
                 {
-                  "name": "useCustomCallback",
-                  "type": "bool",
-                  "internalType": "bool"
+                    "name": "amount",
+                    "type": "uint96",
+                    "internalType": "uint96"
+                },
+                {
+                    "name": "target",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "data",
+                    "type": "bytes",
+                    "internalType": "bytes"
                 }
-              ]
-            }
-          ]
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
         },
         {
-          "name": "_redemptionConfig",
-          "type": "tuple",
-          "internalType": "struct IBaseIndex.RedemptionConfig",
-          "components": [
-            {
-              "name": "shared",
-              "type": "tuple",
-              "internalType": "struct IBaseIndex.Config",
-              "components": [
+            "type": "function",
+            "name": "decimals",
+            "inputs": [],
+            "outputs": [
                 {
-                  "name": "latestSnapshot",
-                  "type": "uint256",
-                  "internalType": "uint256"
-                },
-                {
-                  "name": "AUMDilutionPerSecond",
-                  "type": "uint256",
-                  "internalType": "uint256"
-                },
-                {
-                  "name": "useCustomAUMFee",
-                  "type": "bool",
-                  "internalType": "bool"
-                },
-                {
-                  "name": "staticPriceOracle",
-                  "type": "address",
-                  "internalType": "address"
-                },
-                {
-                  "name": "metadata",
-                  "type": "address",
-                  "internalType": "address"
+                    "name": "",
+                    "type": "uint8",
+                    "internalType": "uint8"
                 }
-              ]
-            },
-            {
-              "name": "fee",
-              "type": "tuple",
-              "internalType": "struct IBaseIndex.FeeConfig",
-              "components": [
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "deposit",
+            "inputs": [
                 {
-                  "name": "BPs",
-                  "type": "uint16",
-                  "internalType": "uint16"
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct IIndex.DepositParams",
+                    "components": [
+                        {
+                            "name": "config",
+                            "type": "tuple",
+                            "internalType": "struct IIndex.DepositConfig",
+                            "components": [
+                                {
+                                    "name": "shared",
+                                    "type": "tuple",
+                                    "internalType": "struct IIndex.Config",
+                                    "components": [
+                                        {
+                                            "name": "latestSnapshot",
+                                            "type": "uint256",
+                                            "internalType": "uint256"
+                                        },
+                                        {
+                                            "name": "AUMDilutionPerSecond",
+                                            "type": "uint256",
+                                            "internalType": "uint256"
+                                        },
+                                        {
+                                            "name": "useCustomAUMFee",
+                                            "type": "bool",
+                                            "internalType": "bool"
+                                        },
+                                        {
+                                            "name": "staticPriceOracle",
+                                            "type": "address",
+                                            "internalType": "address"
+                                        },
+                                        {
+                                            "name": "metadata",
+                                            "type": "address",
+                                            "internalType": "address"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "fee",
+                                    "type": "tuple",
+                                    "internalType": "struct IIndex.FeeConfig",
+                                    "components": [
+                                        {
+                                            "name": "BPs",
+                                            "type": "uint16",
+                                            "internalType": "uint16"
+                                        },
+                                        {
+                                            "name": "useCustomCallback",
+                                            "type": "bool",
+                                            "internalType": "bool"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "recipient",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "payload",
+                            "type": "bytes",
+                            "internalType": "bytes"
+                        }
+                    ]
                 },
                 {
-                  "name": "useCustomCallback",
-                  "type": "bool",
-                  "internalType": "bool"
+                    "name": "cbTarget",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "cbData",
+                    "type": "bytes",
+                    "internalType": "bytes"
                 }
-              ]
-            },
-            {
-              "name": "forwarder",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "homeCurrencies",
-              "type": "uint256[]",
-              "internalType": "a160u96[]"
-            }
-          ]
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "setMessenger",
-      "inputs": [
-        {
-          "name": "_messenger",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "setOrderBook",
-      "inputs": [
-        {
-          "name": "_orderBook",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "snapshotInfo",
-      "inputs": [
-        {
-          "name": "snapshot",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "currencies",
-          "type": "uint256[]",
-          "internalType": "a160u96[]"
+            ],
+            "outputs": [
+                {
+                    "name": "shares",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "payable"
         },
         {
-          "name": "currencySet",
-          "type": "uint256[]",
-          "internalType": "uint256[]"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "startIndexRebalancing",
-      "inputs": [],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "startRebalancingPhase",
-      "inputs": [
-        {
-          "name": "withdrawals",
-          "type": "tuple",
-          "internalType": "struct IVault.CurrencyWithdrawal",
-          "components": [
-            {
-              "name": "currencyIndexSet",
-              "type": "uint256[]",
-              "internalType": "uint256[]"
-            },
-            {
-              "name": "amounts",
-              "type": "uint96[]",
-              "internalType": "uint96[]"
-            }
-          ]
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "stateInfo",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "latestSnapshot",
-          "type": "uint256",
-          "internalType": "uint256"
+            "type": "function",
+            "name": "donate",
+            "inputs": [
+                {
+                    "name": "currency",
+                    "type": "address",
+                    "internalType": "Currency"
+                },
+                {
+                    "name": "data",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
         },
         {
-          "name": "currencies",
-          "type": "address[]",
-          "internalType": "Currency[]"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "symbol",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "string",
-          "internalType": "string"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "totalSupply",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "transfer",
-      "inputs": [
-        {
-          "name": "to",
-          "type": "address",
-          "internalType": "address"
+            "type": "function",
+            "name": "extsload",
+            "inputs": [
+                {
+                    "name": "slot",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "value",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
+                }
+            ],
+            "stateMutability": "view"
         },
         {
-          "name": "amount",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool",
-          "internalType": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "transferFrom",
-      "inputs": [
-        {
-          "name": "from",
-          "type": "address",
-          "internalType": "address"
+            "type": "function",
+            "name": "extsload",
+            "inputs": [
+                {
+                    "name": "slots",
+                    "type": "bytes32[]",
+                    "internalType": "bytes32[]"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bytes32[]",
+                    "internalType": "bytes32[]"
+                }
+            ],
+            "stateMutability": "view"
         },
         {
-          "name": "to",
-          "type": "address",
-          "internalType": "address"
+            "type": "function",
+            "name": "fees",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
         },
         {
-          "name": "amount",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool",
-          "internalType": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "transferLatestSnapshot",
-      "inputs": [
-        {
-          "name": "recipient",
-          "type": "address",
-          "internalType": "address"
+            "type": "function",
+            "name": "finishRebalancingPhase",
+            "inputs": [
+                {
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct IVault.EndRebalancingParams",
+                    "components": [
+                        {
+                            "name": "anatomyCurrencies",
+                            "type": "uint256[]",
+                            "internalType": "a160u96[]"
+                        },
+                        {
+                            "name": "newAnatomy",
+                            "type": "tuple",
+                            "internalType": "struct IVault.SnapshotAnatomy",
+                            "components": [
+                                {
+                                    "name": "currencies",
+                                    "type": "uint256[]",
+                                    "internalType": "a160u96[]"
+                                },
+                                {
+                                    "name": "currencyIndexSet",
+                                    "type": "uint256[]",
+                                    "internalType": "uint256[]"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "withdrawals",
+                            "type": "tuple",
+                            "internalType": "struct IVault.CurrencyWithdrawal",
+                            "components": [
+                                {
+                                    "name": "currencyIndexSet",
+                                    "type": "uint256[]",
+                                    "internalType": "uint256[]"
+                                },
+                                {
+                                    "name": "amounts",
+                                    "type": "uint96[]",
+                                    "internalType": "uint96[]"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "lastKBalance",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "currencies",
+                            "type": "address[]",
+                            "internalType": "Currency[]"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "resultHash",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
+                }
+            ],
+            "stateMutability": "nonpayable"
         },
         {
-          "name": "kAmountWads",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "snapshot",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "transferOwnership",
-      "inputs": [
-        {
-          "name": "newOwner",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "withdraw",
-      "inputs": [
-        {
-          "name": "snapshot",
-          "type": "uint256",
-          "internalType": "uint256"
+            "type": "function",
+            "name": "kBalanceWads",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
         },
         {
-          "name": "kAmount",
-          "type": "uint256",
-          "internalType": "uint256"
+            "type": "function",
+            "name": "kSelf",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
         },
         {
-          "name": "recipient",
-          "type": "address",
-          "internalType": "address"
+            "type": "function",
+            "name": "name",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "string",
+                    "internalType": "string"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "nonces",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "owner",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "permit",
+            "inputs": [
+                {
+                    "name": "owner",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "spender",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "value",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "deadline",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "v",
+                    "type": "uint8",
+                    "internalType": "uint8"
+                },
+                {
+                    "name": "r",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
+                },
+                {
+                    "name": "s",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "redeem",
+            "inputs": [
+                {
+                    "name": "params",
+                    "type": "tuple",
+                    "internalType": "struct IIndex.RedemptionParams",
+                    "components": [
+                        {
+                            "name": "config",
+                            "type": "tuple",
+                            "internalType": "struct IIndex.RedemptionConfig",
+                            "components": [
+                                {
+                                    "name": "shared",
+                                    "type": "tuple",
+                                    "internalType": "struct IIndex.Config",
+                                    "components": [
+                                        {
+                                            "name": "latestSnapshot",
+                                            "type": "uint256",
+                                            "internalType": "uint256"
+                                        },
+                                        {
+                                            "name": "AUMDilutionPerSecond",
+                                            "type": "uint256",
+                                            "internalType": "uint256"
+                                        },
+                                        {
+                                            "name": "useCustomAUMFee",
+                                            "type": "bool",
+                                            "internalType": "bool"
+                                        },
+                                        {
+                                            "name": "staticPriceOracle",
+                                            "type": "address",
+                                            "internalType": "address"
+                                        },
+                                        {
+                                            "name": "metadata",
+                                            "type": "address",
+                                            "internalType": "address"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "fee",
+                                    "type": "tuple",
+                                    "internalType": "struct IIndex.FeeConfig",
+                                    "components": [
+                                        {
+                                            "name": "BPs",
+                                            "type": "uint16",
+                                            "internalType": "uint16"
+                                        },
+                                        {
+                                            "name": "useCustomCallback",
+                                            "type": "bool",
+                                            "internalType": "bool"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "forwarder",
+                                    "type": "address",
+                                    "internalType": "address"
+                                },
+                                {
+                                    "name": "homeCurrencies",
+                                    "type": "uint256[]",
+                                    "internalType": "a160u96[]"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "owner",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "shares",
+                            "type": "uint128",
+                            "internalType": "uint128"
+                        },
+                        {
+                            "name": "payload",
+                            "type": "bytes",
+                            "internalType": "bytes"
+                        }
+                    ]
+                },
+                {
+                    "name": "forwardedSender",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "recipient",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "result",
+                    "type": "tuple",
+                    "internalType": "struct IIndex.RedemptionInfo",
+                    "components": [
+                        {
+                            "name": "reserveValuation",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "totalValuation",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "totalReserveShares",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "totalSupplyAfterAUMAccrual",
+                            "type": "uint128",
+                            "internalType": "uint128"
+                        },
+                        {
+                            "name": "totalKBeforeRedeem",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "accountBalanceSharesBeforeRedeem",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "accountReserveRedeemed",
+                            "type": "uint96",
+                            "internalType": "uint96"
+                        },
+                        {
+                            "name": "accountReserveSharesRedeemed",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "accountKRedeemed",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        }
+                    ]
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "registerCurrencies",
+            "inputs": [
+                {
+                    "name": "currencies",
+                    "type": "address[]",
+                    "internalType": "Currency[]"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "result",
+                    "type": "tuple",
+                    "internalType": "struct IVault.RegisterCurrenciesResult",
+                    "components": [
+                        {
+                            "name": "currencies",
+                            "type": "address[]",
+                            "internalType": "Currency[]"
+                        },
+                        {
+                            "name": "currenciesHash",
+                            "type": "bytes32",
+                            "internalType": "bytes32"
+                        }
+                    ]
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "reserve",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "Currency"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "reserveBalance",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint96",
+                    "internalType": "uint96"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "setConfig",
+            "inputs": [
+                {
+                    "name": "_prevConfig",
+                    "type": "tuple",
+                    "internalType": "struct IIndex.Config",
+                    "components": [
+                        {
+                            "name": "latestSnapshot",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "AUMDilutionPerSecond",
+                            "type": "uint256",
+                            "internalType": "uint256"
+                        },
+                        {
+                            "name": "useCustomAUMFee",
+                            "type": "bool",
+                            "internalType": "bool"
+                        },
+                        {
+                            "name": "staticPriceOracle",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "metadata",
+                            "type": "address",
+                            "internalType": "address"
+                        }
+                    ]
+                },
+                {
+                    "name": "_depositConfig",
+                    "type": "tuple",
+                    "internalType": "struct IIndex.DepositConfig",
+                    "components": [
+                        {
+                            "name": "shared",
+                            "type": "tuple",
+                            "internalType": "struct IIndex.Config",
+                            "components": [
+                                {
+                                    "name": "latestSnapshot",
+                                    "type": "uint256",
+                                    "internalType": "uint256"
+                                },
+                                {
+                                    "name": "AUMDilutionPerSecond",
+                                    "type": "uint256",
+                                    "internalType": "uint256"
+                                },
+                                {
+                                    "name": "useCustomAUMFee",
+                                    "type": "bool",
+                                    "internalType": "bool"
+                                },
+                                {
+                                    "name": "staticPriceOracle",
+                                    "type": "address",
+                                    "internalType": "address"
+                                },
+                                {
+                                    "name": "metadata",
+                                    "type": "address",
+                                    "internalType": "address"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "fee",
+                            "type": "tuple",
+                            "internalType": "struct IIndex.FeeConfig",
+                            "components": [
+                                {
+                                    "name": "BPs",
+                                    "type": "uint16",
+                                    "internalType": "uint16"
+                                },
+                                {
+                                    "name": "useCustomCallback",
+                                    "type": "bool",
+                                    "internalType": "bool"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "_redemptionConfig",
+                    "type": "tuple",
+                    "internalType": "struct IIndex.RedemptionConfig",
+                    "components": [
+                        {
+                            "name": "shared",
+                            "type": "tuple",
+                            "internalType": "struct IIndex.Config",
+                            "components": [
+                                {
+                                    "name": "latestSnapshot",
+                                    "type": "uint256",
+                                    "internalType": "uint256"
+                                },
+                                {
+                                    "name": "AUMDilutionPerSecond",
+                                    "type": "uint256",
+                                    "internalType": "uint256"
+                                },
+                                {
+                                    "name": "useCustomAUMFee",
+                                    "type": "bool",
+                                    "internalType": "bool"
+                                },
+                                {
+                                    "name": "staticPriceOracle",
+                                    "type": "address",
+                                    "internalType": "address"
+                                },
+                                {
+                                    "name": "metadata",
+                                    "type": "address",
+                                    "internalType": "address"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "fee",
+                            "type": "tuple",
+                            "internalType": "struct IIndex.FeeConfig",
+                            "components": [
+                                {
+                                    "name": "BPs",
+                                    "type": "uint16",
+                                    "internalType": "uint16"
+                                },
+                                {
+                                    "name": "useCustomCallback",
+                                    "type": "bool",
+                                    "internalType": "bool"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "forwarder",
+                            "type": "address",
+                            "internalType": "address"
+                        },
+                        {
+                            "name": "homeCurrencies",
+                            "type": "uint256[]",
+                            "internalType": "a160u96[]"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "setFeePool",
+            "inputs": [
+                {
+                    "name": "_feePool",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "setMessenger",
+            "inputs": [
+                {
+                    "name": "_messenger",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "setOrderBook",
+            "inputs": [
+                {
+                    "name": "_orderBook",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "startIndexRebalancing",
+            "inputs": [],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "startRebalancingPhase",
+            "inputs": [
+                {
+                    "name": "withdrawals",
+                    "type": "tuple",
+                    "internalType": "struct IVault.CurrencyWithdrawal",
+                    "components": [
+                        {
+                            "name": "currencyIndexSet",
+                            "type": "uint256[]",
+                            "internalType": "uint256[]"
+                        },
+                        {
+                            "name": "amounts",
+                            "type": "uint96[]",
+                            "internalType": "uint96[]"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "symbol",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "string",
+                    "internalType": "string"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "totalSupply",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "transfer",
+            "inputs": [
+                {
+                    "name": "to",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "transferFrom",
+            "inputs": [
+                {
+                    "name": "from",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "to",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "transferLatestSnapshot",
+            "inputs": [
+                {
+                    "name": "recipient",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "kAmountWads",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "snapshot",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "transferOwnership",
+            "inputs": [
+                {
+                    "name": "newOwner",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "withdraw",
+            "inputs": [
+                {
+                    "name": "snapshot",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "kAmount",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "recipient",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "event",
+            "name": "Approval",
+            "inputs": [
+                {
+                    "name": "owner",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "spender",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "value",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "ConfigUpdated",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "bytes",
+                    "indexed": false,
+                    "internalType": "bytes"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "Consume",
+            "inputs": [
+                {
+                    "name": "currency",
+                    "type": "address",
+                    "indexed": false,
+                    "internalType": "Currency"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "Deposit",
+            "inputs": [
+                {
+                    "name": "sender",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "owner",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "reserve",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "shares",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "Donate",
+            "inputs": [
+                {
+                    "name": "currency",
+                    "type": "address",
+                    "indexed": false,
+                    "internalType": "Currency"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "FeeAccrued",
+            "inputs": [
+                {
+                    "name": "depositFee",
+                    "type": "uint96",
+                    "indexed": false,
+                    "internalType": "uint96"
+                },
+                {
+                    "name": "redemptionFee",
+                    "type": "uint96",
+                    "indexed": false,
+                    "internalType": "uint96"
+                },
+                {
+                    "name": "AUMFee",
+                    "type": "uint96",
+                    "indexed": false,
+                    "internalType": "uint96"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "FeeSettled",
+            "inputs": [
+                {
+                    "name": "fee",
+                    "type": "uint96",
+                    "indexed": false,
+                    "internalType": "uint96"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "FinishRebalancing",
+            "inputs": [
+                {
+                    "name": "snapshot",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "currencies",
+                    "type": "uint256[]",
+                    "indexed": false,
+                    "internalType": "a160u96[]"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "OwnershipTransferred",
+            "inputs": [
+                {
+                    "name": "user",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "newOwner",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "SnapshotTransfer",
+            "inputs": [
+                {
+                    "name": "snapshot",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "from",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "to",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "StartRebalancing",
+            "inputs": [
+                {
+                    "name": "snapshot",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "kBalance",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "withdrawals",
+                    "type": "tuple",
+                    "indexed": false,
+                    "internalType": "struct IVault.CurrencyWithdrawal",
+                    "components": [
+                        {
+                            "name": "currencyIndexSet",
+                            "type": "uint256[]",
+                            "internalType": "uint256[]"
+                        },
+                        {
+                            "name": "amounts",
+                            "type": "uint96[]",
+                            "internalType": "uint96[]"
+                        }
+                    ]
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "Transfer",
+            "inputs": [
+                {
+                    "name": "from",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "to",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "value",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "Withdraw",
+            "inputs": [
+                {
+                    "name": "sender",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "receiver",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "owner",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "shares",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "k",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "reserve",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "error",
+            "name": "CurrenciesHashMismatch",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "ERC20TransferFailed",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "ExcessNewAnatomyCurrencyIndex",
+            "inputs": [
+                {
+                    "name": "currencyIndex",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "FeeExceedsMaxFee",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Forbidden",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "HashMismatch",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "IndexConfigHash",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "IndexConfigMismatch",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "IndexInitialConfig",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "InvalidSender",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "InvalidSigner",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "InvalidWithdrawal",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "NativeTransferFailed",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "NewAnatomyCurrencyCountMismatch",
+            "inputs": [
+                {
+                    "name": "expectedCount",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "NewAnatomyCurrencyIndexNotFound",
+            "inputs": [
+                {
+                    "name": "currencyIndex",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "NewAnatomyCurrencyIndexSetSizeMismatch",
+            "inputs": [
+                {
+                    "name": "expectedCount",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "NewAnatomyCurrencyMismatch",
+            "inputs": [
+                {
+                    "name": "expectedCurrency",
+                    "type": "uint256",
+                    "internalType": "a160u96"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "PermitDeadlineExpired",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Rebalancing",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Registered",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "Currency"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "ZeroAddressTransfer",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "ZeroDeposit",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "ZeroShares",
+            "inputs": []
         }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "event",
-      "name": "Approval",
-      "inputs": [
-        {
-          "name": "owner",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "spender",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "value",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "ConfigUpdated",
-      "inputs": [
-        {
-          "name": "",
-          "type": "bytes",
-          "indexed": false,
-          "internalType": "bytes"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "Consume",
-      "inputs": [
-        {
-          "name": "currency",
-          "type": "address",
-          "indexed": false,
-          "internalType": "Currency"
-        },
-        {
-          "name": "amount",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "Deposit",
-      "inputs": [
-        {
-          "name": "sender",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "owner",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "reserve",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "shares",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "Donate",
-      "inputs": [
-        {
-          "name": "currency",
-          "type": "address",
-          "indexed": false,
-          "internalType": "Currency"
-        },
-        {
-          "name": "amount",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "FeeAccrued",
-      "inputs": [
-        {
-          "name": "baseFee",
-          "type": "uint96",
-          "indexed": false,
-          "internalType": "uint96"
-        },
-        {
-          "name": "AUMFee",
-          "type": "uint96",
-          "indexed": false,
-          "internalType": "uint96"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "FeeSettled",
-      "inputs": [
-        {
-          "name": "fee",
-          "type": "uint96",
-          "indexed": false,
-          "internalType": "uint96"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "FinishRebalancing",
-      "inputs": [
-        {
-          "name": "snapshot",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "currencies",
-          "type": "uint256[]",
-          "indexed": false,
-          "internalType": "a160u96[]"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "OwnershipTransferred",
-      "inputs": [
-        {
-          "name": "user",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "newOwner",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "SnapshotTransfer",
-      "inputs": [
-        {
-          "name": "snapshot",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "amount",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "from",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "to",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "StartRebalancing",
-      "inputs": [
-        {
-          "name": "snapshot",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "kBalance",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "withdrawals",
-          "type": "tuple",
-          "indexed": false,
-          "internalType": "struct IVault.CurrencyWithdrawal",
-          "components": [
-            {
-              "name": "currencyIndexSet",
-              "type": "uint256[]",
-              "internalType": "uint256[]"
-            },
-            {
-              "name": "amounts",
-              "type": "uint96[]",
-              "internalType": "uint96[]"
-            }
-          ]
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "Transfer",
-      "inputs": [
-        {
-          "name": "from",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "to",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "value",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "Withdraw",
-      "inputs": [
-        {
-          "name": "sender",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "receiver",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "owner",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "shares",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "k",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "reserve",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "error",
-      "name": "AmountExceedsBalance",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "CallFailed",
-      "inputs": [
-        {
-          "name": "",
-          "type": "bytes",
-          "internalType": "bytes"
-        }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "CurrenciesHashMismatch",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "CurrencyBalanceOverdraft",
-      "inputs": [
-        {
-          "name": "",
-          "type": "tuple",
-          "internalType": "struct CommandLib.BalanceState",
-          "components": [
-            {
-              "name": "currency",
-              "type": "address",
-              "internalType": "Currency"
-            },
-            {
-              "name": "minBalance",
-              "type": "uint256",
-              "internalType": "uint256"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "ERC20TransferFailed",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "ExcessNewAnatomyCurrencyIndex",
-      "inputs": [
-        {
-          "name": "currencyIndex",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "FeeExceedsMaxFee",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "Forbidden",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "HashMismatch",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "IndexConfigHash",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "IndexConfigMismatch",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "IndexInitialConfig",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "InvalidCurrencies",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "InvalidDepositData",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "InvalidSender",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "InvalidSigner",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "InvalidWithdrawal",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "NativeTransferFailed",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "NewAnatomyCurrencyCountMismatch",
-      "inputs": [
-        {
-          "name": "expectedCount",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "NewAnatomyCurrencyIndexNotFound",
-      "inputs": [
-        {
-          "name": "currencyIndex",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "NewAnatomyCurrencyIndexSetSizeMismatch",
-      "inputs": [
-        {
-          "name": "expectedCount",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "NewAnatomyCurrencyMismatch",
-      "inputs": [
-        {
-          "name": "expectedCurrency",
-          "type": "uint256",
-          "internalType": "a160u96"
-        }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "PermitDeadlineExpired",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "Rebalancing",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "Registered",
-      "inputs": [
-        {
-          "name": "",
-          "type": "address",
-          "internalType": "Currency"
-        }
-      ]
-    },
-    {
-      "type": "error",
-      "name": "ZeroAddressTransfer",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "ZeroShares",
-      "inputs": []
-    }
-  ]
+    ]
 }
