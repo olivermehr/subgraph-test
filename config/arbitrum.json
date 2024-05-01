@@ -6,8 +6,8 @@
         "indexFactory": [
             {
                 "name": "IndexFactoryV2",
-                "address": "0xb45295ef1aa515ba6c31e5dbbc41a46e1d895792",
-                "startBlock": 206062144,
+                "address": "0x3c7bb4b9d820957fbff4fd7c92ef9cfc4b050744",
+                "startBlock": 206681652,
                 "nativeAsset": {
                     "name": "Ethereum",
                     "symbol": "ETH",
