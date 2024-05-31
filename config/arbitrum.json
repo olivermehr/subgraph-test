@@ -13,9 +13,19 @@
                     "symbol": "ETH",
                     "decimals": 18
                 }
+            },
+            {
+                "name": "IndexFactoryV2-staging",
+                "address": "0x30109dDA03455BFf17B07c079F2a5DC70954c034",
+                "startBlock": 213869605,
+                "nativeAsset": {
+                    "name": "Ethereum",
+                    "symbol": "ETH",
+                    "decimals": 18
+                }
             }
         ]
     },
     "ephtr": false,
-    "savingsVaults":false
+    "savingsVaults": false
 }
