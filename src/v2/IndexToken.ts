@@ -32,9 +32,11 @@ export function handleWithdraw(event: WithdrawEvent): void {
         let indexAssets = indexEntity.assets
         for (let i = 0; i < indexAssets.length; i++) {
             let chainIDToAssetMappingEntity = loadChainIDToAssetMappingEntity(indexAssets[i])
+            log.debug("block number = {}. Inside indexAsset loop {}",[event.block.number.toString(),chainIDToAssetMappingEntity.id.toString()])
             let chainIDAssetArray = chainIDToAssetMappingEntity.assets
             for (let y = 0; y < chainIDAssetArray.length; y++) {
                 let indexAssetEntity = loadIndexAssetEntity(chainIDAssetArray[y])
+                log.debug("Block number =  {}. Inside chainIDmapping loop {}",[event.block.number.toString(),indexAssetEntity.asset.toHexString()])
                 log.debug("Asset address is {} and balance before scaling {}",[indexAssetEntity.asset.toHexString(),indexAssetEntity.balance.toString()])
                 indexAssetEntity.balance = indexAssetEntity.balance.times(assetScalar)
                 log.debug("Asset address is {} and balance before scaling {}",[indexAssetEntity.asset.toHexString(),indexAssetEntity.balance.toString()])
