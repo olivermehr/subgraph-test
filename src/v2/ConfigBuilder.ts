@@ -37,7 +37,7 @@ export function handleSetMessenger(event: SetMessengerEvent): void {
     Messenger.createWithContext(event.params.param0, context)
 }
 
-export function handleStartRebalancing(event:StartRebalancingEvent): void {
+export function handleStartRebalancing(event: StartRebalancingEvent): void {
     let indexAddress = dataSource.context().getBytes('indexAddress')
     let indexEntity = createOrLoadIndexEntity(indexAddress)
     indexEntity.isRebalancing = true
@@ -90,8 +90,8 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
 
     } else {
         let chainIDAssetArray: string[] = []
+        let reserveAssetEntity = createOrLoadIndexAssetEntity(indexAddress, reserveAsset, indexEntity.chainID)
         if (event.params.chainId == indexEntity.chainID) {
-            let reserveAssetEntity = createOrLoadIndexAssetEntity(indexAddress, reserveAsset, indexEntity.chainID)
             reserveAssetEntity.balance = BigDecimal.zero()
             reserveAssetEntity.save()
             chainIDAssetArray.push(reserveAssetEntity.id)
@@ -113,7 +113,10 @@ export function handleFinishChainRebalancing(event: FinishChainRebalancingEvent)
             let scalar = new BigDecimal(BigInt.fromI32(10).pow(u8(indexAssetEntity.decimals)))
             indexAssetEntity.balance = balance.div(scalar)
             indexAssetEntity.save()
-            chainIDAssetArray.push(indexAssetEntity.id)
+            if (indexAssetEntity.id != reserveAssetEntity.id) {
+                chainIDAssetArray.push(indexAssetEntity.id)
+            }
+
         }
         for (let i = 0; i < chainIDToAssetMappingEntity.assets.length; i++) {
             let id = chainIDToAssetMappingEntity.assets[i]
@@ -154,7 +157,7 @@ export function saveHistoricalData(index: Bytes, timestamp: BigInt): void {
     let indexEntity = createOrLoadIndexEntity(index)
     let historicalIndexBalanceEntity = createOrLoadHistoricalIndexBalanceEntity(index, timestamp)
     historicalIndexBalanceEntity.totalSupply = indexEntity.totalSupply
-    let historicalIndexAssetArray : string[] = []
+    let historicalIndexAssetArray: string[] = []
     for (let i = 0; i < indexEntity.assets.length; i++) {
         let chainIDToAssetMappingEntity = loadChainIDToAssetMappingEntity(indexEntity.assets[i])
         let chainID = chainIDToAssetMappingEntity.chainID
