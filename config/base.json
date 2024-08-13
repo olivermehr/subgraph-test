@@ -1,0 +1,21 @@
+{
+    "network": "base",
+    "chainID": 8453,
+    "v1": false,
+    "v2": {
+        "indexFactory": [
+            {
+                "name": "IndexFactoryV2-staging",
+                "address": "0x4a664B40062a98dbEEB6f8EC65923dAf1DFA53B8",
+                "startBlock": 18170313,
+                "nativeAsset": {
+                    "name": "Ethereum",
+                    "symbol": "ETH",
+                    "decimals": 18
+                }
+            }
+        ]
+    },
+    "ephtr": false,
+    "savingsVaults": false
+}   
